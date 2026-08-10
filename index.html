@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>小升初英语单词讲义</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { font-size:16px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", sans-serif;
+    background: linear-gradient(180deg,#f3f6ff 0%, #eef1fb 100%);
+    color:#2d3350;
+    min-height:100vh;
+    padding-bottom: 40px;
+  }
+  .header {
+    background: linear-gradient(135deg,#6a5cff 0%, #8a7bff 100%);
+    color:#fff;
+    padding: 28px 20px 22px;
+    border-radius: 0 0 28px 28px;
+    box-shadow: 0 8px 24px rgba(106,92,255,.28);
+  }
+  .header h1 { font-size: 22px; font-weight:700; letter-spacing:.5px; }
+  .header p { margin-top:6px; font-size:13px; opacity:.92; line-height:1.5; }
+  .header .actions { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  .btn {
+    border:none; border-radius:12px; padding:11px 16px; font-size:14px; font-weight:600;
+    cursor:pointer; transition: transform .08s ease, box-shadow .08s ease;
+    -webkit-user-select:none; user-select:none;
+  }
+  .btn:active { transform: scale(.96); }
+  .btn.primary { background:#fff; color:#5a4cff; box-shadow:0 3px 10px rgba(0,0,0,.15); }
+  .btn.ghost { background:rgba(255,255,255,.16); color:#fff; }
+
+  .wrap { padding:18px 16px; }
+  .section-title {
+    display:flex; align-items:center; justify-content:space-between;
+    margin: 6px 0 12px;
+  }
+  .section-title h2 { font-size:17px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .badge { font-size:12px; font-weight:600; color:#5a4cff; background:#e6e2ff; border-radius:20px; padding:3px 10px; }
+  .section + .section { margin-top: 26px; }
+
+  .word-card {
+    background:#fff; border-radius:18px; padding:14px 16px; margin-bottom:12px;
+    box-shadow: 0 4px 14px rgba(80,70,180,.08);
+  }
+  .word-top { display:flex; align-items:center; gap:10px; }
+  .word-main { flex:1; min-width:0; }
+  .word { font-size:22px; font-weight:700; color:#23294a; letter-spacing:.3px; }
+  .phonetic { font-size:13px; color:#8a8fa8; margin-top:2px; }
+  .meaning { font-size:14px; color:#5a5f7a; margin-top:4px; }
+  .icon-btn {
+    width:44px; height:44px; border-radius:14px; border:none; cursor:pointer;
+    font-size:19px; display:flex; align-items:center; justify-content:center;
+    background:#eef0ff; color:#5a4cff; flex-shrink:0; transition: transform .08s;
+  }
+  .icon-btn:active { transform: scale(.92); }
+
+  .expand-area { margin-top:14px; border-top:1px solid #f0f1f8; padding-top:12px; display:none; }
+  .word-card.open .expand-area { display:block; }
+  .toggle-row { margin-top:12px; display:flex; gap:10px; align-items:center; }
+  .toggle {
+    font-size:13px; font-weight:600; color:#5a4cff; background:#f0eeff; border:none;
+    padding:8px 14px; border-radius:10px; cursor:pointer;
+  }
+
+  /* 记忆讲解 */
+  .block { margin-top:12px; border-radius:14px; padding:12px 14px; }
+  .block-label { font-size:12px; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .block-tips { background:#eef4ff; }
+  .block-tips .block-label { color:#2f6bff; }
+  .block-tips p { font-size:14px; line-height:1.7; color:#3a4466; }
+  .block-tips .listen { margin-top:8px; display:inline-flex; align-items:center; gap:6px; font-size:12.5px;
+    color:#2f6bff; background:#fff; border:1px solid #d4e0ff; border-radius:9px; padding:6px 12px; cursor:pointer; font-weight:600; }
+  .block-deriv { background:#f4f6fa; }
+  .block-deriv .block-label { color:#5a5f7a; }
+  .tag-row { display:flex; flex-wrap:wrap; gap:8px; }
+  .tag {
+    background:#fff; border:1px solid #e0e4ef; border-radius:9px; padding:6px 11px;
+    font-size:13px; color:#454a66; display:inline-flex; align-items:center; gap:6px; cursor:pointer;
+  }
+  .tag .vol { color:#8a8fa8; font-size:12px; }
+
+  /* 自然拼读 */
+  .block-phonics { background:#f6f0ff; }
+  .block-phonics .block-label { color:#8a2bff; }
+  .chunk-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+  .chunk {
+    background:#fff; border:2px solid #e3d5ff; border-radius:11px; padding:7px 10px; min-width:56px;
+    text-align:center; transition: transform .15s, border-color .15s, background .15s, box-shadow .15s;
+  }
+  .chunk.active { border-color:#8a2bff; background:#fff; transform: scale(1.1); box-shadow:0 0 0 4px rgba(138,43,255,.15); }
+  .chunk.letter-active { border-color:#ff6bcb; background:#fff0fb; transform: scale(1.18); box-shadow:0 0 0 4px rgba(255,107,203,.18); }
+  .chunk .ch-letters { font-size:17px; font-weight:700; color:#3a2b5e; }
+  .chunk .ch-letters .lit { color:#ff2fae; font-size:1.15em; }
+  .chunk .ch-ipa { font-size:11px; color:#9a8fc0; margin-top:2px; }
+  .chunk .ch-rule { font-size:10px; color:#b0a6d0; margin-top:1px; }
+  .phonics-btns { display:flex; gap:8px; flex-wrap:wrap; }
+  .phonics-btn {
+    border:none; border-radius:11px; padding:10px 14px; font-size:13.5px; font-weight:700; cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px; transition: transform .08s, box-shadow .2s;
+  }
+  .phonics-btn:active { transform: scale(.95); }
+  .phonics-btn.spell { background:#8a2bff; color:#fff; }
+  .phonics-btn.full { background:#fff; color:#8a2bff; border:2px solid #d9c4ff; }
+  .phonics-btn.glowing { animation: glowPulse 1.1s ease-in-out infinite; }
+  @keyframes glowPulse { 0%,100%{ box-shadow:0 0 0 0 rgba(138,43,255,.5);} 50%{ box-shadow:0 0 0 10px rgba(138,43,255,0);} }
+
+  /* 实时面板 */
+  .live-panel {
+    margin-top:10px; background:#2a2140; color:#efe9ff; border-radius:11px; padding:10px 12px;
+    font-size:13px; min-height:42px; display:flex; align-items:center; gap:8px; line-height:1.6;
+  }
+  .live-panel .label { color:#8f84b8; font-size:12px; flex-shrink:0; }
+  .live-panel .cur { color:#ffd75e; font-weight:700; }
+
+  /* 发音检测 */
+  .block-speak { background:#fff4f6; }
+  .block-speak .block-label { color:#ff3d6e; }
+  .speak-btn { border:none; border-radius:11px; padding:10px 15px; font-size:13.5px; font-weight:700; color:#fff;
+    background:linear-gradient(135deg,#ff5c8a,#ff3d6e); cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+  .speak-btn:active { transform: scale(.95); }
+  .speak-result { margin-top:10px; display:none; }
+  .speak-result.show { display:block; }
+  .ring-wrap { display:flex; align-items:center; gap:14px; }
+  .ring { position:relative; width:72px; height:72px; flex-shrink:0; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .score { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:19px; font-weight:800; }
+  .ring .score small { font-size:11px; font-weight:600; color:#999; }
+  .analysis { font-size:13.5px; line-height:1.7; color:#4a4460; }
+  .analysis .heard { color:#ff3d6e; font-weight:700; }
+  .analysis .tip { color:#2f6bff; }
+  .speak-status { font-size:12.5px; color:#b93a5e; margin-top:6px; }
+
+  /* 底部 · 三步记忆法 */
+  .method {
+    background:#fff; border-radius:18px; padding:16px; margin-top:26px;
+    box-shadow:0 4px 14px rgba(80,70,180,.08);
+  }
+  .method h2 { font-size:16px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .step { display:flex; gap:12px; margin-top:12px; }
+  .step .num { width:30px; height:30px; border-radius:50%; background:#e6e2ff; color:#5a4cff;
+    font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .step b { font-size:14px; }
+  .step p { font-size:13px; color:#666b85; margin-top:3px; line-height:1.6; }
+
+  /* 弹层 */
+  .overlay { position:fixed; inset:0; background:rgba(20,16,40,.45); z-index:40; display:none;
+    align-items:flex-end; justify-content:center; }
+  .overlay.show { display:flex; }
+  .sheet {
+    background:#fff; border-radius:22px 22px 0 0; width:100%; max-width:560px;
+    padding:18px 20px 34px; max-height:78vh; overflow-y:auto;
+    animation: slideUp .22s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(40px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+  .sheet h3 { font-size:17px; font-weight:700; margin-bottom:6px; }
+  .sheet .close { float:right; border:none; background:#f0f1f8; width:30px; height:30px; border-radius:9px;
+    font-size:15px; color:#666; cursor:pointer; }
+  .rule { margin-top:14px; border-left:3px solid #8a2bff; background:#f7f3ff; border-radius:0 10px 10px 0; padding:10px 12px; }
+  .rule b { font-size:14px; color:#4a2b8e; }
+  .rule .formula { font-size:12.5px; color:#8a2bff; font-weight:700; margin-top:3px; }
+  .rule .eg { font-size:12.5px; color:#6a6f8a; margin-top:2px; }
+
+  /* 自测 */
+  .quiz-card { background:#fff; border-radius:20px; padding:26px 22px; text-align:center; box-shadow:0 6px 20px rgba(80,70,180,.12); }
+  .quiz-word { font-size:34px; font-weight:800; color:#23294a; letter-spacing:1px; }
+  .quiz-ipa { font-size:14px; color:#8a8fa8; margin-top:6px; }
+  .quiz-meaning { font-size:17px; color:#3a3f5c; margin-top:20px; line-height:1.7; min-height:60px; }
+  .quiz-btns { display:flex; gap:10px; margin-top:22px; }
+  .quiz-btns .btn { flex:1; padding:13px; font-size:15px; }
+  .quiz-progress { font-size:13px; color:#8a8fa8; margin-top:14px; }
+  .quiz-hint { font-size:13px; color:#5a5f7a; margin-top:10px; }
+
+  /* 拼写测试 */
+  .spell-mean { font-size:22px; font-weight:700; color:#23294a; margin-top:14px; line-height:1.5; }
+  .spell-ipa { font-size:14px; color:#8a8fa8; margin-top:4px; }
+  .spell-hear { margin-top:14px; border:none; background:#e9f9f0; color:#1f9d63; padding:9px 16px;
+    border-radius:12px; font-size:14px; font-weight:600; cursor:pointer; }
+  .spell-input { width:100%; box-sizing:border-box; margin-top:16px; padding:13px;
+    border:2px solid #e4e6f2; border-radius:14px; font-size:22px; text-align:center;
+    letter-spacing:3px; outline:none; font-weight:600; color:#23294a; background:#fbfbfe; }
+  .spell-input:focus { border-color:#2fb46b; background:#fff; }
+  .letter-row { display:flex; justify-content:center; gap:6px; margin-top:18px; flex-wrap:wrap; }
+  .letter-cell { width:30px; height:40px; line-height:40px; border-radius:8px;
+    font-size:19px; font-weight:700; text-align:center; }
+  .letter-cell.ok { background:#dff6e8; color:#0a8f50; }
+  .letter-cell.bad { background:#ffe6e6; color:#d4380d; }
+  .spell-msg { font-size:15px; font-weight:700; margin-top:16px; }
+  .spell-msg.ok { color:#0a8f50; }
+  .spell-msg.bad { color:#d4380d; }
+  .spell-answer { font-size:13.5px; color:#8a8fa8; margin-top:8px; }
+  .btn.know { background:#dff6e8; color:#0a8f50; }
+  .btn.notknow { background:#ffe6e6; color:#d4380d; }
+  .btn.reveal { background:#5a4cff; color:#fff; }
+
+  /* 错题本 */
+  .btn.wrong { background:#fff5f3; color:#e5484d; }
+  .btn.wrong .cnt { display:inline-flex; align-items:center; justify-content:center; min-width:21px; height:21px; padding:0 6px;
+    border-radius:11px; background:#e5484d; color:#fff; font-size:12px; font-weight:700; margin-left:6px; }
+  .wrong-sum { font-size:13px; color:#8a8fa8; margin-bottom:12px; line-height:1.7; }
+  .wrong-row { display:flex; align-items:center; gap:10px; background:#faf9ff; border:1px solid #eceef7;
+    border-radius:12px; padding:10px 12px; margin-bottom:8px; }
+  .wrong-row .w { font-size:16px; font-weight:700; color:#23294a; min-width:92px; }
+  .wrong-row .m { flex:1; font-size:12.5px; color:#6a6f8a; line-height:1.5; }
+  .wrong-row .stk { font-size:11.5px; color:#e5484d; font-weight:600; margin-left:4px; }
+  .wrong-master { border:none; background:#dff6e8; color:#0a8f50; border-radius:9px; padding:7px 11px;
+    font-size:12.5px; font-weight:600; cursor:pointer; flex-shrink:0; }
+  .wrong-actions { display:flex; gap:10px; margin-top:16px; }
+  .wrong-actions .btn { flex:1; }
+  .wrong-empty { text-align:center; color:#a5a8bd; font-size:13.5px; padding:26px 0; line-height:1.8; }
+
+  .toast {
+    position:fixed; left:50%; bottom:28px; transform:translateX(-50%);
+    background:#2a2140; color:#fff; padding:11px 18px; border-radius:12px; font-size:13.5px; z-index:60;
+    opacity:0; pointer-events:none; transition: opacity .2s;
+  }
+  .toast.show { opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📘 小升初英语单词讲义</h1>
+  <p id="wordCount">18 个核心词 · 自然拼读 · 发音检测 · 记忆讲解，跟着读、对着练</p>
+  <div class="actions">
+    <button class="btn primary" id="quizBtn">🎮 自测模式</button>
+    <button class="btn primary" id="spellBtn" style="background:#2fb46b">✏️ 拼写测试</button>
+    <button class="btn ghost" id="rulesBtn">🔤 拼读规则</button>
+    <button class="btn wrong" id="wrongBtn">📕 错题本<span class="cnt" id="wrongCount">0</span></button>
+  </div>
+</div>
+
+<div class="wrap" id="app">
+  <!-- 单词卡片按数据渲染 -->
+</div>
+
+<!-- 三步记忆法 -->
+<div class="wrap">
+  <div class="method">
+    <h2>🧠 三步记忆法</h2>
+    <div class="step"><div class="num">1</div><div><b>听音跟读</b><p>先听单词和中文讲解，跟读 3 遍。读的时候注意口型和重音。</p></div></div>
+    <div class="step"><div class="num">2</div><div><b>拼读拆解</b><p>用「完整流程」听自然拼读：分组读音 → 组内拼字母 → 整词 → 逐字母拼一遍。把发音和拼写绑在一起记。</p></div></div>
+    <div class="step"><div class="num">3</div><div><b>自测巩固</b><p>进「自测模式」打乱顺序测一遍，不会的词标出来，回头再练。当天睡前再看一眼，记得最牢。</p></div></div>
+  </div>
+</div>
+
+<!-- 拼读规则弹层 -->
+<div class="overlay" id="rulesOverlay">
+  <div class="sheet">
+    <h3>🔤 本课拼读规则 <button class="close" data-close="rulesOverlay">✕</button></h3>
+    <div id="rulesList"></div>
+  </div>
+</div>
+
+<!-- 自测弹层 -->
+<div class="overlay" id="quizOverlay">
+  <div class="sheet" style="background:transparent;padding:10px 14px;">
+    <div id="quizBody"></div>
+  </div>
+</div>
+
+<!-- 拼写测试弹层 -->
+<div class="overlay" id="spellOverlay">
+  <div class="sheet" style="background:transparent;padding:10px 14px;">
+    <div id="spellBody"></div>
+  </div>
+</div>
+
+<!-- 错题本弹层 -->
+<div class="overlay" id="wrongOverlay">
+  <div class="sheet">
+    <h3>📕 错题本 <button class="close" data-close="wrongOverlay">✕</button></h3>
+    <div class="wrong-sum" id="wrongSum"></div>
+    <div id="wrongList"></div>
+    <div class="wrong-actions">
+      <button class="btn reveal" id="wrongPracticeBtn" style="background:#e5484d">🔁 反复练习</button>
+      <button class="btn ghost" id="wrongClearBtn" style="background:#f0f1f8;color:#666">🗑 清空</button>
+    </div>
+  </div>
+</div>
+
+<!-- 错题练习弹层 -->
+<div class="overlay" id="wrongPracticeOverlay">
+  <div class="sheet" style="background:transparent;padding:10px 14px;">
+    <div id="wrongPracticeBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ================= 数据 =================
+   每个词条：word 单词 / ipa 音标 / meaning 中文释义 / cat 板块 /
+   tips 记忆讲解 / example 例句 / derivatives 衍生词[词,释义] /
+   phrases 常用短语[短语,释义] / chunks 拼读拆解[{letters,ipa,rule,sound}] /
+   speaTips 发音建议 / spelling 逐字母拼写（自动生成）
+   板块：basic = 基本信息，like = 性格与喜好 */
+const WORDS = [
+  {
+    word:"introduce", ipa:"/ˌɪntrəˈdjuːs/", meaning:"v. 介绍",
+    cat:"basic",
+    tips:"拆词根：intro（向内）+ duce（引导）→ 把对方“引导”进你的世界 → 介绍。同根词：produce 生产（向前引导）、reduce 减少（向后拉）。",
+    example:"Let me introduce my friend to you. 让我把我朋友介绍给你。",
+    derivatives:[["introduction","n. 介绍"],["self-introduction","n. 自我介绍"],["introducer","n. 介绍人"]],
+    phrases:[["introduce oneself","自我介绍"],["introduce A to B","把 A 介绍给 B"]],
+    chunks:[
+      {letters:"in",  ipa:"/ɪn/",    rule:"短音 i",      sound:"in"},
+      {letters:"tro", ipa:"/trə/",   rule:"弱读 o",      sound:"truh"},
+      {letters:"duce",ipa:"/djuːs/", rule:"魔法 e：u-e→/juː/", sound:"dyooss"}
+    ],
+    speaTips:"重音在第三个音节 duce 上，前面弱读：in-tro-DUCE，别把 i 读成重音。"
+  },
+  {
+    word:"name", ipa:"/neɪm/", meaning:"n. 名字",
+    cat:"basic",
+    tips:"魔法 e：a_e → /eɪ/，结尾 e 不发音，把前面的 a 变成长音。N-A-M-E，e 是“小帮手”，不读出来。",
+    example:"My name is Lily. 我的名字叫莉莉。",
+    derivatives:[["named","adj. 名为……的"],["nameless","adj. 无名的"],["rename","v. 重命名"]],
+    phrases:[["first name","名"],["last name / family name","姓"],["a name card","一张名片"]],
+    chunks:[
+      {letters:"n",   ipa:"/n/",    rule:"鼻音 n",        sound:"nn"},
+      {letters:"ame", ipa:"/eɪm/",  rule:"魔法 e：a_e→/eɪ/", sound:"aim"}
+    ],
+    speaTips:"双元音 /eɪ/ 要读到位：从 /e/ 慢慢滑向 /ɪ/，嘴形变扁。"
+  },
+  {
+    word:"country", ipa:"/ˈkʌntri/", meaning:"n. 国家",
+    cat:"basic",
+    tips:"count（数）+ ry：数也数不清的疆域，就是“国家”。注意：这里的 ou 发 /ʌ/（像“啊”），不是 /aʊ/（像“奥”）。",
+    example:"China is a big country. 中国是一个大国。",
+    derivatives:[["countryside","n. 乡村"],["countries","n. 复数形式"],["fellow countryman","n. 同胞"]],
+    phrases:[["our country","我们的国家"],["country music","乡村音乐"],["all over the country","全国"]],
+    chunks:[
+      {letters:"coun", ipa:"/kʌn/", rule:"ou→/ʌ/",        sound:"cun"},
+      {letters:"try",  ipa:"/tri/", rule:"tr 组合 /tr/",  sound:"tree"}
+    ],
+    speaTips:"重音在第一音节 coun，ou 读短 /ʌ/；后半截 try 轻一点。"
+  },
+  {
+    word:"classmate", ipa:"/ˈklɑːsmeɪt/", meaning:"n. 同班同学",
+    cat:"basic",
+    tips:"合成词：class（班级）+ mate（同伴）→ 同班同学。mate 家族一起记：classmate 同学、roommate 室友、teammate 队友。",
+    example:"She is my new classmate. 她是我的新同学。",
+    derivatives:[["classmates","n. 复数形式"],["roommate","n. 室友"],["teammate","n. 队友"]],
+    phrases:[["my classmate","我的同学"],["old classmates","老同学"]],
+    chunks:[
+      {letters:"class", ipa:"/klɑːs/", rule:"cl 组合 /kl/",  sound:"class"},
+      {letters:"mate",  ipa:"/meɪt/",  rule:"魔法 e：a_e→/eɪ/", sound:"mate"}
+    ],
+    speaTips:"两个音节，重音在 class 上；mate 的 /eɪ/ 要读长一点。"
+  },
+  {
+    word:"friend", ipa:"/frend/", meaning:"n. 朋友",
+    cat:"basic",
+    tips:"“fri + end”：真正的朋友陪你走到最后（end），还是朋友。特别注意：friend 里的 ie 发短音 /e/，不是长音！",
+    example:"He is my best friend. 他是我最好的朋友。",
+    derivatives:[["friendly","adj. 友好的"],["friendship","n. 友谊"],["friends","n. 复数形式"]],
+    phrases:[["make friends","交朋友"],["best friend","最好的朋友"]],
+    chunks:[
+      {letters:"fr", ipa:"/fr/", rule:"fr 组合 /fr/", sound:"fruh"},
+      {letters:"ie", ipa:"/e/",  rule:"ie→/e/（短音）", sound:"eh"},
+      {letters:"nd", ipa:"/nd/", rule:"nd 组合 /nd/", sound:"nnd"}
+    ],
+    speaTips:"ie 读短 /e/，别读成“衣”；结尾 d 轻收，别拖长。"
+  },
+  {
+    word:"different", ipa:"/ˈdɪfrənt/", meaning:"adj. 不同的",
+    cat:"basic",
+    tips:"differ（不同）+ ent（形容词后缀）→ 不同的。易错点：be different FROM（跟……不同），介词用 from，不是 with！",
+    example:"My bag is different from yours. 我的包和你的不一样。",
+    derivatives:[["difference","n. 不同"],["differently","adv. 不同地"],["differ","v. 不同"]],
+    phrases:[["be different from","与……不同"],["a different way","一种不同的方式"]],
+    chunks:[
+      {letters:"dif", ipa:"/dɪf/",  rule:"短音 i",        sound:"dif"},
+      {letters:"fer", ipa:"/fə/",   rule:"弱读 e",        sound:"fuh"},
+      {letters:"ent", ipa:"/ənt/",  rule:"弱读 en",       sound:"unt"}
+    ],
+    speaTips:"重音在第一个音节 dif，后面两个音节都弱化读 /ə/，别一个音节一个音。"
+  },
+  {
+    word:"interesting", ipa:"/ˈɪntrəstɪŋ/", meaning:"adj. 有趣的",
+    cat:"like",
+    tips:"interest（兴趣）+ ing → 令人感兴趣的。考试重点：interesting 形容“物”，主语是有趣的东西；interested 形容“人”的感觉，要加 be interested in（对……感兴趣）。",
+    example:"This book is very interesting. 这本书很有趣。",
+    derivatives:[["interest","n./v. 兴趣"],["interested","adj. 感兴趣的"],["interestingly","adv. 有趣地"]],
+    phrases:[["an interesting book","一本有趣的书"],["be interested in","对……感兴趣"]],
+    chunks:[
+      {letters:"in",  ipa:"/ɪn/",   rule:"短音 i",        sound:"in"},
+      {letters:"ter", ipa:"/tər/",  rule:"弱读 er",       sound:"tuh"},
+      {letters:"est", ipa:"/ɪst/",  rule:"短音 e",        sound:"ist"},
+      {letters:"ing", ipa:"/ɪŋ/",   rule:"ing→/ɪŋ/",     sound:"ing"}
+    ],
+    speaTips:"重音在第一个音节 in，注意结尾 ing 是 /ɪŋ/，舌根抬起来，不是“因个”。"
+  },
+  {
+    word:"grade", ipa:"/ɡreɪd/", meaning:"n. 年级",
+    cat:"basic",
+    tips:"发音靠 magic e：gr + a_e → /ɡreɪd/，结尾 e 不发音。grade 既指“年级”也指“分数”：I'm in Grade 7（我在七年级）。别和 great /ɡreɪt/（伟大的）记混。",
+    example:"I'm in Grade 7. 我在七年级。",
+    derivatives:[["grades","n. 复数形式"],["graded","adj. 分级的"],["grader","n. 评分者"]],
+    phrases:[["in Grade 7","在七年级"],["high grade","高分"],["grade level","年级水平"]],
+    chunks:[
+      {letters:"gr",  ipa:"/ɡr/",  rule:"gr 组合 /ɡr/",    sound:"gruh"},
+      {letters:"ade", ipa:"/eɪd/", rule:"魔法 e：a_e→/eɪ/", sound:"aid"}
+    ],
+    speaTips:"一个音节直接读完：/ɡreɪd/，双元音 /eɪ/ 拉长，结尾 d 轻收，别拖。"
+  },
+  {
+    word:"looks", ipa:"/lʊks/", meaning:"n. 外貌；容貌（pl.）",
+    cat:"basic",
+    tips:"look（看）+ s：你“看起来”的样子就是 looks（外貌）。注意 oo 在这里发短音 /ʊ/（像“乌”），和 book 一样，不是长音 /uː/。拼写是 look + s，别丢 s。",
+    example:"Her good looks make her popular. 她漂亮的外貌让她很受欢迎。",
+    derivatives:[["look","v./n. 看"],["good-looking","adj. 好看的"],["looking","adj. ……相的"]],
+    phrases:[["good looks","漂亮的外貌"],["look like","看起来像"]],
+    chunks:[
+      {letters:"l",  ipa:"/l/",  rule:"清晰 l",        sound:"ll"},
+      {letters:"oo", ipa:"/ʊ/",  rule:"oo→/ʊ/（短音）", sound:"uh"},
+      {letters:"ks", ipa:"/ks/", rule:"k+s 组合 /ks/",  sound:"ks"}
+    ],
+    speaTips:"oo 读短 /ʊ/，跟 book 一样；结尾 ks 连读成 /ks/，别拆开读成“克思”。"
+  },
+  {
+    word:"polite", ipa:"/pəˈlaɪt/", meaning:"adj. 有礼貌的；客气的",
+    cat:"like",
+    tips:"难点在 li 的魔法 e：i_e → /aɪ/（读“爱”），重音在第二音节 li。反义词 impolite（不礼貌的）一起记。p 开头是送气清音，别读成“波”。",
+    example:"Be polite to your teachers. 对老师要有礼貌。",
+    derivatives:[["politely","adv. 有礼貌地"],["politeness","n. 礼貌"],["impolite","adj. 不礼貌的"]],
+    phrases:[["be polite to sb","对某人有礼貌"],["polite words","礼貌用语"]],
+    chunks:[
+      {letters:"po",  ipa:"/pə/",  rule:"弱读 o",          sound:"puh"},
+      {letters:"li",  ipa:"/laɪ/", rule:"魔法 e：i_e→/aɪ/", sound:"lie"},
+      {letters:"te",  ipa:"/t/",   rule:"结尾 e 不发音",    sound:"t"}
+    ],
+    speaTips:"重音在第二个音节 li：po-LITE。po 弱读成 /pə/，不要读成“坡”。"
+  },
+  {
+    word:"impolite", ipa:"/ˌɪmpəˈlaɪt/", meaning:"adj. 不礼貌的；粗鲁的",
+    cat:"like",
+    tips:"im-（否定前缀，表“不”）+ polite（有礼貌的）→ 不礼貌的。im- 家族一起记：impossible 不可能的、impolite 不礼貌的。",
+    example:"It's impolite to interrupt others. 打断别人说话是不礼貌的。",
+    derivatives:[["impolitely","adv. 不礼貌地"],["impoliteness","n. 无礼"]],
+    phrases:[["It's impolite to do sth","做某事是不礼貌的"],["impolite to sb","对某人不礼貌"]],
+    chunks:[
+      {letters:"im",  ipa:"/ɪm/",  rule:"前缀 im-（表否定）", sound:"im"},
+      {letters:"po",  ipa:"/pə/",  rule:"弱读 o",            sound:"puh"},
+      {letters:"li",  ipa:"/laɪ/", rule:"魔法 e：i_e→/aɪ/",  sound:"lie"},
+      {letters:"te",  ipa:"/t/",   rule:"结尾 e 不发音",      sound:"t"}
+    ],
+    speaTips:"重音在第三个音节：im-po-LITE。前缀 im 轻读 /ɪm/，别读重。"
+  },
+  {
+    word:"creative", ipa:"/kriˈeɪtɪv/", meaning:"adj. 有创造力的",
+    cat:"like",
+    tips:"create（创造）+ tive（形容词后缀）→ 有创造力的。词族一串记：create 动词、creation 名词、creativity 创造力、creator 创造者。重音在第二音节 /eɪ/。",
+    example:"She is a creative girl. 她是个有创造力的女孩。",
+    derivatives:[["create","v. 创造"],["creation","n. 创造"],["creativity","n. 创造力"],["creator","n. 创造者"]],
+    phrases:[["be creative","有创造力"],["creative thinking","创造性思维"]],
+    chunks:[
+      {letters:"cre",  ipa:"/kri/",  rule:"cre→/kri/",     sound:"cree"},
+      {letters:"a",    ipa:"/eɪ/",   rule:"开音节 a→/eɪ/", sound:"ay"},
+      {letters:"tive", ipa:"/tɪv/",  rule:"tive→/tɪv/",    sound:"tiv"}
+    ],
+    speaTips:"重音在第二个音节：cre-A-tive。/eɪ/ 拉长，结尾 tive 轻读 /tɪv/。"
+  },
+  {
+    word:"interested", ipa:"/ˈɪntrəstɪd/", meaning:"adj. 感兴趣的",
+    cat:"like",
+    tips:"interest（兴趣）+ ed → 感兴趣的。考试重点：interested 形容“人”的感觉，用 be interested in；interesting 形容“物”让人感兴趣。I'm interested in... = 我对……感兴趣。",
+    example:"I am interested in English. 我对英语感兴趣。",
+    derivatives:[["interest","n./v. 兴趣"],["interesting","adj. 有趣的"],["interestingly","adv. 有趣地"]],
+    phrases:[["be interested in","对……感兴趣"]],
+    chunks:[
+      {letters:"in",  ipa:"/ɪn/",  rule:"短音 i",     sound:"in"},
+      {letters:"ter", ipa:"/tər/", rule:"弱读 er",    sound:"tuh"},
+      {letters:"est", ipa:"/ɪst/", rule:"短音 e",     sound:"ist"},
+      {letters:"ed",  ipa:"/ɪd/",  rule:"ed→/ɪd/",    sound:"id"}
+    ],
+    speaTips:"重音在第一个音节 in：IN-ter-est-ed。后面全轻读，ed 发 /ɪd/ 不是 /d/。"
+  },
+  {
+    word:"friendly", ipa:"/ˈfrendli/", meaning:"adj. 友好的",
+    cat:"like",
+    tips:"friend（朋友）+ ly（形容词后缀）→ 像朋友一样 → 友好的。friend 里 ie 发短音 /e/，老朋友再记一遍：fri + end，真正的朋友陪你到最后。",
+    example:"He is friendly to everyone. 他对每个人都很好。",
+    derivatives:[["friend","n. 朋友"],["friendship","n. 友谊"],["unfriendly","adj. 不友好的"]],
+    phrases:[["be friendly to sb","对某人友好"],["a friendly smile","友好的微笑"]],
+    chunks:[
+      {letters:"fr",  ipa:"/fr/",  rule:"fr 组合 /fr/",   sound:"fruh"},
+      {letters:"ie",  ipa:"/e/",   rule:"ie→/e/（短音）",  sound:"eh"},
+      {letters:"nd",  ipa:"/nd/",  rule:"nd 组合 /nd/",   sound:"nnd"},
+      {letters:"ly",  ipa:"/li/",  rule:"ly→/li/",        sound:"lee"}
+    ],
+    speaTips:"重音在第一音节 friend，ie 读短 /e/；结尾 ly 轻读 /li/，别读成“利”。"
+  },
+  {
+    word:"hobby", ipa:"/ˈhɒbi/", meaning:"n. 业余爱好",
+    cat:"like",
+    tips:"短元音 /ɒ/ 后面的辅音 b 要双写：ho + bb + y，这就是“双写辅音”规则。复数 hobbies 是去 y 加 ies，考试常考。",
+    example:"My hobby is playing chess. 我的爱好是下国际象棋。",
+    derivatives:[["hobbies","n. 复数形式"]],
+    phrases:[["my hobby","我的爱好"],["a hobby of mine","我的一个爱好"]],
+    chunks:[
+      {letters:"ho",  ipa:"/hɒ/",  rule:"o→/ɒ/（短音）",    sound:"hah"},
+      {letters:"bb",  ipa:"/b/",   rule:"双写辅音 bb→/b/",  sound:"b"},
+      {letters:"y",   ipa:"/i/",   rule:"结尾 y→/i/",       sound:"ee"}
+    ],
+    speaTips:"重音在第一音节 ho：HO-bby。结尾 y 发 /i/（像“一”），复数时 y 变 ies。"
+  },
+  {
+    word:"good", ipa:"/ɡʊd/", meaning:"adj. 好的",
+    cat:"like",
+    tips:"oo 两种发音要分清：book /ʊ/ 短音、school /uː/ 长音，good 也是短音 /ʊ/（像“古”）。比较级 better、最高级 best 是不规则变化，考试必考！",
+    example:"Eating more vegetables is good for our health. 多吃蔬菜对我们的健康有好处。",
+    derivatives:[["better","adj. 更好的"],["best","adj. 最好的"],["goods","n. 商品"]],
+    phrases:[["be good at doing sth","擅长做某事"],["be good for","对……有好处"],["be good to sb","对某人好"]],
+    chunks:[
+      {letters:"g",  ipa:"/ɡ/",  rule:"g→/ɡ/",           sound:"g"},
+      {letters:"oo", ipa:"/ʊ/",  rule:"oo→/ʊ/（短音）",   sound:"uh"},
+      {letters:"d",  ipa:"/d/",  rule:"d→/d/",           sound:"d"}
+    ],
+    speaTips:"oo 读短 /ʊ/，干脆别拖长；good 只有一个音节，清清爽爽。"
+  },
+  {
+    word:"guitar", ipa:"/ɡɪˈtɑː(r)/", meaning:"n. 吉他",
+    cat:"like",
+    tips:"注意 gui 发 /ɡɪ/，u 不发音、只是帮 g 保住 /ɡ/（不然 g+i 会变成 /dʒ/）。重音在第二个音节，ar 读长 /ɑː(r)/。",
+    example:"I can play the guitar. 我会弹吉他。",
+    derivatives:[["guitarist","n. 吉他手"]],
+    phrases:[["play the guitar","弹吉他"]],
+    chunks:[
+      {letters:"gui", ipa:"/ɡɪ/",    rule:"gu 组合 /ɡ/，u 不发音", sound:"gih"},
+      {letters:"t",   ipa:"/t/",     rule:"t→/t/",               sound:"t"},
+      {letters:"ar",  ipa:"/ɑː(r)/", rule:"ar→/ɑː(r)/",           sound:"ar"}
+    ],
+    speaTips:"重音在第二个音节：gui-TAR。/ɑː/ 口型张大像“啊”，r 卷舌轻轻带过。"
+  },
+  {
+    word:"chess", ipa:"/tʃes/", meaning:"n. 国际象棋",
+    cat:"like",
+    tips:"ch → /tʃ/（像“吃”的开头），短音 e 后面双写 ss 只发一个 /s/。play chess 下棋，Chinese chess 中国象棋。",
+    example:"Let's play chess after class. 下课后我们一起下棋吧。",
+    derivatives:[["chessboard","n. 棋盘"],["chessman","n. 棋子"]],
+    phrases:[["play chess","下国际象棋"],["play Chinese chess","下中国象棋"]],
+    chunks:[
+      {letters:"ch",  ipa:"/tʃ/", rule:"ch→/tʃ/",       sound:"ch"},
+      {letters:"e",   ipa:"/e/",  rule:"短音 e",         sound:"eh"},
+      {letters:"ss",  ipa:"/s/",  rule:"双写 ss→/s/",   sound:"s"}
+    ],
+    speaTips:"ch 发 /tʃ/ 要送气；短 e 干脆；ss 双写只读一个 /s/，别拖长。"
+  },
+  /* ================= 第2天 · 学校场所 · 设施 ================= */
+  {
+    word:"hall", ipa:"/hɔːl/", meaning:"n. 礼堂；大厅",
+    cat:"place",
+    tips:"al 组合在 hall 里读长音 /ɔː/（像\"奥\"）。同家族一起记：all、tall、small、wall、hall，都有 al→/ɔː/。",
+    example:"The students are in the hall. 学生们在礼堂里。",
+    derivatives:[["halls","n. 复数形式"]],
+    phrases:[["dining hall","餐厅"],["in the hall","在礼堂里"],["city hall","市政厅"]],
+    chunks:[
+      {letters:"h",  ipa:"/h/",  rule:"h→/h/",          sound:"h"},
+      {letters:"a",  ipa:"/ɔː/", rule:"al→/ɔː/（长音）",   sound:"aw"},
+      {letters:"ll", ipa:"/l/",  rule:"双写 ll→/l/",      sound:"l"}
+    ],
+    speaTips:"单音节直接读完 /hɔːl/。/ɔː/口型张大变圆，结尾 l 舌尖抵上齿龈，别拖。"
+  },
+  {
+    word:"dining", ipa:"/ˈdaɪnɪŋ/", meaning:"n. 吃饭；进餐",
+    cat:"place",
+    tips:"dine（用餐）+ ing → 进餐。dining 里的 i 是开音节发长音 /aɪ/（源自动词 dine）。dining hall 就是\"吃饭的大厅\"＝餐厅。",
+    example:"We eat lunch in the dining hall. 我们在餐厅吃午饭。",
+    derivatives:[["dine","v. 用餐"],["dinner","n. 晚餐"]],
+    phrases:[["dining hall","餐厅"],["a dining table","餐桌"],["in the dining hall","在餐厅里"]],
+    chunks:[
+      {letters:"di",   ipa:"/daɪ/", rule:"开音节 i→/aɪ/",  sound:"dye"},
+      {letters:"ning", ipa:"/nɪŋ/", rule:"ing→/ɪŋ/",      sound:"ning"}
+    ],
+    speaTips:"重音在第一音节 di：DI-ning。/aɪ/双元音读到位，ning 轻一点。"
+  },
+  {
+    word:"central", ipa:"/ˈsentrəl/", meaning:"adj. 中心的",
+    cat:"place",
+    tips:"centre（中心）+ al（形容词后缀）→ 中心的。centre 变形容词去 e 加 al。c 后跟 e 发 /s/（软音）。",
+    example:"The library is in the central area. 图书馆在中心区域。",
+    derivatives:[["centre","n. 中心"],["center","n. 中心（美式拼写）"]],
+    phrases:[["central area","中心区域"],["in the centre of","在……的中心"]],
+    chunks:[
+      {letters:"cen", ipa:"/sen/", rule:"c+e→/s/",      sound:"sen"},
+      {letters:"tr",  ipa:"/tr/",  rule:"tr 组合 /tr/",  sound:"truh"},
+      {letters:"al",  ipa:"/əl/",  rule:"弱读 al",       sound:"ul"}
+    ],
+    speaTips:"重音在第一音节 cen：CEN-tral。e 短音干脆，tr 连读，al 弱化读 /əl/。"
+  },
+  {
+    word:"building", ipa:"/ˈbɪldɪŋ/", meaning:"n. 建筑物；房子",
+    cat:"place",
+    tips:"build（建造）+ ing → 建造出来的东西＝建筑物。注意：building 里的 u 不发音，i 读短音 /ɪ/，别把 u 读出来。",
+    example:"That tall building is our library. 那栋高楼是我们的图书馆。",
+    derivatives:[["build","v. 建筑；建造"],["builder","n. 建筑者"],["rebuilt","v. 重建"]],
+    phrases:[["tall building","高楼"],["office building","办公楼"],["school building","教学楼"]],
+    chunks:[
+      {letters:"b",   ipa:"/b/",  rule:"b→/b/",             sound:"b"},
+      {letters:"ui",  ipa:"/ɪ/",  rule:"ui→/ɪ/（u 不发音）",  sound:"ih"},
+      {letters:"ld",  ipa:"/ld/", rule:"ld 组合 /ld/",        sound:"ld"},
+      {letters:"ing", ipa:"/ɪŋ/", rule:"ing→/ɪŋ/",           sound:"ing"}
+    ],
+    speaTips:"重音在第一音节 build：BUILD-ing。ui 里 u 不发音、i 读短 /ɪ/，结尾 ing 发 /ɪŋ/。"
+  },
+  {
+    word:"locker", ipa:"/ˈlɒkə(r)/", meaning:"n. 有锁存物柜；寄物柜",
+    cat:"place",
+    tips:"lock（锁）+ er（表\"物\"的后缀）→ 能上锁的柜子＝存物柜。o 发短 /ɒ/，ck 双写只发一个 /k/。",
+    example:"I put my bag in the locker. 我把书包放进存物柜。",
+    derivatives:[["lock","v./n. 锁"],["lockers","n. 复数形式"]],
+    phrases:[["school locker","学校储物柜"],["locker room","更衣室；储物间"]],
+    chunks:[
+      {letters:"lo",  ipa:"/lɒ/", rule:"o→/ɒ/（短音）",     sound:"lah"},
+      {letters:"ck",  ipa:"/k/",  rule:"ck→/k/",           sound:"k"},
+      {letters:"er",  ipa:"/ə(r)/",rule:"er→/ə(r)/（弱读）",  sound:"uh"}
+    ],
+    speaTips:"重音在第一音节 lock：LOCK-er。o 短音干脆，er 弱读 /ə/，别读成\"洛克儿\"。"
+  },
+  {
+    word:"build", ipa:"/bɪld/", meaning:"v. 建筑；建造",
+    cat:"place",
+    tips:"building 的动词原形。u 是\"辅助字母\"不发音，让 i 读短音 /ɪ/。别把 u 读出来，也别把 i 读成长音 /aɪ/。",
+    example:"They will build a new school. 他们将建一所新学校。",
+    derivatives:[["building","n. 建筑物"],["builder","n. 建筑者"],["rebuild","v. 重建"]],
+    phrases:[["build a house","建房子"],["build up","逐步建立"]],
+    chunks:[
+      {letters:"b",   ipa:"/b/",  rule:"b→/b/",             sound:"b"},
+      {letters:"ui",  ipa:"/ɪ/",  rule:"ui→/ɪ/（u 不发音）",  sound:"ih"},
+      {letters:"ld",  ipa:"/ld/", rule:"ld 组合 /ld/",        sound:"ld"}
+    ],
+    speaTips:"一个音节 /bɪld/。/ɪ/短音，干脆收住，别读成\"拜尔德\"。"
+  },
+  {
+    word:"corner", ipa:"/ˈkɔːnə(r)/", meaning:"n. 角；墙角；街角",
+    cat:"place",
+    tips:"or 组合读 /ɔː/，结尾 er 弱读。English corner（英语角）是常考搭配。别和 corn（玉米）记混。",
+    example:"The post office is at the corner. 邮局在街角。",
+    derivatives:[["corners","n. 复数形式"],["cornerstone","n. 基石"]],
+    phrases:[["English corner","英语角"],["in the corner","在角落里"],["at the corner","在拐角处"]],
+    chunks:[
+      {letters:"cor", ipa:"/kɔː/", rule:"or→/ɔː/",          sound:"kor"},
+      {letters:"ner", ipa:"/nə(r)/", rule:"er→/ə(r)/（弱读）", sound:"nuh"}
+    ],
+    speaTips:"重音在第一音节 cor：COR-ner。/ɔː/圆唇，ner 弱读 /nə/。"
+  },
+  {
+    word:"gym", ipa:"/dʒɪm/", meaning:"n. 体育馆；健身房",
+    cat:"place",
+    tips:"gymnasium（体育馆）的缩写。g 在 y 前发 /dʒ/（像\"知\"的开头），y 读短音 /ɪ/。",
+    example:"We have PE in the gym. 我们在体育馆上体育课。",
+    derivatives:[["gymnasium","n. 体育馆（全称）"],["gym class","体育课"]],
+    phrases:[["in the gym","在体育馆里"],["go to the gym","去健身房"]],
+    chunks:[
+      {letters:"g",  ipa:"/dʒ/", rule:"g→/dʒ/（像\"知\"）", sound:"juh"},
+      {letters:"y",  ipa:"/ɪ/",  rule:"y→/ɪ/（短音）",     sound:"ih"},
+      {letters:"m",  ipa:"/m/",  rule:"m→/m/",           sound:"m"}
+    ],
+    speaTips:"一个音节 /dʒɪm/。g 发 /dʒ/ 要送气，y 读短 /ɪ/，别读成\"个一母\"。"
+  },
+  {
+    word:"screen", ipa:"/skriːn/", meaning:"n. 屏幕；银幕",
+    cat:"place",
+    tips:"ee 组合读长音 /iː/。scr 三个字母一口气读完 /skr/。别把 ee 读成短音。",
+    example:"The words are on the screen. 单词在屏幕上。",
+    derivatives:[["screens","n. 复数形式"],["screener","n. 筛选者"]],
+    phrases:[["on the screen","在屏幕上"],["TV screen","电视屏幕"]],
+    chunks:[
+      {letters:"scr", ipa:"/skr/", rule:"scr 组合 /skr/",  sound:"scr"},
+      {letters:"ee",  ipa:"/iː/",  rule:"ee→/iː/（长音）",  sound:"ee"},
+      {letters:"n",   ipa:"/n/",   rule:"n→/n/",          sound:"n"}
+    ],
+    speaTips:"一个音节 /skriːn/。/iː/拉长，结尾 n 舌尖顶住上齿龈。"
+  },
+  {
+    word:"put", ipa:"/pʊt/", meaning:"v. 放",
+    cat:"place",
+    tips:"u 在 put 里发短 /ʊ/（像\"乌\"），是少数例外，和 full、pull 一起记。put 的动词短语考试常考：put up / put on / put off / put away。",
+    example:"Put your bag on the desk. 把你的包放在桌上。",
+    derivatives:[["puts","v. 第三人称单数"],["putting","v. 现在分词"]],
+    phrases:[["put up","张贴；搭建"],["put on","穿上；戴上"],["put off","推迟"],["put away","把……收起"]],
+    chunks:[
+      {letters:"p",  ipa:"/p/",  rule:"p→/p/",          sound:"p"},
+      {letters:"u",  ipa:"/ʊ/",  rule:"u→/ʊ/（短音）",    sound:"uh"},
+      {letters:"t",  ipa:"/t/",  rule:"t→/t/",          sound:"t"}
+    ],
+    speaTips:"一个音节 /pʊt/，干脆收住。u 读 /ʊ/ 像\"乌\"，别读成\"坡特\"。"
+  },
+  {
+    word:"field", ipa:"/fiːld/", meaning:"n. 场地；田地",
+    cat:"place",
+    tips:"ie 组合在 field 里读长音 /iː/（和 friend 的短 /e/ 不一样！）。sports field 运动场。",
+    example:"The boys are playing on the field. 男孩们在运动场上玩。",
+    derivatives:[["fields","n. 复数形式"],["fieldwork","n. 实地考察"]],
+    phrases:[["sports field","运动场"],["in the field","在田野里"]],
+    chunks:[
+      {letters:"f",   ipa:"/f/",  rule:"f→/f/",          sound:"f"},
+      {letters:"ie",  ipa:"/iː/", rule:"ie→/iː/（长音）",  sound:"ee"},
+      {letters:"ld",  ipa:"/ld/", rule:"ld 组合 /ld/",     sound:"ld"}
+    ],
+    speaTips:"一个音节 /fiːld/。ie 读长 /iː/，和 friend 的短 /e/ 分清，结尾 ld 连读。"
+  },
+  {
+    word:"office", ipa:"/ˈɒfɪs/", meaning:"n. 办公室",
+    cat:"place",
+    tips:"双写 ff：短元音 /ɒ/ 后面的辅音要双写（同 hobby 的 bb 规则）。ce 在词尾发 /s/。post office 邮局。",
+    example:"My mother works in an office. 我妈妈在办公室工作。",
+    derivatives:[["officer","n. 官员；军官"],["office worker","办公室职员"]],
+    phrases:[["post office","邮局"],["in the office","在办公室里"]],
+    chunks:[
+      {letters:"o",   ipa:"/ɒ/", rule:"o→/ɒ/（短音）",  sound:"ah"},
+      {letters:"ff",  ipa:"/f/", rule:"双写 ff→/f/",    sound:"f"},
+      {letters:"ice", ipa:"/ɪs/",rule:"ce→/s/",        sound:"iss"}
+    ],
+    speaTips:"重音在第一音节 of：OF-fice。o 短音干脆，ice 轻读 /ɪs/。"
+  },
+  {
+    word:"centre", ipa:"/ˈsentə(r)/", meaning:"n. 中心；中央",
+    cat:"place",
+    tips:"英式拼写 centre，美式拼写 center，都读 /ˈsentə/。ce 发 /s/。in the centre of 在……的中心，常考搭配。",
+    example:"The shop is in the centre of the city. 商店在市中心。",
+    derivatives:[["center","n. 中心（美式拼写）"],["central","adj. 中心的"]],
+    phrases:[["in the centre of","在……的中心"],["sports centre","体育中心"],["shopping centre","购物中心"]],
+    chunks:[
+      {letters:"cen", ipa:"/sen/", rule:"c+e→/s/",      sound:"sen"},
+      {letters:"tre", ipa:"/tə(r)/", rule:"弱读 tre",     sound:"tuh"}
+    ],
+    speaTips:"重音在第一音节 cen：CEN-tre。结尾 re 弱读 /tə/，英式读音 r 不卷舌。"
+  },
+  /* ================= 第2天 · 学校场所 · 感受 ================= */
+  {
+    word:"important", ipa:"/ɪmˈpɔːtənt/", meaning:"adj. 重要的",
+    cat:"feel",
+    tips:"im-（表强调）+ port（港口）+ ant（形容词后缀）。or 发 /ɔː/。考试重点：It's important for sb to do sth 对某人做某事很重要。",
+    example:"It is important for us to learn English well. 学好英语对我们来说很重要。",
+    derivatives:[["importance","n. 重要性"],["unimportant","adj. 不重要的"]],
+    phrases:[["be important for","对……重要"],["an important thing","一件重要的事"]],
+    chunks:[
+      {letters:"im",   ipa:"/ɪm/",   rule:"前缀 im-",          sound:"im"},
+      {letters:"por",  ipa:"/pɔː/",  rule:"or→/ɔː/",           sound:"por"},
+      {letters:"tant", ipa:"/tənt/", rule:"弱读 tant",          sound:"tunt"}
+    ],
+    speaTips:"重音在第二音节 por：im-POR-tant。开头 im 轻读，结尾 tant 弱化读 /tənt/。"
+  },
+  {
+    word:"amazed", ipa:"/əˈmeɪzd/", meaning:"adj. 大为惊奇的",
+    cat:"feel",
+    tips:"amaze（使惊奇）+ ed → 感到惊奇的。amazed 形容\"人\"的感受，amazing 形容\"物\"令人惊奇（对比记忆，同 interested / interesting）。ed 在元音后发 /d/。",
+    example:"I am amazed at the big gym. 我对这个大体育馆感到惊奇。",
+    derivatives:[["amaze","v. 使惊奇"],["amazing","adj. 令人惊奇的"],["amazement","n. 惊奇"]],
+    phrases:[["be amazed at","对……感到惊奇"]],
+    chunks:[
+      {letters:"a",    ipa:"/ə/",   rule:"弱读 a",              sound:"uh"},
+      {letters:"maze", ipa:"/meɪz/",rule:"魔法 e：a_e→/eɪ/",     sound:"maze"},
+      {letters:"d",    ipa:"/d/",   rule:"ed→/d/（元音后）",      sound:"d"}
+    ],
+    speaTips:"重音在第二音节：a-MAZED。a 弱读 /ə/，/eɪ/拉长，结尾 ed 读 /d/。"
+  },
+  {
+    word:"similar", ipa:"/ˈsɪmələ(r)/", meaning:"adj. 类似的；相像的",
+    cat:"feel",
+    tips:"词根 simil（相似）+ ar（形容词后缀）。拼写易错：si-mi-lar 三个音节。be similar to 与……相似，to 别漏。",
+    example:"My bag is similar to yours. 我的包和你的很像。",
+    derivatives:[["similarly","adv. 类似地"],["similarity","n. 相似点"]],
+    phrases:[["be similar to","与……相似"]],
+    chunks:[
+      {letters:"si",  ipa:"/sɪ/",  rule:"短音 i",           sound:"sih"},
+      {letters:"mi",  ipa:"/mə/",  rule:"弱读 mi",          sound:"muh"},
+      {letters:"lar", ipa:"/lə(r)/",rule:"ar→/ə(r)/（弱读）", sound:"luh"}
+    ],
+    speaTips:"重音在第一音节 si：SI-mi-lar。后面两个音节都弱化，别一个音节一个重音。"
+  },
+  {
+    word:"change", ipa:"/tʃeɪndʒ/", meaning:"v.&n. 改变；变化",
+    cat:"feel",
+    tips:"魔法 e：a_e→/eɪ/，ge 发 /dʒ/，ch 发 /tʃ/。拼写别漏结尾的 e。change...into... 把……变成……。",
+    example:"The weather changes all the time. 天气一直在变。",
+    derivatives:[["changes","v. 第三人称单数"],["changed","v. 过去式"],["exchange","v./n. 交换"]],
+    phrases:[["change into","变成"],["make a change","做出改变"],["change...into...","把……变成……"]],
+    chunks:[
+      {letters:"ch",  ipa:"/tʃ/",    rule:"ch→/tʃ/",          sound:"ch"},
+      {letters:"ange",ipa:"/eɪndʒ/", rule:"魔法 e + ge→/dʒ/",  sound:"ange"}
+    ],
+    speaTips:"一个音节 /tʃeɪndʒ/。/eɪ/拉长，ge 读 /dʒ/，结尾轻收别拖。"
+  },
+  {
+    word:"amazing", ipa:"/əˈmeɪzɪŋ/", meaning:"adj. 令人惊奇的",
+    cat:"feel",
+    tips:"amaze（使惊奇）+ ing → 令人惊奇的。amazing 形容\"物\"（这件事太神奇了），amazed 形容\"人\"的感受（我很惊讶）。",
+    example:"The sports centre is amazing! 这个体育中心真让人惊叹！",
+    derivatives:[["amaze","v. 使惊奇"],["amazed","adj. 感到惊奇的"],["amazingly","adv. 惊人地"]],
+    phrases:[["an amazing place","一个令人惊叹的地方"]],
+    chunks:[
+      {letters:"a",    ipa:"/ə/",    rule:"弱读 a",              sound:"uh"},
+      {letters:"maz",  ipa:"/meɪz/", rule:"魔法 e：a_e→/eɪ/",     sound:"maze"},
+      {letters:"ing",  ipa:"/ɪŋ/",   rule:"ing→/ɪŋ/",            sound:"ing"}
+    ],
+    speaTips:"重音在第二音节：a-MA-zing。a 弱读 /ə/，结尾 ing 发 /ɪŋ/。"
+  }
+];
+
+/* 拼读规则面板数据 */
+const RULES = [
+  { name:"魔法 e（a_e / i_e / u_e）", formula:"字母 + e → 前面的元音变长音", eg:"name n-e→/eɪ/，like l-i-k-e→/aɪ/，duce d-u-c-e→/juː/；结尾 e 本身不发音" },
+  { name:"双写辅音", formula:"辅音字母 + 短元音 → 辅音双写", eg:"different 里 dif 的 f：短音 i 后面的辅音自然加重" },
+  { name:"oo 的两种发音", formula:"oo → 长音 /uː/ 或短音 /ʊ/", eg:"school /uː/，book /ʊ/——靠多读记住" },
+  { name:"ch 组合", formula:"ch → /tʃ/", eg:"China /ˈtʃaɪnə/，ch 像“吃”的开头" },
+  { name:"ou 多音", formula:"ou → 多数 /aʊ/，本课 country 里读 /ʌ/", eg:"country coun 发 /kʌn/，不是“考恩”" },
+  { name:"-ed 尾缀", formula:"ed → /d/ /t/ /ɪd/ 三种", eg:"played /d/，talked /t/，needed /ɪd/" }
+];
+
+/* ================= 基础工具 ================= */
+const $ = s => document.querySelector(s);
+const el = (tag, cls, html) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (html != null) n.innerHTML = html;
+  return n;
+};
+let toastTimer;
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+
+/* ================= 语音引擎 ================= */
+let voiceEn = null, voiceZh = null;
+function loadVoices(){
+  const vs = speechSynthesis.getVoices();
+  voiceEn = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("en") && /US|America/i.test(v.name))
+        || vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("en"))
+        || vs[0];
+  voiceZh = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("zh"))
+        || vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("cmn"));
+}
+if (window.speechSynthesis) {
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+function speak(text, rate, pitch){
+  if(!window.speechSynthesis){ toast("当前浏览器不支持语音朗读"); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = rate != null ? rate : 0.85;
+  u.pitch = pitch != null ? pitch : 1;
+  u.voice = /[一-鿿]/.test(text) ? (voiceZh||voiceEn) : voiceEn;
+  speechSynthesis.speak(u);
+  return u;
+}
+function stopSpeak(){
+  if(window.speechSynthesis) speechSynthesis.cancel();
+}
+
+/* ================= 渲染单词卡 ================= */
+const CATS = [["basic","基本信息"],["like","性格与喜好"],["place","学校场所 · 设施"],["feel","学校场所 · 感受"]];
+const app = $("#app");
+
+function renderCard(w){
+  const card = el("div","word-card");
+  const spelling = w.word.toUpperCase().split("").join("·");
+  card.innerHTML = `
+    <div class="word-top">
+      <div class="word-main">
+        <div class="word">${w.word}</div>
+        <div class="phonetic">${w.ipa}</div>
+        <div class="meaning">${w.meaning}</div>
+      </div>
+      <button class="icon-btn spk-word" title="朗读">🔊</button>
+    </div>
+    <div class="expand-area">
+      <div class="block block-tips">
+        <div class="block-label">💡 记忆讲解</div>
+        <p>${w.tips}</p>
+        <span class="listen">▶ 听讲解（中文）</span>
+      </div>
+      ${w.derivatives.length ? `<div class="block block-deriv">
+        <div class="block-label">🧩 衍生词 & 常用短语</div>
+        <div class="tag-row">
+          ${w.derivatives.map(d=>`<span class="tag">${d[0]} <span class="vol">🔊</span><i style="font-style:normal;color:#8a8fa8">${d[1]}</i></span>`).join("")}
+          ${w.phrases.map(p=>`<span class="tag">${p[0]} <span class="vol">🔊</span><i style="font-style:normal;color:#8a8fa8">${p[1]}</i></span>`).join("")}
+        </div>
+      </div>` : ""}
+      ${w.example ? `<div class="block" style="background:#fff6e8">
+        <div class="block-label" style="color:#b8791a">✏️ 例句</div>
+        <p style="font-size:14px;line-height:1.7;color:#5a4a2e">${w.example}</p>
+      </div>` : ""}
+      <div class="block block-phonics">
+        <div class="block-label">🔤 自然拼读</div>
+        <div class="chunk-row">
+          ${w.chunks.map((c,i)=>`
+            <div class="chunk" data-c="${i}">
+              <div class="ch-letters">${[...c.letters].map((L,li)=>`<span data-l="${li}">${L}</span>`).join("")}</div>
+              <div class="ch-ipa">${c.ipa}</div>
+              <div class="ch-rule">${c.rule}</div>
+            </div>`).join("")}
+        </div>
+        <div class="phonics-btns">
+          <button class="phonics-btn spell">✏️ 拼读单词</button>
+          <button class="phonics-btn full">🔊 完整流程</button>
+          <button class="phonics-btn" style="background:#f0f0f5;color:#666" data-stop>⏹ 停止</button>
+        </div>
+        <div class="live-panel"><span class="label">实况</span><span class="cur">点「拼读单词」或「完整流程」开始</span></div>
+      </div>
+      <div class="block block-speak">
+        <div class="block-label">🎤 发音检测</div>
+        <button class="speak-btn">🎙 测测我的发音</button>
+        <div class="speak-result"></div>
+        <div class="speak-status"></div>
+      </div>
+    </div>
+    <div class="toggle-row">
+      <button class="toggle expand">展开更多</button>
+      <button class="toggle spell-quick">✏️ 拼读单词</button>
+      <button class="toggle spk-cn">▶ 听讲解</button>
+    </div>
+  `;
+
+  /* —— 事件绑定 —— */
+  const live = card.querySelector(".live-panel .cur");
+  const setLive = t => live.textContent = t;
+
+  // 朗读单词
+  card.querySelector(".spk-word").onclick = () => { stopSpeak(); speak(w.word, 0.8); };
+
+  // 展开/收起
+  const toggle = card.querySelector(".toggle.expand");
+  const updToggle = () => toggle.textContent = card.classList.contains("open") ? "收起" : "展开更多";
+  toggle.onclick = () => { card.classList.toggle("open"); updToggle(); };
+  card.querySelector(".toggle.spk-cn").onclick = () => { stopSpeak(); speak(w.tips, 0.95); };
+  card.querySelector(".toggle.spell-quick").onclick = () => runPhonics(w, "quick", setLive, card);
+
+  // 听讲解（中文）
+  card.querySelector(".listen").onclick = () => { stopSpeak(); speak(w.tips, 0.95); };
+
+  // 衍生词/短语朗读
+  card.querySelectorAll(".tag").forEach(tg=>{
+    tg.onclick = () => {
+      stopSpeak();
+      const t = tg.childNodes[0].textContent.trim(); // 词或短语本身
+      speak(t, 0.8);
+    };
+  });
+
+  // 拼读
+  card.querySelector(".phonics-btn.spell").onclick = () => runPhonics(w, "quick", setLive, card);
+  card.querySelector(".phonics-btn.full").onclick  = () => runPhonics(w, "full", setLive, card);
+  card.querySelector("[data-stop]").onclick = () => { stopSpeak(); clearQueue(); setLive("已停止"); };
+
+  // 发音检测
+  card.querySelector(".speak-btn").onclick = () => checkSpeak(w, card);
+  return card;
+}
+
+function renderAll(){
+  app.innerHTML = "";
+  for (const [key, title] of CATS) {
+    const ws = WORDS.filter(w=>w.cat===key);
+    if(!ws.length) continue;
+    const sec = el("div","section");
+    const h = el("div","section-title");
+    h.innerHTML = `<h2>${key==="basic"?"📋":"🎈"} ${title} <span class="badge">${ws.length} 词</span></h2>
+      <button class="btn ghost" style="background:#e6e2ff;color:#5a4cff;padding:8px 12px;font-size:12.5px" data-all>🔊 连读全部</button>`;
+    sec.appendChild(h);
+    ws.forEach(w=>sec.appendChild(renderCard(w)));
+    h.querySelector("[data-all]").onclick = () => {
+      stopSpeak();
+      ws.forEach((w,i)=> setTimeout(()=> speak(w.word,0.8), i*1300));
+    };
+    app.appendChild(sec);
+  }
+}
+
+/* ================= 拼读流程引擎 ================= */
+let queue = [], queueRunning = false, currentCard = null;
+function clearQueue(){ queue = []; queueRunning = false; currentCard = null; }
+
+function runPhonics(w, mode, setLive, cardEl){
+  stopSpeak(); clearQueue();
+  currentCard = cardEl;
+  if(cardEl && !cardEl.classList.contains("open")){
+    cardEl.classList.add("open");
+    const tg = cardEl.querySelector(".toggle.expand");
+    if(tg) tg.textContent = "收起";
+  }
+  const chunks = w.chunks.map(c=>({...c, letters:[...c.letters]}));
+  if (mode === "full") {
+    chunks.forEach(ch=>{
+      queue.push({t:"chunkSound", ch});
+      ch.letters.forEach((L,li)=> queue.push({t:"chunkLetter", ch, L, li}));
+    });
+    queue.push({t:"word", text:w.word});
+    [...w.word].forEach(L=> queue.push({t:"wholeLetter", L}));
+    queue.push({t:"word", text:w.word, glow:true});
+  } else {
+    [...w.word].forEach(L=> queue.push({t:"wholeLetter", L}));
+    queue.push({t:"word", text:w.word});
+  }
+  queueRunning = true;
+  stepQueue(setLive);
+}
+
+function findChunk(letters){
+  if(!currentCard) return null;
+  const key = letters.join("");
+  return [...currentCard.querySelectorAll(".chunk")].find(n=>
+    (n.querySelector(".ch-letters").textContent||"").replace(/\s+/g,"") === key);
+}
+
+function stepQueue(setLive){
+  if(!queue.length || !queueRunning){
+    queueRunning = false; clearActive();
+    if(currentCard){ const b = currentCard.querySelector(".phonics-btn.full"); if(b) b.classList.remove("glowing"); }
+    if(setLive) setLive("完成 ✅");
+    currentCard = null;
+    return;
+  }
+  const it = queue.shift();
+  const qc = currentCard ? currentCard.querySelector(".phonics-btn.full") : null;
+
+  if (it.t === "chunkSound") {
+    clearActive();
+    const cn = findChunk(it.ch.letters);
+    if(cn) cn.classList.add("active");
+    if(setLive) setLive(`🔊 读音 ${it.ch.letters.join("")}（${it.ch.ipa}）`);
+    const u = speak(it.ch.sound, 0.6, 0.9);
+    u.onend = ()=> setTimeout(()=>stepQueue(setLive), 80);
+  }
+  else if (it.t === "chunkLetter") {
+    clearActive();
+    const cn = findChunk(it.ch.letters);
+    if(cn){
+      cn.classList.add("letter-active");
+      const span = cn.querySelector(`[data-l="${it.li}"]`);
+      if(span) span.classList.add("lit");
+    }
+    if(setLive) setLive(`✍️ 拼写 ${it.ch.letters.join("")}：${it.L.toUpperCase()}`);
+    const u = speak(it.L.toUpperCase(), 0.8, 1.05);
+    u.onend = ()=> setTimeout(()=>stepQueue(setLive), 60);
+  }
+  else if (it.t === "wholeLetter") {
+    clearActive();
+    if(setLive) setLive(`🔡 整词拼写：${it.L.toUpperCase()}`);
+    const u = speak(it.L.toUpperCase(), 0.8, 1.05);
+    u.onend = ()=> setTimeout(()=>stepQueue(setLive), 55);
+  }
+  else if (it.t === "word") {
+    clearActive();
+    if(it.glow && qc) qc.classList.add("glowing");
+    if(setLive) setLive(it.glow ? `⭐ 整词：${it.text}` : `🔊 ${it.text}`);
+    const u = speak(it.text, 0.75);
+    u.onend = ()=>{ if(qc) qc.classList.remove("glowing"); setTimeout(()=>stepQueue(setLive), 120); };
+  }
+}
+
+function clearActive(){
+  if(!currentCard) return;
+  currentCard.querySelectorAll(".chunk").forEach(n=>{
+    n.classList.remove("active","letter-active");
+    n.querySelectorAll(".lit").forEach(s=>s.classList.remove("lit"));
+  });
+}
+
+/* ================= 发音检测 ================= */
+function checkSpeak(w, card){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const statusEl = card.querySelector(".speak-status");
+  const resultEl = card.querySelector(".speak-result");
+  resultEl.classList.remove("show");
+  if(!SR){
+    statusEl.textContent = "⚠️ 这个浏览器不支持语音识别。请用电脑 Chrome 或安卓浏览器打开，iPhone Safari 暂不支持录音识别。";
+    return;
+  }
+  statusEl.textContent = "🎙 请对准麦克风读这个单词…";
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  rec.onerror = e => {
+    if(e.error==="not-allowed"||e.error==="service-not-allowed") statusEl.textContent = "需要允许麦克风权限才能测发音。";
+    else if(e.error==="no-speech") statusEl.textContent = "没听清，再点一次试试。";
+    else statusEl.textContent = "识别出错了（"+e.error+"），再试一次。";
+  };
+  rec.onresult = e => {
+    const heard = (e.results[0][0].transcript||"").trim().toLowerCase();
+    const target = w.word.toLowerCase();
+    const score = wordScore(heard, target);
+    resultEl.innerHTML = ringHTML(score) + `
+      <div class="analysis">
+        <div>我们听到的是：<span class="heard">“${heard||"—"}”</span>（目标：${w.word}）</div>
+        <div class="tip" style="margin-top:6px">💬 ${score>=80 ? "很棒，发音已经很标准了！" : score>=55 ? "不错，离标准只差一点点，重点练下面这几点：" : "再练练，重点看下面这几点："}</div>
+        <div class="tip">${w.speaTips}</div>
+      </div>`;
+    resultEl.classList.add("show");
+    statusEl.textContent = "";
+  };
+  try { rec.start(); } catch(err){ statusEl.textContent = "无法启动录音，请换浏览器再试。"; }
+}
+
+function wordScore(heard, target){
+  if(!heard) return 0;
+  if(heard === target) return 100;
+  if(heard.includes(target) || target.includes(heard)) return 88;
+  const dist = levenshtein(heard, target);
+  const max = Math.max(heard.length, target.length);
+  return Math.max(0, Math.round(100 * (1 - dist/max)));
+}
+function levenshtein(a,b){
+  const m=a.length, n=b.length, d=Array.from({length:m+1},(_,i)=>[i]);
+  for(let j=0;j<=n;j++) d[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    d[i][j]=Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  return d[m][n];
+}
+function ringHTML(score){
+  const r=30, c=2*Math.PI*r, off=c*(1-score/100);
+  const color = score>=80 ? "#0a8f50" : score>=55 ? "#ff8f1f" : "#ff3d6e";
+  return `<div class="ring-wrap">
+    <div class="ring">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="${r}" fill="none" stroke="#f0f1f8" stroke-width="7"/>
+        <circle cx="36" cy="36" r="${r}" fill="none" stroke="${color}" stroke-width="7"
+          stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/>
+      </svg>
+      <div class="score">${score}<small>分</small></div>
+    </div>
+    <div style="font-size:13px;color:#8a8fa8">发音匹配度<br>（与标准发音的接近程度）</div>
+  </div>`;
+}
+
+/* ================= 错题本（收集错词·反复练习） ================= */
+const WRONG_KEY = "vocab_wrong";
+let wrongStore = [];
+(function(){
+  try { wrongStore = JSON.parse(localStorage.getItem(WRONG_KEY)||"[]") || []; }
+  catch(e){ wrongStore = []; }
+  if(!Array.isArray(wrongStore)) wrongStore = [];
+})();
+function saveWrong(){
+  try { localStorage.setItem(WRONG_KEY, JSON.stringify(wrongStore)); } catch(e){}
+  updateWrongBadge();
+}
+function wrongInfo(word){ return wrongStore.find(x=>x.word===word); }
+function addWrong(word){
+  const it = wrongInfo(word);
+  if(it){ it.streak = 0; }
+  else { wrongStore.push({word, streak:0}); }
+  saveWrong();
+  renderWrongList();
+}
+function markMastered(word){
+  wrongStore = wrongStore.filter(x=>x.word!==word);
+  saveWrong();
+  renderWrongList();
+}
+function clearWrong(){
+  wrongStore = [];
+  saveWrong();
+  renderWrongList();
+  toast("错题已清空");
+}
+function updateWrongBadge(){
+  const b = $("#wrongCount");
+  if(b) b.textContent = wrongStore.length;
+}
+function renderWrongList(){
+  const listEl = $("#wrongList");
+  const sumEl = $("#wrongSum");
+  const n = wrongStore.length;
+  if(sumEl) sumEl.textContent = n
+    ? `已收集 ${n} 个没记住的词。反复练习时，一个词连对 2 次就会自动移出。`
+    : "还没有错题。自测、拼写测试里没答对的词会自动收进来。";
+  const pb = $("#wrongPracticeBtn");
+  if(pb) pb.style.opacity = n ? 1 : .45;
+  if(!n){
+    if(listEl) listEl.innerHTML = `<div class="wrong-empty">✅ 目前没有错题<br>在「自测模式」或「拼写测试」中答错的词会自动收进来</div>`;
+    return;
+  }
+  listEl.innerHTML = wrongStore.map(x=>{
+    const w = WORDS.find(d=>d.word===x.word);
+    if(!w) return "";
+    return `<div class="wrong-row">
+      <div class="w">${w.word}</div>
+      <div class="m">${w.meaning}<span class="stk">已连对 ${x.streak}/2</span></div>
+      <button class="wrong-master" data-master="${w.word}">✅ 记住了</button>
+    </div>`;
+  }).join("");
+}
+$("#wrongBtn").onclick = ()=>{ renderWrongList(); $("#wrongOverlay").classList.add("show"); };
+$("#wrongList").addEventListener("click", e=>{
+  const b = e.target.closest("[data-master]");
+  if(b){ markMastered(b.dataset.master); toast("🎉 记住了，移出！"); }
+});
+$("#wrongClearBtn").onclick = ()=>{
+  if(!wrongStore.length){ toast("错题本是空的"); return; }
+  if(confirm("确定清空全部错题吗？")){ clearWrong(); }
+};
+$("#wrongPracticeBtn").onclick = startWrongPractice;
+
+/* 错题反复练习：走拼写流程，一个词连对 2 次就移出错题本 */
+const wq = { list:[], idx:0, total:0, mastered:0, checked:false, lastOk:false, lastTyped:"" };
+function startWrongPractice(){
+  if(!wrongStore.length){ toast("错题本是空的，先去自测或拼写收集吧"); return; }
+  wq.list = wrongStore.map(x=>x.word)
+    .sort(()=>Math.random()-0.5)
+    .map(word=>WORDS.find(d=>d.word===word))
+    .filter(Boolean)
+    .map(w=>({w}));
+  wq.idx = 0; wq.total = wq.list.length; wq.mastered = 0;
+  wq.checked = false; wq.lastOk = false; wq.lastTyped = "";
+  $("#wrongPracticeOverlay").classList.add("show");
+  renderWrongPractice();
+}
+function renderWrongPractice(){
+  const body = $("#wrongPracticeBody");
+  if(wq.idx >= wq.total){
+    const left = wrongStore.length;
+    body.innerHTML = `<div class="quiz-card">
+      <div style="font-size:46px">${left===0?"🏆":wq.mastered?"👍":"💪"}</div>
+      <h3 style="margin:10px 0 4px">本轮练习完成！</h3>
+      <p style="color:#666">这轮掌握 <b style="color:#e5484d">${wq.mastered}</b> 个，错题本还剩 <b>${left}</b> 个</p>
+      <p style="font-size:12.5px;color:#999;margin-top:6px">${left===0 ? "全部记住啦 🎉" : "再点「反复练习」，把剩下的词连对 2 次，直到全部清空。"}</p>
+      <div class="quiz-btns">
+        <button class="btn reveal" id="wpAgain" style="background:#e5484d">🔁 再来一轮</button>
+        <button class="btn ghost" style="background:#eef0f5;color:#555" data-close="wrongPracticeOverlay">关闭</button>
+      </div>
+    </div>`;
+    $("#wpAgain").onclick = startWrongPractice;
+    return;
+  }
+  const {w} = wq.list[wq.idx];
+  if(!wq.checked){
+    body.innerHTML = `<div class="quiz-card">
+      <div class="quiz-progress">错题 ${wq.idx+1} / ${wq.total} · 本轮已掌握 ${wq.mastered}</div>
+      <div class="spell-mean">${w.meaning}</div>
+      <div class="spell-ipa">${w.ipa}</div>
+      <div><button class="spell-hear" id="wpHear">🔊 听一遍</button></div>
+      <input class="spell-input" id="wpInput" placeholder="打出这个英文单词…" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <div class="spell-msg" id="wpMsg"></div>
+      <div class="quiz-btns"><button class="btn reveal" id="wpCheck" style="background:#e5484d">✅ 检查</button></div>
+      <div class="quiz-hint">看中文拼写。连对 2 次，这个词就会移出错题本。</div>
+    </div>`;
+    $("#wpHear").onclick = ()=>{ stopSpeak(); speak(w.word, 0.75); };
+    const inp = $("#wpInput");
+    if(inp && inp.focus) inp.focus();
+    inp.addEventListener("keydown", e=>{ if(e.key==="Enter") checkWrongPractice(w); });
+    $("#wpCheck").onclick = ()=> checkWrongPractice(w);
+  } else {
+    body.innerHTML = `<div class="quiz-card">
+      <div class="quiz-progress">错题 ${wq.idx+1} / ${wq.total} · 本轮已掌握 ${wq.mastered}</div>
+      <div class="spell-mean">${w.meaning}</div>
+      <div class="spell-ipa">${w.ipa}</div>
+      <div><button class="spell-hear" id="wpHear2">🔊 再听一遍</button></div>
+      <div class="letter-row">${letterCells(w, wq.lastTyped)}</div>
+      <div class="spell-msg ${wq.lastOk?"ok":"bad"}">${wq.lastOk ? "✅ 拼对了！这个词的连对进度 +1" : "😅 没拼对，连对进度归零，红色字母是要记住的位置"}</div>
+      ${wq.lastOk ? "" : `<div class="spell-answer">正确答案：<b>${w.word}</b> ${w.ipa}</div>`}
+      <div class="quiz-btns"><button class="btn reveal" id="wpNext" style="background:#e5484d">下一题 ➡</button></div>
+    </div>`;
+    $("#wpHear2").onclick = ()=>{ stopSpeak(); speak(w.word, 0.75); };
+    $("#wpNext").onclick = ()=>{ wq.checked=false; wq.lastTyped=""; wq.idx++; renderWrongPractice(); };
+  }
+}
+function checkWrongPractice(w){
+  const inp = $("#wpInput");
+  const val = (inp && inp.value ? inp.value : "").trim().toLowerCase();
+  if(!val){ toast("先打出单词再检查"); if(inp && inp.focus) inp.focus(); return; }
+  wq.lastTyped = val;
+  wq.lastOk = (val === w.word);
+  wq.checked = true;
+  const it = wrongInfo(w.word);
+  if(wq.lastOk && it){
+    it.streak++;
+    if(it.streak >= 2){
+      wrongStore = wrongStore.filter(x=>x.word!==w.word);
+      wq.mastered++;
+      saveWrong();
+      renderWrongPractice();
+      toast("🎉 "+w.word+" 已掌握，移出错题本！");
+      return;
+    }
+  } else if(!wq.lastOk && it){
+    it.streak = 0;
+  }
+  saveWrong();
+  renderWrongPractice();
+}
+updateWrongBadge();
+
+/* ================= 自测模式 ================= */
+const quiz = { list:[], idx:0, known:0, total:0, state:"guess" };
+$("#quizBtn").onclick = startQuiz;
+$("#rulesBtn").onclick = ()=> $("#rulesOverlay").classList.add("show");
+document.querySelectorAll("[data-close]").forEach(b=>{
+  b.onclick = ()=> $("#"+b.dataset.close).classList.remove("show");
+});
+document.querySelectorAll(".overlay").forEach(o=>{
+  o.addEventListener("click", e=>{ if(e.target===o) o.classList.remove("show"); });
+});
+// 委托处理动态生成的关闭按钮（自测/拼写结果页里的「关闭」）
+document.addEventListener("click", e=>{
+  const c = e.target && e.target.closest ? e.target.closest("[data-close]") : null;
+  if(c) $("#"+c.dataset.close).classList.remove("show");
+});
+
+function startQuiz(){
+  quiz.list = WORDS.map((w,i)=>({w,i})).sort(()=>Math.random()-0.5);
+  quiz.idx = 0; quiz.known = 0; quiz.total = quiz.list.length; quiz.state = "guess";
+  $("#quizOverlay").classList.add("show");
+  renderQuiz();
+}
+function renderQuiz(){
+  const body = $("#quizBody");
+  if(quiz.idx >= quiz.total){
+    const pct = Math.round(100*quiz.known/quiz.total);
+    const wc = wrongStore.length;
+    body.innerHTML = `<div class="quiz-card">
+      <div style="font-size:46px">${pct>=80?"🏆":pct>=50?"👍":"💪"}</div>
+      <h3 style="margin:10px 0 4px">自测完成！</h3>
+      <p style="color:#666">认识 ${quiz.known} / ${quiz.total} 个，正确率 <b style="color:#5a4cff">${pct}%</b></p>
+      <p style="font-size:12.5px;color:#999;margin-top:6px">认识率 ${pct}%${pct>=80?"，很稳！":pct>=50?"，还有进步空间。":"，回去多练练自然拼读。"}</p>
+      ${wc ? `<div class="quiz-btns" style="margin-top:12px"><button class="btn reveal" id="quizGoWrong" style="background:#e5484d;flex:1">📕 练错题（${wc}）</button></div>` : ""}
+      <div class="quiz-btns"><button class="btn reveal" id="quizAgain">🔄 再测一轮</button>
+      <button class="btn ghost" style="background:#eef0f5;color:#555" data-close="quizOverlay">关闭</button></div>
+    </div>`;
+    const qgw = $("#quizGoWrong");
+    if(qgw) qgw.onclick = ()=>{ $("#quizOverlay").classList.remove("show"); startWrongPractice(); };
+    $("#quizAgain").onclick = startQuiz;
+    return;
+  }
+  const {w} = quiz.list[quiz.idx];
+  body.innerHTML = `<div class="quiz-card">
+    <div class="quiz-progress">${quiz.idx+1} / ${quiz.total}</div>
+    <div class="quiz-word">${quiz.state==="guess"? w.word : ""}</div>
+    <div class="quiz-ipa">${quiz.state==="guess"? w.ipa : ""}</div>
+    <div class="quiz-meaning">${quiz.state==="reveal" ? w.meaning+"<br><span style='font-size:12px;color:#aaa'>"+w.ipa+"</span>" : "🤔 想一下它的意思…"}</div>
+    ${quiz.state==="guess" ? `
+      <div class="quiz-btns">
+        <button class="btn know" id="qKnow">✅ 认识</button>
+        <button class="btn notknow" id="qNot">❌ 不认识</button>
+      </div>
+      <button class="btn reveal" style="width:100%;margin-top:10px" id="qReveal">👀 看答案</button>
+      <div class="quiz-hint">先猜，再点「认识 / 不认识」或看答案</div>`
+    : `
+      <div class="quiz-btns">
+        <button class="btn reveal" id="qNext">继续 ➡</button>
+      </div>`}
+  </div>`;
+  if(quiz.state==="guess"){
+    $("#qReveal").onclick = ()=>{ quiz.state="reveal"; renderQuiz(); };
+    $("#qKnow").onclick = ()=>{ quiz.known++; next(); };
+    $("#qNot").onclick = ()=>{ addWrong(w.word); toast("已收进错题本 📕"); next(); };
+  } else {
+    $("#qNext").onclick = next;
+  }
+}
+function next(){ quiz.idx++; quiz.state="guess"; renderQuiz(); }
+
+/* ================= 拼写测试 ================= */
+const spell = { list:[], idx:0, score:0, total:0, checked:false, lastOk:false, lastTyped:"" };
+$("#spellBtn").onclick = startSpell;
+
+function startSpell(){
+  spell.list = WORDS.map((w,i)=>({w,i})).sort(()=>Math.random()-0.5);
+  spell.idx = 0; spell.score = 0; spell.total = spell.list.length;
+  spell.checked = false; spell.lastOk = false; spell.lastTyped = "";
+  $("#spellOverlay").classList.add("show");
+  renderSpell();
+}
+
+// 拼写反馈：按字母逐个对，答对的位置绿、答错的位置红（显示正确字母）
+function letterCells(w, typed){
+  const t = (typed||"").toLowerCase();
+  return [...w.word].map((L,i)=>
+    `<span class="letter-cell ${t[i]===L?"ok":"bad"}">${L}</span>`).join("");
+}
+
+function renderSpell(){
+  const body = $("#spellBody");
+  if(spell.idx >= spell.total){
+    const pct = Math.round(100*spell.score/spell.total);
+    const wc = wrongStore.length;
+    body.innerHTML = `<div class="quiz-card">
+      <div style="font-size:46px">${pct>=90?"🏆":pct>=70?"👍":"💪"}</div>
+      <h3 style="margin:10px 0 4px">拼写测试完成！</h3>
+      <p style="color:#666">拼对 <b style="color:#2fb46b">${spell.score}</b> / ${spell.total} 个，正确率 <b style="color:#2fb46b">${pct}%</b></p>
+      <p style="font-size:12.5px;color:#999;margin-top:6px">拼错的单词已收进错题本，回去练或者点下面直接练。</p>
+      ${wc ? `<div class="quiz-btns" style="margin-top:12px"><button class="btn reveal" id="spellGoWrong" style="background:#e5484d;flex:1">📕 练错题（${wc}）</button></div>` : ""}
+      <div class="quiz-btns"><button class="btn reveal" id="spellAgain">🔄 再测一轮</button>
+      <button class="btn ghost" style="background:#eef0f5;color:#555" data-close="spellOverlay">关闭</button></div>
+    </div>`;
+    const sgw = $("#spellGoWrong");
+    if(sgw) sgw.onclick = ()=>{ $("#spellOverlay").classList.remove("show"); startWrongPractice(); };
+    $("#spellAgain").onclick = startSpell;
+    return;
+  }
+  const {w} = spell.list[spell.idx];
+  if(!spell.checked){
+    body.innerHTML = `<div class="quiz-card">
+      <div class="quiz-progress">${spell.idx+1} / ${spell.total} · 已拼对 ${spell.score}</div>
+      <div class="spell-mean">${w.meaning}</div>
+      <div class="spell-ipa">${w.ipa}</div>
+      <div><button class="spell-hear" id="spellHear">🔊 听一遍</button></div>
+      <input class="spell-input" id="spellInput" placeholder="打出这个英文单词…" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <div class="spell-msg" id="spellMsg"></div>
+      <div class="quiz-btns"><button class="btn reveal" id="spellCheckBtn" style="background:#2fb46b">✅ 检查拼写</button></div>
+      <div class="quiz-hint">看中文（或点🔊听发音），在框里打出英文再检查。第一次就打对才计入成绩。</div>
+    </div>`;
+    $("#spellHear").onclick = ()=>{ stopSpeak(); speak(w.word, 0.75); };
+    const inp = $("#spellInput");
+    if(inp && inp.focus) inp.focus();
+    if(inp.addEventListener) inp.addEventListener("keydown", e=>{ if(e.key==="Enter") checkSpell(w); });
+    $("#spellCheckBtn").onclick = ()=> checkSpell(w);
+  } else {
+    body.innerHTML = `<div class="quiz-card">
+      <div class="quiz-progress">${spell.idx+1} / ${spell.total} · 已拼对 ${spell.score}</div>
+      <div class="spell-mean">${w.meaning}</div>
+      <div class="spell-ipa">${w.ipa}</div>
+      <div><button class="spell-hear" id="spellHear2">🔊 再听一遍</button></div>
+      <div class="letter-row">${letterCells(w, spell.lastTyped)}</div>
+      <div class="spell-msg ${spell.lastOk?"ok":"bad"}">${spell.lastOk?"🎉 拼对了！":"😅 没拼对，已收进错题本，红色字母是要记住的位置"}</div>
+      ${spell.lastOk?"":`<div class="spell-answer">正确答案：<b>${w.word}</b> ${w.ipa}</div>`}
+      <div class="quiz-btns"><button class="btn reveal" id="spellNext" style="background:#2fb46b">下一题 ➡</button></div>
+    </div>`;
+    $("#spellHear2").onclick = ()=>{ stopSpeak(); speak(w.word, 0.75); };
+    $("#spellNext").onclick = ()=>{ spell.checked=false; spell.lastTyped=""; spell.idx++; renderSpell(); };
+  }
+}
+
+function checkSpell(w){
+  const inp = $("#spellInput");
+  const val = (inp && inp.value ? inp.value : "").trim().toLowerCase();
+  if(!val){ toast("先打出单词再检查"); if(inp && inp.focus) inp.focus(); return; }
+  spell.lastTyped = val;
+  spell.lastOk = (val === w.word);
+  if(spell.lastOk) spell.score++;
+  else addWrong(w.word); // 拼错 → 收进错题本
+  spell.checked = true;
+  renderSpell();
+}
+
+/* ================= 拼读规则面板 ================= */
+(function(){
+  const list = $("#rulesList");
+  RULES.forEach(r=>{
+    list.appendChild(el("div","rule", `<b>${r.name}</b><div class="formula">${r.formula}</div><div class="eg">例：${r.eg}</div>`));
+  });
+})();
+
+/* ================= 启动 ================= */
+(function(){
+  const wc = $("#wordCount");
+  if(wc) wc.textContent = WORDS.length + " 个核心词 · 自然拼读 · 发音检测 · 记忆讲解，跟着读、对着练";
+})();
+renderAll();
+</script>
+</body>
+</html>
