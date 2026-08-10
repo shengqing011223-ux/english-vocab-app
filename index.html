@@ -984,8 +984,8 @@ function renderAll(){
 }
 
 /* ================= 拼读流程引擎 ================= */
-let queue = [], queueRunning = false, currentCard = null;
-function clearQueue(){ queue = []; queueRunning = false; currentCard = null; }
+let queue = [], queueRunning = false, currentCard = null, spellTimer = null;
+function clearQueue(){ queue = []; queueRunning = false; currentCard = null; if(spellTimer){ clearInterval(spellTimer); spellTimer = null; } }
 
 function runPhonics(w, mode, setLive, cardEl){
   stopSpeak(); clearQueue();
@@ -996,13 +996,10 @@ function runPhonics(w, mode, setLive, cardEl){
     if(tg) tg.textContent = "收起";
   }
   const chunks = w.chunks.map(c=>({...c, letters:[...c.letters]}));
-  if (mode === "full") {
-    chunks.forEach(ch=>{ ch.letters.forEach((L,li)=> queue.push({t:"chunkLetter", ch, L, li})); });
-    queue.push({t:"word", text:w.word, glow:true});
-  } else {
-    [...w.word].forEach(L=> queue.push({t:"wholeLetter", L}));
-    queue.push({t:"word", text:w.word});
-  }
+  // 字母拼读：把空格隔开的小写字母一次性读完（如 "n a m e"），再读整词。
+  // iOS 语音引擎把「单个字符」念成 capital X；空格隔开的多字符串不会触发，且不需要按平台区分。
+  queue.push({t:"spell", word:w.word, letters:[...w.word], chunks, full: mode==="full"});
+  queue.push({t:"word", text:w.word, glow: mode==="full"});
   queueRunning = true;
   stepQueue(setLive);
 }
@@ -1014,13 +1011,6 @@ function findChunk(letters){
     (n.querySelector(".ch-letters").textContent||"").replace(/\s+/g,"") === key);
 }
 
-// iOS 语音引擎会把单个大写字母读成 "capital X"（如 I → capital I）。
-// 只在 iOS 上改读小写；桌面（macOS）保持大写原样，避免改坏已正常的桌面。
-function spellLetter(L){
-  const ua = navigator.userAgent || "";
-  const isIOS = /iP(hone|ad|od)/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
-  return speak(isIOS ? L.toLowerCase() : L.toUpperCase(), 0.85, 1.0);
-}
 function stepQueue(setLive){
   if(!queue.length || !queueRunning){
     queueRunning = false; clearActive();
@@ -1032,23 +1022,34 @@ function stepQueue(setLive){
   const it = queue.shift();
   const qc = currentCard ? currentCard.querySelector(".phonics-btn.full") : null;
 
-  if (it.t === "chunkLetter") {
+  if (it.t === "spell") {
     clearActive();
-    const cn = findChunk(it.ch.letters);
-    if(cn){
-      cn.classList.add("letter-active");
-      const span = cn.querySelector(`[data-l="${it.li}"]`);
-      if(span) span.classList.add("lit");
+    if(setLive) setLive((it.full?"✍️ 逐块拼写：":"🔡 整词拼写：") + it.word.toUpperCase().split("").join(" "));
+    const u = speak(it.letters.map(L=>L.toLowerCase()).join(" "), 0.85);
+    // 完整流程：读的同时按节奏点亮对应字母（装饰，与发音节拍大致对齐）
+    clearInterval(spellTimer);
+    if(it.full && currentCard){
+      let gi = 0;
+      spellTimer = setInterval(()=>{
+        clearActive();
+        if(gi >= it.letters.length){ clearInterval(spellTimer); spellTimer = null; return; }
+        let acc = 0;
+        for(const ch of it.chunks){
+          if(gi < acc + ch.letters.length){
+            const cn = findChunk(ch.letters);
+            if(cn){
+              cn.classList.add("letter-active");
+              const span = cn.querySelector(`[data-l="${gi-acc}"]`);
+              if(span) span.classList.add("lit");
+            }
+            break;
+          }
+          acc += ch.letters.length;
+        }
+        gi++;
+      }, 450);
     }
-    if(setLive) setLive(`✍️ 拼写 ${it.ch.letters.join("")}：${it.L.toUpperCase()}`);
-    const u = spellLetter(it.L);
-    u.onend = ()=> setTimeout(()=>stepQueue(setLive), 60);
-  }
-  else if (it.t === "wholeLetter") {
-    clearActive();
-    if(setLive) setLive(`🔡 整词拼写：${it.L.toUpperCase()}`);
-    const u = spellLetter(it.L);
-    u.onend = ()=> setTimeout(()=>stepQueue(setLive), 55);
+    u.onend = ()=>{ clearInterval(spellTimer); spellTimer = null; setTimeout(()=>stepQueue(setLive), 130); };
   }
   else if (it.t === "word") {
     clearActive();
