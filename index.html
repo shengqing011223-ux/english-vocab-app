@@ -835,13 +835,17 @@ function toast(msg){
 
 /* ================= 语音引擎 ================= */
 let voiceEn = null, voiceZh = null;
+const FEMALE_RE=/Samantha|Karen|Moira|Fiona|Victoria|Susan|Tessa|Rishi|Kate|Veena|Zira|Allison|Aria|Ava|Emma|Libby|Jenny|Sonia|Hazel|Georgia|Nathalie|Olivia|Nicky|Catherine|Daria|Zo[eë]|Zuzana|Yuna|Claire|Elena|Marta|Serena|Paulina|Hannah|Google US English|Google UK English|Ting-?Ting|Li-?mu|Sin-?ji|Mei-?Jia|Lili|Xiaoxiao|Xiaoyi|Huihui|Yaoyao|普通话|female/i;
+function isFemale(v){ return FEMALE_RE.test(v.name||"") && !/male/i.test(v.name||""); }
+function pickFemale(list){
+  return list.find(v=>isFemale(v) && /US|America/i.test(v.name)) || list.find(isFemale) || null;
+}
 function loadVoices(){
   const vs = speechSynthesis.getVoices();
-  voiceEn = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("en") && /US|America/i.test(v.name))
-        || vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("en"))
-        || vs[0];
-  voiceZh = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("zh"))
-        || vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("cmn"));
+  const en = vs.filter(v=>v.lang && v.lang.toLowerCase().startsWith("en"));
+  const zh = vs.filter(v=>v.lang && (v.lang.toLowerCase().startsWith("zh")||v.lang.toLowerCase().startsWith("cmn")));
+  voiceEn = pickFemale(en) || en.find(v=>v.lang && v.lang.toLowerCase().startsWith("en") && /US|America/i.test(v.name)) || en[0] || vs[0];
+  voiceZh = pickFemale(zh) || zh[0] || vs.find(v=>v.lang && v.lang.toLowerCase().startsWith("cmn"));
 }
 if (window.speechSynthesis) {
   loadVoices();

@@ -206,10 +206,17 @@ function toast(msg){
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),1800);
 }
 let voiceEn=null, voiceZh=null;
+const FEMALE_RE=/Samantha|Karen|Moira|Fiona|Victoria|Susan|Tessa|Rishi|Kate|Veena|Zira|Allison|Aria|Ava|Emma|Libby|Jenny|Sonia|Hazel|Georgia|Nathalie|Olivia|Nicky|Catherine|Daria|Zo[eë]|Zuzana|Yuna|Claire|Elena|Marta|Serena|Paulina|Hannah|Google US English|Google UK English|Ting-?Ting|Li-?mu|Sin-?ji|Mei-?Jia|Lili|Xiaoxiao|Xiaoyi|Huihui|Yaoyao|普通话|female/i;
+function isFemale(v){ return FEMALE_RE.test(v.name||"") && !/male/i.test(v.name||""); }
+function pickFemale(list){
+  return list.find(v=>isFemale(v)&&/US|America/i.test(v.name)) || list.find(isFemale) || null;
+}
 function loadVoices(){
   const vs=window.speechSynthesis?speechSynthesis.getVoices():[];
-  voiceEn=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("en")&&/US|America/i.test(v.name))||vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("en"))||vs[0];
-  voiceZh=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("zh"))||vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("cmn"));
+  const en=vs.filter(v=>v.lang&&v.lang.toLowerCase().startsWith("en"));
+  const zh=vs.filter(v=>v.lang&&(v.lang.toLowerCase().startsWith("zh")||v.lang.toLowerCase().startsWith("cmn")));
+  voiceEn=pickFemale(en)||en.find(v=>/US|America/i.test(v.name))||en[0]||vs[0];
+  voiceZh=pickFemale(zh)||zh[0]||null;
 }
 if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
 function speak(text){
@@ -229,7 +236,7 @@ function matchAns(got, want){
 const LS_PROG="course_progress", LS_WRONG="course_wrong";
 let progress={ lessons:{}, stars:0 };
 let wrongStore=[];
-function load(){ try{ progress=JSON.parse(localStorage.getItem(LS_PROG))||{lessons:{},stars:0}; wrongStore=JSON.parse(localStorage.getItem(LS_WRONG))||[]; }catch(e){} }
+function load(){ try{ progress=JSON.parse(localStorage.getItem(LS_PROG))||{lessons:{},stars:0}; wrongStore=JSON.parse(localStorage.getItem(LS_WRONG))||[]; selfStudy=localStorage.getItem("self_study")==="1"; }catch(e){} }
 function saveProg(){ try{ localStorage.setItem(LS_PROG,JSON.stringify(progress)); }catch(e){} }
 function saveWrong(){ try{ localStorage.setItem(LS_WRONG,JSON.stringify(wrongStore)); }catch(e){} updateWrongBadge(); }
 function updateWrongBadge(){ const n=$("#wrongCount"); if(n) n.textContent=wrongStore.length?(" "+wrongStore.length+" "):""; }
@@ -618,6 +625,8 @@ const LESSONS=[
 
 /* ============ 状态 ============ */
 let cur = { lesson:null, stage:0, i:0, score:0, total:0 };  // i 是当前小步索引
+let selfStudy = false;   // 自学模式：不闯关，自由翻看知识点
+let lastEx = "";         // 上一条题解，供「🔊 读讲解」
 const STAGE_NAMES = ["关一 单词","关二 句型","关三 跟读","关四 练习","关五 实战"];
 const app = $("#app");
 
@@ -631,9 +640,18 @@ function renderHome(){
     <div class="stat"><b>${done}/${LESSONS.length}</b><span>已学课时</span></div>
     <div class="stat"><b>${stars}/${LESSONS.length*3}</b><span>累计星星</span></div>
     <div class="stat"><b>${wrongStore.length}</b><span>待练错题</span></div>`));
+  h.appendChild(el("div","card",`
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div>
+        <b style="font-size:15px">📖 自学模式</b>
+        <div style="font-size:12.5px;color:#9a9fb8;margin-top:3px;line-height:1.6">不闯关，直接翻看所有课的知识点，点 🔊 就能读出来</div>
+      </div>
+      <button class="btn ${selfStudy?"pink":"green"}" style="flex-shrink:0" onclick="toggleSelfStudy()">${selfStudy?"已开启 ✓":"去开启"}</button>
+    </div>`));
   LESSONS.forEach(L=>{
     const st = progress.lessons[L.id];
     const doneIt = st && st.done;
+    const go = selfStudy ? "📖 自由翻 →" : (doneIt?"🔁 复习":"开始 →");
     const card = el("div","l-card"+(doneIt?" done":""),`
       <div class="icon">${L.icon}</div>
       <div class="info">
@@ -641,7 +659,7 @@ function renderHome(){
         <div class="s">${L.src} · ${doneIt?"已完成":(st?"进行中":"未开始")}</div>
         <div class="stars">${doneIt ? "★".repeat(st.stars||0)+"☆".repeat(3-(st.stars||0)) : ""}</div>
       </div>
-      <div class="go">${doneIt?"🔁 复习":"开始 →"}</div>`);
+      <div class="go">${go}</div>`);
     card.onclick = ()=> openLesson(L.id);
     h.appendChild(card);
   });
@@ -650,13 +668,14 @@ function renderHome(){
     <p style="font-size:13.5px;color:#5a5f7a;line-height:1.8;margin-top:8px">
     每一课都走同一条路：<b>先学这课的生词 → 看句型公式 → 一句一句跟着读 → 做小练习 → 最后上原卷实战</b>。
     每道题做完都会告诉你「为什么」，答错了也别怕，看讲解就能懂。<br>
-    <span style="color:#9a9fb8">建议一次学一课（约 10 分钟），学完第二天先复习错题再开新课。</span></p>`));
+    <span style="color:#9a9fb8">建议一次学一课（约 10 分钟），学完第二天先复习错题再开新课。<br>想快速翻知识点、不闯关，就打开上方「📖 自学模式」。</span></p>`));
   app.innerHTML=""; app.appendChild(h);
 }
 
 /* ============ 渲染：课时流程 ============ */
 function openLesson(id){
   const L = LESSONS.find(x=>x.id===id);
+  if(selfStudy){ cur={ lesson:L, stage:0, i:0, ssTab:0 }; renderSelfStudy(); return; }
   cur = { lesson:L, stage:1, i:0, score:0, fscore:0, total:0 };
   renderStage();
 }
@@ -674,7 +693,7 @@ function lessonTop(){
   const L = cur.lesson;
   const title = L?`${L.icon} ${L.title}`:"📕 错题重练";
   const src = L?L.src:"";
-  const tipsBtn = L?`<button class="btn ghost" style="background:#f1ecff;color:#5f3dc4" onclick="showTips()">👩‍🏫 要点</button>`:"";
+  const tipsBtn = (L && cur.stage!==0)?`<button class="btn ghost" style="background:#f1ecff;color:#5f3dc4" onclick="showTips()">👩‍🏫 要点</button>`:"";
   return `<div class="lesson-top">
     <button class="back" onclick="renderHome()">←</button>
     <div class="ti"><b>${title}</b><span>${src}</span></div>
@@ -713,7 +732,7 @@ function stageVocab(){
     <div class="w-meaning" id="wMean">
       <div class="m">${w.m}</div>
       <div class="ex">${w.ex}<br><span style="color:#9a9fb8">${w.exz}</span></div>
-      <div class="tip">💡 ${w.tip}</div>
+      <div class="tip">💡 ${w.tip} <button class="say" style="margin-left:6px" onclick="speak('${sq(w.tip)}')">🔊 读口诀</button></div>
     </div>
     <div class="w-btns">
       <button class="btn grey" onclick="revealMeaning()">👁️ 看意思</button>
@@ -752,8 +771,8 @@ function stagePattern(){
     <div class="f-title">${p.title}</div>
     <div class="f-sub">${p.sub||""}</div>
     ${p.rows?`<table class="tbl"><tr>${p.rows[0].map((c,ix)=>ix===0?"<th>种类</th>":"<th>"+c+"</th>").join("")}</tr>${rows}</table>`:""}
-    <div class="formula">📐 ${p.formula}</div>
-    <div class="note">💬 ${p.note}</div>
+    <div class="formula">📐 ${p.formula} <button class="say" style="background:rgba(255,255,255,.22);color:#fff" onclick="speakFormula()">🔊</button></div>
+    <div class="note">💬 ${p.note} <button class="say" style="background:#fff4d6;color:#b07d00" onclick="speakNote()">🔊</button></div>
     ${sents?`<div class="f-sent"><div class="lbl">例句（点 🔊 跟读）</div>${sents}</div>`:""}
     <div style="margin-top:18px;display:flex;gap:10px">
       <button class="btn ghost" style="background:#eef0f8;color:#5a5f7a" onclick="playAllSents()">🔊 全读一遍</button>
@@ -825,10 +844,14 @@ function stageQuiz(isFinal){
 }
 function showQHint(){ const h=$("#hintBox"); if(h){ h.classList.add("show"); } }
 function renderFb(ok, q){
+  lastEx=q.ex;
   const fb=$("#qFb");
   fb.className="q-feedback show "+(ok?"ok":"bad");
   fb.innerHTML = `<div class="v">${ok?"✅ 答对了！":"❌ 答错了"}</div>
     <div class="why">${ok?q.ex:"正确答案："+(Array.isArray(q.a)?q.a.join(" / "):q.a)+"<br><br>💡 "+q.ex}</div>`;
+  const snd = el("button","btn grey","🔊 读讲解");
+  snd.onclick=speakFb; snd.style.cssText="width:100%;margin-top:10px";
+  fb.appendChild(snd);
   const nxt = el("div","",`<button class="btn primary" style="width:100%;margin-top:12px;background:#5f3dc4;color:#fff" onclick="cur.i++;renderStage()">下一题 →</button>`);
   fb.appendChild(nxt);
   fb.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -942,11 +965,15 @@ function wpSubmit(){
   wpDone(ok, q);
 }
 function wpDone(ok, q){
+  lastEx=q.ex;
   const w = wp.list[wp.i];
   const fb=$("#wpFb");
   fb.className="q-feedback show "+(ok?"ok":"bad");
   fb.innerHTML=`<div class="v">${ok?"✅ 对！":"❌ 再记一遍"}</div>
     <div class="why">${ok?q.ex:"正确答案："+(Array.isArray(q.a)?q.a.join(" / "):q.a)+"　"+q.ex}</div>`;
+  const snd=el("button","btn grey","🔊 读讲解");
+  snd.onclick=speakFb; snd.style.cssText="width:100%;margin-top:10px";
+  fb.appendChild(snd);
   const nxt=el("div","",`<button class="btn primary" style="width:100%;margin-top:12px;background:#5f3dc4;color:#fff" onclick="wpNext(${ok})">下一题 →</button>`);
   fb.appendChild(nxt);
 }
@@ -963,9 +990,11 @@ function showTips(){
   const L = cur.lesson;
   $("#tipsBody").innerHTML=`<button class="close" onclick="closeOv('tipsOv')">✕</button>
     <h3>👩‍🏫 ${L.title} · 老师要点</h3><div class="sub">${L.src}　·　上课时看这里</div>
-    <div class="t-block t-goal"><b>🎯 本节课目标</b><p>${L.teacher.goal}</p></div>
-    <div class="t-block t-trap"><b>⚠️ 学生常踩的坑</b><ul>${L.teacher.traps.map(t=>`<li>${t}</li>`).join("")}</ul></div>
-    <div class="t-block t-say"><b>🗣️ 带教话术</b><p>${L.teacher.say}</p></div>`;
+    <div class="t-block t-goal"><b>🎯 本节课目标</b><p>${L.teacher.goal}</p>
+      <button class="say" style="margin-top:8px" onclick="speak('${sq(L.teacher.goal)}')">🔊 读出来</button></div>
+    <div class="t-block t-trap"><b>⚠️ 学生常踩的坑</b><ul>${L.teacher.traps.map((t,i)=>`<li>${t} <button class="say" style="vertical-align:middle" onclick="speakTrap(${i})">🔊</button></li>`).join("")}</ul></div>
+    <div class="t-block t-say"><b>🗣️ 带教话术</b><p>${L.teacher.say}</p>
+      <button class="say" style="margin-top:8px" onclick="speak('${sq(L.teacher.say)}')">🔊 读出来</button></div>`;
   $("#tipsOv").classList.add("show");
 }
 function openTeacher(){
@@ -987,6 +1016,103 @@ function openTeacher(){
   $("#teacherOv").classList.add("show");
 }
 function closeOv(id){ $("#"+id).classList.remove("show"); }
+
+/* ============ 自学模式 ============ */
+function sq(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g," "); }
+function toggleSelfStudy(){
+  selfStudy=!selfStudy;
+  try{ localStorage.setItem("self_study", selfStudy?"1":"0"); }catch(e){}
+  renderHome();
+}
+const SS_TABS=["📖 单词","📐 公式","🗣 跟读","👩‍🏫 要点"];
+function renderSelfStudy(){
+  stopSpeak();
+  const tabs=SS_TABS.map((t,ix)=>`<div class="step ${ix===cur.ssTab?"on":""}" onclick="ssTab(${ix})">${t}</div>`).join("");
+  let body="";
+  if(cur.ssTab===0) body=ssVocab();
+  else if(cur.ssTab===1) body=ssPattern();
+  else if(cur.ssTab===2) body=ssLines();
+  else body=ssTips();
+  app.innerHTML = lessonTop() + `<div class="steps">${tabs}</div><div class="stage-tag">📖 自学模式 · 自由翻看，随便点 🔊 听</div>` + body;
+}
+function ssTab(ix){ cur.ssTab=ix; cur.i=0; renderSelfStudy(); }
+function ssPrev(){ cur.i--; renderSelfStudy(); }
+function ssNext(){ cur.i++; renderSelfStudy(); }
+function ssVocab(){
+  const L=cur.lesson, list=L.vocab;
+  if(cur.i>=list.length) cur.i=0;
+  if(cur.i<0) cur.i=list.length-1;
+  const w=list[cur.i];
+  const nav=`<div style="display:flex;gap:10px;margin-top:22px">
+      <button class="btn ghost" style="flex:1;background:#eef0f8;color:#5a5f7a" onclick="ssPrev()">◀️ 上一个</button>
+      <button class="btn primary" style="flex:1;background:#5f3dc4;color:#fff" onclick="ssNext()">下一个 ▶️</button></div>`;
+  return `<div class="card w-card">
+    <div class="w-prog">单词 ${cur.i+1} / ${list.length}　·　自学模式：意思直接显示</div>
+    <div class="w-word" style="margin-top:8px">${w.w}</div>
+    <div class="w-ipa">${w.ipa}</div>
+    <button class="w-sound" onclick="speak('${sq(w.w)}')">🔊 听发音</button>
+    <div class="w-meaning show">
+      <div class="m">${w.m}</div>
+      <div class="ex">${w.ex}<br><span style="color:#9a9fb8">${w.exz}</span>
+        <div style="margin-top:8px"><button class="say" onclick="speak('${sq(w.ex)}')">🔊 读例句</button></div></div>
+      <div class="tip">💡 ${w.tip} <button class="say" style="margin-left:6px" onclick="speak('${sq(w.tip)}')">🔊 读口诀</button></div>
+    </div>
+    ${nav}
+  </div>`;
+}
+function ssPattern(){
+  const p=cur.lesson.pattern;
+  const rows=(p.rows||[]).map(r=>{
+    const tds=r.map((c,ix)=> ix===0?`<td class="lbl">${c}</td>`:`<td>${c}</td>`).join("");
+    return `<tr>${tds}</tr>`;
+  }).join("");
+  const sents=(p.sents||[]).map((s,ix)=>{
+    return `<div class="one"><span><b>${enPart(s)}</b> <small style="color:#9a9fb8">${zhPart(s)}</small></span><button class="say" onclick="speakPat(${ix})">🔊</button></div>`;
+  }).join("");
+  return `<div class="card">
+    <div class="f-title">${p.title}</div>
+    <div class="f-sub">${p.sub||""}</div>
+    ${p.rows?`<table class="tbl"><tr>${p.rows[0].map((c,ix)=>ix===0?"<th>种类</th>":"<th>"+c+"</th>").join("")}</tr>${rows}</table>`:""}
+    <div class="formula">📐 ${p.formula} <button class="say" style="background:rgba(255,255,255,.22);color:#fff" onclick="speakFormula()">🔊</button></div>
+    <div class="note">💬 ${p.note} <button class="say" style="background:#fff4d6;color:#b07d00" onclick="speakNote()">🔊</button></div>
+    ${sents?`<div class="f-sent"><div class="lbl">例句（点 🔊 跟读）</div>${sents}</div>`:""}
+    <div style="margin-top:18px;display:flex;gap:10px">
+      <button class="btn ghost" style="background:#eef0f8;color:#5a5f7a" onclick="playAllSents()">🔊 全读一遍</button>
+      <button class="btn primary" style="flex:1;background:#5f3dc4;color:#fff" onclick="ssTab(2)">去跟读 →</button>
+    </div>
+  </div>`;
+}
+function ssLines(){
+  const L=cur.lesson, list=L.lines;
+  if(cur.i>=list.length) cur.i=0;
+  if(cur.i<0) cur.i=list.length-1;
+  const line=list[cur.i];
+  return `<div class="card line-card">
+    <div class="w-prog">句子 ${cur.i+1} / ${list.length}　·　先听中文意思，再听英文</div>
+    <div class="line-zh" style="margin-top:10px">${line.zh}</div>
+    <div class="line-en show" style="margin-top:16px">${line.en}
+      <div style="margin-top:12px"><button class="snd" onclick="speakLine()">🔊 听英文</button></div>
+    </div>
+    <div style="margin-top:24px;display:flex;gap:10px">
+      <button class="btn ghost" style="flex:1;background:#eef0f8;color:#5a5f7a" onclick="ssPrev()">◀️ 上一个</button>
+      <button class="btn primary" style="flex:1;background:#5f3dc4;color:#fff" onclick="ssNext()">下一个 ▶️</button>
+    </div>
+  </div>`;
+}
+function ssTips(){
+  const L=cur.lesson;
+  return `<div class="card">
+    <div class="t-block t-goal"><b>🎯 本节课目标</b><p>${L.teacher.goal}</p>
+      <button class="say" style="margin-top:8px" onclick="speak('${sq(L.teacher.goal)}')">🔊 读出来</button></div>
+    <div class="t-block t-trap"><b>⚠️ 学生常踩的坑</b><ul>${L.teacher.traps.map((t,i)=>`<li>${t} <button class="say" style="vertical-align:middle" onclick="speakTrap(${i})">🔊</button></li>`).join("")}</ul></div>
+    <div class="t-block t-say"><b>🗣️ 带教话术</b><p>${L.teacher.say}</p>
+      <button class="say" style="margin-top:8px" onclick="speak('${sq(L.teacher.say)}')">🔊 读出来</button></div>
+  </div>`;
+}
+function speakFormula(){ speak(cur.lesson.pattern.formula); }
+function speakNote(){ speak(cur.lesson.pattern.note); }
+function speakTrap(ix){ speak(cur.lesson.teacher.traps[ix]); }
+function speakFb(){ if(lastEx) speak(lastEx); }
 
 /* ============ 事件绑定 + 启动 ============ */
 $("#homeBtn").onclick=renderHome;
