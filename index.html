@@ -1014,6 +1014,13 @@ function findChunk(letters){
     (n.querySelector(".ch-letters").textContent||"").replace(/\s+/g,"") === key);
 }
 
+// iOS 语音引擎会把单个大写字母读成 "capital X"（如 I → capital I）。
+// 只在 iOS 上改读小写；桌面（macOS）保持大写原样，避免改坏已正常的桌面。
+function spellLetter(L){
+  const ua = navigator.userAgent || "";
+  const isIOS = /iP(hone|ad|od)/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+  return speak(isIOS ? L.toLowerCase() : L.toUpperCase(), 0.85, 1.0);
+}
 function stepQueue(setLive){
   if(!queue.length || !queueRunning){
     queueRunning = false; clearActive();
@@ -1034,13 +1041,13 @@ function stepQueue(setLive){
       if(span) span.classList.add("lit");
     }
     if(setLive) setLive(`✍️ 拼写 ${it.ch.letters.join("")}：${it.L.toUpperCase()}`);
-    const u = speak(it.L.toUpperCase(), 0.85, 1.0);
+    const u = spellLetter(it.L);
     u.onend = ()=> setTimeout(()=>stepQueue(setLive), 60);
   }
   else if (it.t === "wholeLetter") {
     clearActive();
     if(setLive) setLive(`🔡 整词拼写：${it.L.toUpperCase()}`);
-    const u = speak(it.L.toUpperCase(), 0.85, 1.0);
+    const u = spellLetter(it.L);
     u.onend = ()=> setTimeout(()=>stepQueue(setLive), 55);
   }
   else if (it.t === "word") {
