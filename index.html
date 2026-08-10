@@ -997,12 +997,7 @@ function runPhonics(w, mode, setLive, cardEl){
   }
   const chunks = w.chunks.map(c=>({...c, letters:[...c.letters]}));
   if (mode === "full") {
-    chunks.forEach(ch=>{
-      queue.push({t:"chunkSound", ch});
-      ch.letters.forEach((L,li)=> queue.push({t:"chunkLetter", ch, L, li}));
-    });
-    queue.push({t:"word", text:w.word});
-    [...w.word].forEach(L=> queue.push({t:"wholeLetter", L}));
+    chunks.forEach(ch=>{ ch.letters.forEach((L,li)=> queue.push({t:"chunkLetter", ch, L, li})); });
     queue.push({t:"word", text:w.word, glow:true});
   } else {
     [...w.word].forEach(L=> queue.push({t:"wholeLetter", L}));
@@ -1030,15 +1025,7 @@ function stepQueue(setLive){
   const it = queue.shift();
   const qc = currentCard ? currentCard.querySelector(".phonics-btn.full") : null;
 
-  if (it.t === "chunkSound") {
-    clearActive();
-    const cn = findChunk(it.ch.letters);
-    if(cn) cn.classList.add("active");
-    if(setLive) setLive(`🔊 读音 ${it.ch.letters.join("")}（${it.ch.ipa}）`);
-    const u = speak(it.ch.sound, 0.6, 0.9);
-    u.onend = ()=> setTimeout(()=>stepQueue(setLive), 80);
-  }
-  else if (it.t === "chunkLetter") {
+  if (it.t === "chunkLetter") {
     clearActive();
     const cn = findChunk(it.ch.letters);
     if(cn){
@@ -1047,13 +1034,13 @@ function stepQueue(setLive){
       if(span) span.classList.add("lit");
     }
     if(setLive) setLive(`✍️ 拼写 ${it.ch.letters.join("")}：${it.L.toUpperCase()}`);
-    const u = speak(it.L.toUpperCase(), 0.8, 1.05);
+    const u = speak(it.L.toUpperCase(), 0.85, 1.0);
     u.onend = ()=> setTimeout(()=>stepQueue(setLive), 60);
   }
   else if (it.t === "wholeLetter") {
     clearActive();
     if(setLive) setLive(`🔡 整词拼写：${it.L.toUpperCase()}`);
-    const u = speak(it.L.toUpperCase(), 0.8, 1.05);
+    const u = speak(it.L.toUpperCase(), 0.85, 1.0);
     u.onend = ()=> setTimeout(()=>stepQueue(setLive), 55);
   }
   else if (it.t === "word") {
