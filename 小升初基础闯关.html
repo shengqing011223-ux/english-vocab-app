@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>小升初英语 · 基础闯关</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { font-size:16px; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Segoe UI", sans-serif;
+    background: linear-gradient(180deg,#f3f6ff 0%, #eef1fb 100%);
+    color:#2d3350; min-height:100vh; padding-bottom:60px;
+  }
+  .header {
+    background: linear-gradient(135deg,#5f3dc4 0%, #8a5cf6 55%, #b388ff 100%);
+    color:#fff; padding:26px 20px 22px; border-radius:0 0 28px 28px;
+    box-shadow:0 8px 24px rgba(95,61,196,.28);
+  }
+  .header h1 { font-size:21px; font-weight:800; letter-spacing:.5px; }
+  .header p { margin-top:6px; font-size:12.5px; opacity:.92; line-height:1.5; }
+  .hdr-btns { display:flex; gap:9px; margin-top:14px; flex-wrap:wrap; }
+  .btn {
+    border:none; border-radius:12px; padding:11px 15px; font-size:13.5px; font-weight:700;
+    cursor:pointer; transition: transform .08s ease; -webkit-user-select:none; user-select:none;
+  }
+  .btn:active { transform: scale(.95); }
+  .btn.white { background:#fff; color:#5f3dc4; box-shadow:0 3px 10px rgba(0,0,0,.15); }
+  .btn.ghost { background:rgba(255,255,255,.16); color:#fff; }
+  .btn.pink { background:#ff5c8a; color:#fff; }
+  .btn.green { background:#2fb46b; color:#fff; }
+  .btn.grey { background:#eef0f8; color:#5a5f7a; }
+  .btn:disabled { opacity:.45; }
+
+  .wrap { padding:18px 16px; }
+  .card {
+    background:#fff; border-radius:18px; padding:16px; margin-bottom:12px;
+    box-shadow:0 4px 14px rgba(80,70,180,.08);
+  }
+  .section-title { display:flex; align-items:center; justify-content:space-between; margin:6px 0 12px; }
+  .section-title h2 { font-size:16px; font-weight:800; }
+  .badge { font-size:12px; font-weight:700; color:#5f3dc4; background:#ece5ff; border-radius:20px; padding:3px 10px; }
+
+  /* 课程地图 */
+  .stat-row { display:flex; gap:10px; margin-bottom:14px; }
+  .stat { flex:1; background:#fff; border-radius:16px; padding:12px 14px; text-align:center; box-shadow:0 4px 14px rgba(80,70,180,.08); }
+  .stat b { font-size:20px; color:#5f3dc4; display:block; }
+  .stat span { font-size:11.5px; color:#8a8fa8; }
+  .l-card { display:flex; align-items:center; gap:12px; background:#fff; border-radius:18px; padding:14px 16px; margin-bottom:11px;
+    box-shadow:0 4px 14px rgba(80,70,180,.08); cursor:pointer; border:2px solid transparent; }
+  .l-card.done { border-color:#dff6e8; }
+  .l-card .icon { width:46px; height:46px; border-radius:14px; background:#f1ecff; display:flex; align-items:center; justify-content:center; font-size:23px; flex-shrink:0; }
+  .l-card .info { flex:1; min-width:0; }
+  .l-card .t { font-size:15.5px; font-weight:800; }
+  .l-card .s { font-size:11.5px; color:#9a9fb8; margin-top:2px; }
+  .l-card .stars { font-size:13px; color:#ffb800; margin-top:4px; letter-spacing:1px; }
+  .l-card .go { color:#5f3dc4; font-size:14px; font-weight:800; }
+
+  /* 步骤指示 */
+  .steps { display:flex; gap:4px; margin-bottom:14px; }
+  .step { flex:1; text-align:center; padding:7px 2px; border-radius:11px; font-size:11px; font-weight:700;
+    background:#eceff8; color:#9a9fb8; }
+  .step.on { background:#5f3dc4; color:#fff; }
+  .step.done { background:#dff6e8; color:#0a8f50; }
+
+  /* 关卡顶栏 */
+  .lesson-top { display:flex; align-items:center; gap:10px; margin:4px 0 14px; }
+  .back { border:none; background:#fff; border-radius:12px; width:40px; height:40px; font-size:17px; cursor:pointer; box-shadow:0 3px 10px rgba(80,70,180,.12); }
+  .lesson-top .ti { flex:1; min-width:0; }
+  .lesson-top .ti b { font-size:16px; font-weight:800; display:block; }
+  .lesson-top .ti span { font-size:11.5px; color:#8a8fa8; }
+  .stage-tag { font-size:11.5px; font-weight:800; color:#5f3dc4; background:#ece5ff; border-radius:20px; padding:4px 12px; margin-bottom:10px; display:inline-block; }
+
+  /* 单词卡 */
+  .w-card { text-align:center; padding:30px 20px 24px; }
+  .w-word { font-size:38px; font-weight:800; color:#23294a; letter-spacing:1px; }
+  .w-ipa { font-size:15px; color:#8a8fa8; margin-top:8px; }
+  .w-sound { margin-top:14px; border:none; background:#f1ecff; color:#5f3dc4; padding:11px 20px; border-radius:14px; font-size:15px; font-weight:700; cursor:pointer; }
+  .w-meaning { display:none; margin-top:20px; }
+  .w-meaning.show { display:block; }
+  .w-meaning .m { font-size:21px; font-weight:800; color:#5f3dc4; }
+  .w-meaning .ex { font-size:14.5px; color:#3a4466; margin-top:12px; line-height:1.7; }
+  .w-meaning .tip { font-size:13px; color:#8a6bff; background:#f6f2ff; border-radius:10px; padding:9px 12px; margin-top:12px; line-height:1.6; }
+  .w-btns { display:flex; gap:10px; margin-top:22px; }
+  .w-btns .btn { flex:1; padding:14px; font-size:15px; }
+  .w-prog { font-size:12.5px; color:#9a9fb8; margin-top:14px; }
+
+  /* 公式/表格 */
+  .f-title { font-size:16px; font-weight:800; margin-bottom:4px; }
+  .f-sub { font-size:12px; color:#8a8fa8; margin-bottom:14px; }
+  .tbl { width:100%; border-collapse:collapse; margin-bottom:12px; }
+  .tbl th, .tbl td { border:1px solid #e4e6f2; padding:9px 6px; text-align:center; font-size:14px; }
+  .tbl th { background:#f4f1ff; color:#5f3dc4; font-weight:800; }
+  .tbl td.lbl { background:#faf8ff; color:#9a9fb8; font-size:12px; font-weight:700; }
+  .formula { background:#5f3dc4; color:#fff; border-radius:13px; padding:12px 14px; font-size:14.5px; font-weight:700; margin:6px 0 12px; line-height:1.6; }
+  .note { background:#fff8e6; border-left:3px solid #ffb800; border-radius:0 11px 11px 0; padding:10px 13px; font-size:13.5px; color:#7a5d00; line-height:1.7; }
+  .f-sent { margin-top:14px; border-top:1px dashed #e6e8f2; padding-top:12px; }
+  .f-sent .lbl { font-size:12px; color:#8a8fa8; font-weight:700; margin-bottom:8px; }
+  .f-sent .one { font-size:14.5px; color:#3a4466; padding:7px 0; border-bottom:1px dashed #f0f1f8; display:flex; align-items:center; gap:8px; }
+  .f-sent .one:last-child { border-bottom:none; }
+  .say { margin-left:auto; border:none; background:#f1ecff; color:#5f3dc4; width:34px; height:34px; border-radius:10px; cursor:pointer; font-size:14px; flex-shrink:0; }
+
+  /* 跟读句 */
+  .line-card { text-align:center; padding:34px 20px; }
+  .line-zh { font-size:22px; font-weight:800; color:#23294a; line-height:1.6; }
+  .line-en { display:none; margin-top:18px; font-size:19px; font-weight:700; color:#5f3dc4; line-height:1.6; }
+  .line-en.show { display:block; }
+  .line-en .snd { margin-top:10px; border:none; background:#f1ecff; color:#5f3dc4; padding:10px 18px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; }
+
+  /* 题目 */
+  .q-card { padding:20px 18px; }
+  .q-num { font-size:12px; color:#9a9fb8; font-weight:700; margin-bottom:6px; }
+  .q-text { font-size:16px; font-weight:700; color:#23294a; line-height:1.7; margin-bottom:14px; }
+  .q-bank { font-size:13px; color:#8a6bff; background:#f6f2ff; border-radius:10px; padding:9px 12px; margin-bottom:13px; line-height:1.7; }
+  .opts { display:flex; flex-direction:column; gap:9px; }
+  .opt { border:2px solid #e4e6f2; border-radius:13px; padding:12px 14px; font-size:15px; text-align:left; background:#fff; cursor:pointer; line-height:1.6; }
+  .opt:active { transform: scale(.98); }
+  .opt.sel-right { border-color:#2fb46b; background:#e9f9f0; color:#0a8f50; font-weight:700; }
+  .opt.sel-wrong { border-color:#ff5c8a; background:#ffe9f0; color:#d4380d; }
+  .opt.dim { opacity:.5; }
+  .fill-row { display:flex; gap:9px; }
+  .fill-in { flex:1; border:2px solid #e4e6f2; border-radius:13px; padding:13px; font-size:17px; font-weight:700; text-align:center; outline:none; color:#23294a; background:#fbfbfe; }
+  .fill-in:focus { border-color:#5f3dc4; background:#fff; }
+  .q-feedback { display:none; margin-top:14px; border-radius:13px; padding:12px 14px; }
+  .q-feedback.show { display:block; }
+  .q-feedback.ok { background:#e9f9f0; border:1px solid #bfe9d0; }
+  .q-feedback.bad { background:#fff1f5; border:1px solid #ffc6d6; }
+  .q-feedback .v { font-size:16px; font-weight:800; }
+  .q-feedback.ok .v { color:#0a8f50; }
+  .q-feedback.bad .v { color:#d4380d; }
+  .q-feedback .why { font-size:13.5px; color:#3a4466; margin-top:7px; line-height:1.7; }
+  .q-hint { margin-top:11px; border:none; background:#fff8e6; color:#b07d00; padding:9px 14px; border-radius:11px; font-size:13px; font-weight:700; cursor:pointer; }
+  .q-hint-box { display:none; margin-top:10px; background:#fff8e6; border-radius:11px; padding:10px 13px; font-size:13.5px; color:#7a5d00; line-height:1.7; }
+  .q-hint-box.show { display:block; }
+
+  /* 完成页 */
+  .done-card { text-align:center; padding:32px 20px; }
+  .done-big { font-size:54px; }
+  .done-title { font-size:20px; font-weight:800; margin-top:6px; }
+  .done-stars { font-size:30px; color:#ffb800; margin-top:10px; letter-spacing:4px; }
+  .done-sub { font-size:13.5px; color:#8a8fa8; margin-top:8px; line-height:1.6; }
+
+  /* 老师要点 */
+  .t-block { border-radius:14px; padding:12px 14px; margin-bottom:11px; }
+  .t-goal { background:#eef4ff; }
+  .t-goal b { color:#2f6bff; }
+  .t-trap { background:#fff1f5; }
+  .t-trap b { color:#ff3d6e; }
+  .t-say { background:#e9f9f0; }
+  .t-say b { color:#1f9d63; }
+  .t-block b { display:block; font-size:12.5px; margin-bottom:6px; }
+  .t-block p { font-size:13.5px; line-height:1.7; color:#3a4466; }
+  .t-block li { font-size:13.5px; line-height:1.7; color:#3a4466; margin-left:18px; }
+
+  /* 错题本 */
+  .wr-item { background:#fff; border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+  .wr-item .lbl { font-size:11.5px; color:#9a9fb8; margin-bottom:4px; }
+  .wr-item .q { font-size:14px; font-weight:700; color:#23294a; line-height:1.6; }
+  .wr-item .a { font-size:13px; color:#0a8f50; margin-top:5px; }
+  .wr-item .why { font-size:12.5px; color:#7a7f9c; margin-top:5px; line-height:1.6; }
+  .empty { text-align:center; color:#9a9fb8; font-size:14px; padding:34px 0; }
+
+  /* 弹层 */
+  .overlay { position:fixed; inset:0; background:rgba(20,16,40,.45); z-index:40; display:none; align-items:flex-end; justify-content:center; }
+  .overlay.show { display:flex; }
+  .sheet { background:#fff; border-radius:22px 22px 0 0; width:100%; max-width:560px; padding:18px 20px 34px; max-height:80vh; overflow-y:auto; animation:slideUp .22s ease; }
+  @keyframes slideUp { from { transform: translateY(40px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+  .sheet h3 { font-size:17px; font-weight:800; margin-bottom:4px; }
+  .sheet .close { float:right; border:none; background:#f0f1f8; width:30px; height:30px; border-radius:9px; font-size:15px; color:#666; cursor:pointer; }
+  .sheet .sub { font-size:12.5px; color:#9a9fb8; margin-bottom:14px; }
+
+  .toast { position:fixed; left:50%; bottom:80px; transform:translateX(-50%); background:rgba(35,41,74,.92); color:#fff;
+    padding:11px 20px; border-radius:30px; font-size:14px; font-weight:700; z-index:60; opacity:0; pointer-events:none; transition:opacity .25s; max-width:80%; text-align:center; }
+  .toast.show { opacity:1; }
+  .bar { height:8px; background:#eceff8; border-radius:6px; overflow:hidden; margin-top:8px; }
+  .bar i { display:block; height:100%; background:linear-gradient(90deg,#5f3dc4,#8a5cf6); border-radius:6px; transition:width .3s; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🚀 小升初英语 · 基础闯关</h1>
+  <p>从零开始：先学单词 → 再懂句型 → 跟着读 → 小练习 → 原题实战<br>每题都有「为什么」，错了不白错</p>
+  <div class="hdr-btns">
+    <button class="btn white" id="homeBtn">🏠 课程地图</button>
+    <button class="btn ghost" id="teacherBtn">👩‍🏫 老师面板</button>
+    <button class="btn ghost" id="wrongBtn">📕 错题本 <span id="wrongCount"></span></button>
+  </div>
+</div>
+
+<div class="wrap" id="app"></div>
+
+<div class="overlay" id="teacherOv"><div class="sheet"><div id="teacherBody"></div></div></div>
+<div class="overlay" id="wrongOv"><div class="sheet"><div id="wrongBody"></div></div></div>
+<div class="overlay" id="tipsOv"><div class="sheet"><div id="tipsBody"></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============ 工具 ============ */
+function $(s){ return document.querySelector(s); }
+function el(tag, cls, html){ const n=document.createElement(tag); if(cls) n.className=cls; if(html!=null) n.innerHTML=html; return n; }
+let toastTimer;
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),1800);
+}
+let voiceEn=null, voiceZh=null;
+function loadVoices(){
+  const vs=window.speechSynthesis?speechSynthesis.getVoices():[];
+  voiceEn=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("en")&&/US|America/i.test(v.name))||vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("en"))||vs[0];
+  voiceZh=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("zh"))||vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith("cmn"));
+}
+if(window.speechSynthesis){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+function speak(text){
+  if(!window.speechSynthesis){ toast("当前浏览器不支持朗读"); return; }
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.82; u.voice=/[一-鿿]/.test(text)?(voiceZh||voiceEn):voiceEn;
+  speechSynthesis.speak(u); return u;
+}
+function stopSpeak(){ if(window.speechSynthesis) speechSynthesis.cancel(); }
+function norm(s){ return (s||"").toLowerCase().replace(/\s+/g," ").trim(); }
+function matchAns(got, want){
+  const g=norm(got), W=Array.isArray(want)?want:[want];
+  return W.some(w=>g===norm(w));
+}
+
+/* ============ 存储 ============ */
+const LS_PROG="course_progress", LS_WRONG="course_wrong";
+let progress={ lessons:{}, stars:0 };
+let wrongStore=[];
+function load(){ try{ progress=JSON.parse(localStorage.getItem(LS_PROG))||{lessons:{},stars:0}; wrongStore=JSON.parse(localStorage.getItem(LS_WRONG))||[]; }catch(e){} }
+function saveProg(){ try{ localStorage.setItem(LS_PROG,JSON.stringify(progress)); }catch(e){} }
+function saveWrong(){ try{ localStorage.setItem(LS_WRONG,JSON.stringify(wrongStore)); }catch(e){} updateWrongBadge(); }
+function updateWrongBadge(){ const n=$("#wrongCount"); if(n) n.textContent=wrongStore.length?(" "+wrongStore.length+" "):""; }
+function wrongOf(qid){ return wrongStore.find(w=>w.qid===qid); }
+
+/* ============ 课时数据 ============ */
+/* 每个课时：vocab 关一 / pattern 关二 / lines 关三 / quiz 关四 / final 关五 */
+const LESSONS=[
+{
+  id:"l1", icon:"🙋", title:"人称代词", src:"讲义第 1037 页",
+  teacher:{
+    goal:"学生能分清主格和宾格，知道 me/him/her/us/them 用在动词或介词后面。",
+    traps:["动词后面用宾格：with her、to me、like him","句子开头做主语用主格：We are friends.","别把 hers/me 和 my/our 混在一起——那是下一课。"],
+    say:"先让她背两行表，再玩「我说主格你说宾格」的游戏，最后做句子。"
+  },
+  vocab:[
+    {w:"friend",ipa:"/frend/",m:"n. 朋友",ex:"We are good friends.",exz:"我们是好朋友。",tip:"fri+end：真正的朋友陪你到最后（end）。"},
+    {w:"teacher",ipa:"/ˈtiːtʃə/",m:"n. 老师",ex:"I am a teacher.",exz:"我是老师。",tip:"teach（教）+ er（人）= 教的人。"},
+    {w:"student",ipa:"/ˈstjuːdnt/",m:"n. 学生",ex:"You are students.",exz:"你们是学生。",tip:"study（学习）的学生，study→student 注意变 y 加 ent。"},
+    {w:"play",ipa:"/pleɪ/",m:"v. 玩；弹（乐器）",ex:"I like playing with her.",exz:"我喜欢和她一起玩。",tip:"play with=和…玩；play the violin=拉小提琴。"},
+    {w:"sport",ipa:"/spɔːt/",m:"n. 运动",ex:"My favourite sport is basketball.",exz:"我最喜欢的运动是篮球。",tip:"favourite sport=最爱的运动。"},
+    {w:"basketball",ipa:"/ˈbɑːskɪtbɔːl/",m:"n. 篮球",ex:"I play basketball after school.",exz:"我放学后打篮球。",tip:"basket（篮子）+ ball（球）。"},
+    {w:"give",ipa:"/ɡɪv/",m:"v. 给",ex:"Give it to me, please.",exz:"请把它给我。",tip:"give sth to sb = 把某物给某人。"},
+    {w:"sister",ipa:"/ˈsɪstə/",m:"n. 姐姐/妹妹",ex:"My sister often goes to school with him.",exz:"我妹妹经常和他一起去上学。",tip:"often 是副词：经常，放动词前。"}
+  ],
+  pattern:{
+    title:"人称代词 · 主格和宾格",
+    sub:"谁来做主语？谁跟在动词后面？",
+    rows:[["主格","I","you","he","she","it","we","they"],["宾格","me","you","him","her","it","us","them"]],
+    formula:"主格做主语，站在句首；宾格跟在动词或介词的后面。",
+    note:"口诀：主格领头站句首，宾格跟在动词后。with her、to me、like him —— 介词和动词后面，全用宾格。",
+    sents:["I like playing with her. 我喜欢和她一起玩。","Give it to me, please. 请把它给我。","My sister often goes to school with him. 我妹妹经常和他一起去上学。"]
+  },
+  lines:[
+    {en:"We are good friends.",zh:"我们是好朋友。"},
+    {en:"I like playing with her.",zh:"我喜欢和她一起玩。"},
+    {en:"My favourite sport is basketball. Hers is ping-pong.",zh:"我最喜欢的运动是篮球，她的是乒乓球。"},
+    {en:"Give it to me, please.",zh:"请把它给我。"},
+    {en:"My sister often goes to school with him.",zh:"我妹妹经常和他一起去上学。"}
+  ],
+  quiz:[
+    {t:"c", q:"句子开头做主语，填主格：___（我）am a student.", o:["I","me","my","mine"], a:"I", hint:"主语在句首，想一想表格第一行。", ex:"I 是主格，做主语放在句首；me 是宾格，不能站句首。"},
+    {t:"c", q:"动词后面用宾格：I like playing with ___.（她）", o:["she","her","hers","he"], a:"her", hint:"with 是介词，介词后面用…？", ex:"with 后面用宾格 her。口诀：动词和介词后面，全用宾格。"},
+    {t:"c", q:"介词 to 后面：Give it to ___, please.（我）", o:["I","me","my","mine"], a:"me", hint:"to 是介词。", ex:"to 是介词，介词后面用宾格 me。I 是主格，不能跟在 to 后面。"},
+    {t:"c", q:"哪句是对的？", o:["We are good friends.","Us are good friends.","Me is a teacher.","Him likes music."], a:"We are good friends.", hint:"句子开头做主语，应该用主格。", ex:"只有第一句对：句首做主语用主格 We。me/us/him 是宾格，不能做主语。"}
+  ],
+  final:[
+    {t:"f", q:"翻译填空：___（我是）a student.", a:"I am", hint:"我是=I am，am 跟着 I。", ex:"I 用 am，这是个固定搭配，怎么都别写成 I is。"},
+    {t:"f", q:"翻译填空：___（你们是）students.", a:"You are", hint:"你是/你们是都用 You are。", ex:"you 不管单数复数，都跟 are。"},
+    {t:"c", q:"My sister often goes to school with ___.（他）", o:["he","him","his","himself"], a:"him", hint:"with 后面用宾格。", ex:"with 是介词 → 用宾格 him。原句在讲义 1037 页。"},
+    {t:"c", q:"We are good friends. 里的 We 能不能换成 Us？", o:["不能，句首做主语要用主格","能，us 也是我们","能，me 更好","不能，应该用 our"], a:"不能，句首做主语要用主格", hint:"想想主格和宾格的分工。", ex:"句首做主语必须用主格 We。Us 是宾格，只能跟在动词或介词后面。"}
+  ]
+},
+{
+  id:"l2", icon:"🎒", title:"物主代词", src:"讲义第 1038 页",
+  teacher:{
+    goal:"学生分清「形容词性」（my book 我的书）和「名词性」（mine 我的），知道形物后面必须接名词。",
+    traps:["my 后面一定有名词：my book","mine 单独用，等于 my book：This is mine","its（它的）和 it's（它是）不是一个词！"],
+    say:"指着东西问 This is my…，然后让她说 mine/yours。用教室里的实物练最有效。"
+  },
+  vocab:[
+    {w:"book",ipa:"/bʊk/",m:"n. 书",ex:"This is my English book.",exz:"这是我的英语书。",tip:"my book 我的书：my 后面跟着名词。"},
+    {w:"maths",ipa:"/mæθs/",m:"n. 数学",ex:"This is our maths teacher.",exz:"这是我们的数学老师。",tip:"maths teacher 数学老师。"},
+    {w:"cap",ipa:"/kæp/",m:"n. 帽子",ex:"This black cap is not mine.",exz:"这顶黑帽子不是我的。",tip:"mine=我的，单独用，后面不跟名词。"},
+    {w:"room",ipa:"/ruːm/",m:"n. 房间",ex:"The room is ours.",exz:"这个房间是我们的。",tip:"room 房间；oo 发长音 /uː/。"},
+    {w:"cute",ipa:"/kjuːt/",m:"adj. 可爱的",ex:"I have a cute dog.",exz:"我有一只可爱的小狗。",tip:"cute 可爱，读 /kjuːt/。"},
+    {w:"dog",ipa:"/dɒɡ/",m:"n. 狗",ex:"This ball is its toy.",exz:"这个球是它的玩具。",tip:"its=它的，后面跟名词 toy。"},
+    {w:"toy",ipa:"/tɔɪ/",m:"n. 玩具",ex:"Its toy is here.",exz:"它的玩具在这里。",tip:"toy 玩具，oy 发 /ɔɪ/。"},
+    {w:"black",ipa:"/blæk/",m:"adj. 黑色的",ex:"This black cap is not his.",exz:"这顶黑帽子不是他的。",tip:"black 黑色，bl 组合读 /bl/。"}
+  ],
+  pattern:{
+    title:"物主代词 · 两套要分清",
+    sub:"「我的书」和「我的」是两回事",
+    rows:[["形容词性（+名词）","my","your","his","her","its","our","their"],["名词性（单独用）","mine","yours","his","hers","its","ours","theirs"]],
+    formula:"形容词性 my 后面一定跟着名词（my book）；名词性 mine 单独用，就等于 my book。",
+    note:"mine = my book；yours = your book；hers = her book。This is my book = This book is mine，意思一样。its（它的）和 it's（它是）不是一回事！",
+    sents:["This is my English book. 这是我的英语书。","This black cap is not mine. 这顶黑帽子不是我的。","The room next to Alice's room is ours. 爱丽丝旁边那间是我们的。"]
+  },
+  lines:[
+    {en:"This is my English book.",zh:"这是我的英语书。"},
+    {en:"This is our maths teacher.",zh:"这是我们的数学老师。"},
+    {en:"I have a cute dog. This ball is its toy.",zh:"我有一只可爱的小狗。这个球是它的玩具。"},
+    {en:"This black cap is not mine.",zh:"这顶黑帽子不是我的。"},
+    {en:"The room next to Alice's room is ours.",zh:"爱丽丝旁边那个房间是我们的。"}
+  ],
+  quiz:[
+    {t:"c", q:"后面有名词 book，用哪种？This is ___ book.（我）", o:["my","mine","me","I"], a:"my", hint:"my 后面一定要接名词。", ex:"book 是名词，前面用形容词性 my。mine 后面不能接名词。"},
+    {t:"c", q:"句末没有名词，单独用哪种？This black cap is not ___.（我的）", o:["my","mine","me","I"], a:"mine", hint:"句末没有名词，用名词性。", ex:"句末没有名词，用名词性 mine。mine 就等于 my cap。"},
+    {t:"c", q:"I have a cute dog. This ball is ___ toy.（它的）", o:["it","its","it's","is"], a:"its", hint:"toy 是名词，前面用形容词性；its 是它的。", ex:"后面有名词 toy → 用形容词性 its（它的）。it's=它是，别选错。"},
+    {t:"c", q:"This is our maths teacher. —— 这里的 our 能不能换成 ours？", o:["不能，后面有名词要用形容词性","能，意思一样","能，ours 更好","不能，应该用 us"], a:"不能，后面有名词要用形容词性", hint:"后面有 teacher 这个名词。", ex:"后面跟着名词 teacher，必须用形容词性 our。ours 只能单独站。"}
+  ],
+  final:[
+    {t:"f", q:"填空：This is ___（你的）English book.", a:"your", hint:"你的+书，后面有名词。", ex:"后面有名词 book → 用形容词性 your。"},
+    {t:"f", q:"填空：This black cap is not ___（她的）.", a:"hers", hint:"句末没有名词。", ex:"句末没有名词 → 用名词性 hers（= her cap）。"},
+    {t:"c", q:"The room next to Alice's room is ___.（我们的）", o:["our","ours","us","we"], a:"ours", hint:"句末没有名词。", ex:"句末没有名词，用名词性 ours（= our room）。原句在讲义 1038 页。"},
+    {t:"f", q:"改写：This is my book. → This book is ___.", a:"mine", hint:"把 my book 变成名词性。", ex:"This book is mine = This is my book，mine 等于 my book。"}
+  ]
+},
+{
+  id:"l3", icon:"⚡", title:"be 动词与动词三单", src:"讲义第 1037/1038 页",
+  teacher:{
+    goal:"学生掌握 be 动词三兄弟（am/is/are）怎么配对，和一般现在时动词加 s（三单）。",
+    traps:["I 永远配 am；we/you/they 配 are；he/she/it 配 is","主语是 he/she/it 或单数名词时，动词加 s：He likes…","have 变 has、go 变 goes，不是加 s 那么简单"],
+    say:"让 I am / you are / he is 对着手指头读三遍。再让她选词填句子，错了就让她自己念出三单口诀。"
+  },
+  vocab:[
+    {w:"like",ipa:"/laɪk/",m:"v. 喜欢",ex:"He likes playing the violin.",exz:"他喜欢拉小提琴。",tip:"he/she/it 后面，like 要加 s → likes。"},
+    {w:"go",ipa:"/ɡəʊ/",m:"v. 去",ex:"My sister often goes to school.",exz:"我妹妹经常去上学。",tip:"三单 go→goes，加 es。"},
+    {w:"often",ipa:"/ˈɒfn/",m:"adv. 经常",ex:"She often says thank you.",exz:"她经常说谢谢。",tip:"often 放在动词前面：She often…"},
+    {w:"music",ipa:"/ˈmjuːzɪk/",m:"n. 音乐",ex:"He likes music.",exz:"他喜欢音乐。",tip:"music 不可数名词，前面不加 a。"},
+    {w:"violin",ipa:"/ˌvaɪəˈlɪn/",m:"n. 小提琴",ex:"He plays the violin.",exz:"他拉小提琴。",tip:"弹乐器前面要加 the：play the violin。"},
+    {w:"school",ipa:"/skuːl/",m:"n. 学校",ex:"We go to school by bike.",exz:"我们骑自行车上学。",tip:"go to school 去上学。"},
+    {w:"each",ipa:"/iːtʃ/",m:"adj. 每个",ex:"They are nice to each other.",exz:"他们彼此很友好。",tip:"each other=彼此，互相。"}
+  ],
+  pattern:{
+    title:"be 动词三兄弟 + 三单",
+    sub:"am / is / are 配谁，一句口诀记完",
+    rows:[["I","am"],["You","are"],["He / She / It","is"],["We / You / They","are"],["单数名词（Tom）","is"],["复数名词（my friends）","are"]],
+    formula:"主语 + be（am/is/are）+ 其他",
+    note:"我用 am，你用 are，is 用在他她它；复数名词全用 are。三单口诀：主语是 he/she/it 或单数名词，动词加 s（go→goes，have→has，study→studies）。",
+    sents:["I am a teacher. 我是老师。","You are students. 你们是学生。","He likes playing the violin. 他喜欢拉小提琴。"]
+  },
+  lines:[
+    {en:"I am a teacher.",zh:"我是老师。"},
+    {en:"You are students.",zh:"你们是学生。"},
+    {en:"He likes playing the violin.",zh:"他喜欢拉小提琴。"},
+    {en:"My sister often goes to school with him.",zh:"我妹妹经常和他一起去上学。"},
+    {en:"They are nice to each other.",zh:"他们彼此很友好。"}
+  ],
+  quiz:[
+    {t:"c", q:"I ___ a student.", o:["am","is","are","be"], a:"am", hint:"我用 am。", ex:"I 永远配 am。这是最硬的一条搭配。"},
+    {t:"c", q:"He ___ music.（喜欢）", o:["like","likes","liking","is like"], a:"likes", hint:"he 是三单，动词加 s。", ex:"主语 he 是三单，like 加 s → likes。原句 He likes music."},
+    {t:"c", q:"My sister ___ to school every day.（去）", o:["go","goes","going","is go"], a:"goes", hint:"My sister 是单数，go 的三单怎么变？", ex:"sister 是单数 → 三单，go 变 goes（加 es）。"},
+    {t:"c", q:"We ___ good friends.", o:["am","is","are","be"], a:"are", hint:"我们=we，用哪个 be？", ex:"we 用 are。I am、you are、we are，把三兄弟背熟。"},
+    {t:"c", q:"She ___ a teacher. 哪句对？", o:["She are a teacher.","She is a teacher.","She am a teacher.","She be a teacher."], a:"She is a teacher.", hint:"she 用 is。", ex:"she 用 is。你=are、我=am、他她它=is。"}
+  ],
+  final:[
+    {t:"f", q:"填空：I ___ a teacher.（用 be 动词）", a:"am", hint:"我用 am。", ex:"I am a teacher. 我是老师。"},
+    {t:"f", q:"填空：He ___ the violin.（喜欢拉）", a:"likes playing", hint:"He 三单，like 加 s；喜欢做某事 like doing。", ex:"He likes playing the violin. 他喜欢拉小提琴。like doing=喜欢做某事。"},
+    {t:"f", q:"把 He likes playing the violin 的主语换成 They，动词怎么变？", a:"like", hint:"they 不是三单，动词用原形。", ex:"主语 They → 动词用原形 like：They like playing the violin."},
+    {t:"c", q:"Tom ___ music and he often plays the guitar.", o:["like","likes","liking","is like"], a:"likes", hint:"Tom 是单数名词 → 三单。", ex:"Tom 是单数名词，和三单 he 一样，动词加 s → likes。"
+    }
+  ]
+},
+{
+  id:"l4", icon:"🏫", title:"There be 句型", src:"讲义第 1040 页",
+  teacher:{
+    goal:"学生掌握 There is/are 表「某地有某物」，会变否定和疑问，懂就近原则。",
+    traps:["There is + 单数/不可数；There are + 复数","there be 和 have 都是「有」，但 there be 表示「某地存在」","就近原则：There is a ruler and two books… 看最近的名词"],
+    say:"拿房间里的东西造句：There is a desk. There are two chairs. 一直替换到她会为止。"
+  },
+  vocab:[
+    {w:"dining",ipa:"/ˈdaɪnɪŋ/",m:"n. 用餐",ex:"There is a dining hall.",exz:"有一个食堂。",tip:"dining hall 食堂；dine=进餐。"},
+    {w:"hall",ipa:"/hɔːl/",m:"n. 大厅",ex:"We eat in the dining hall.",exz:"我们在食堂吃饭。",tip:"dining hall 食堂。"},
+    {w:"library",ipa:"/ˈlaɪbrəri/",m:"n. 图书馆",ex:"There are many books in the library.",exz:"图书馆里有很多书。",tip:"li-bra-ry 三个音节慢慢读。"},
+    {w:"desk",ipa:"/desk/",m:"n. 书桌",ex:"There is a ruler on the desk.",exz:"书桌上有一把尺子。",tip:"desk 书桌；on the desk 在书桌上。"},
+    {w:"ruler",ipa:"/ˈruːlə/",m:"n. 尺子",ex:"There is a ruler on the desk.",exz:"书桌上有一把尺子。",tip:"ruler 尺子；rule 规则+er。"},
+    {w:"flower",ipa:"/ˈflaʊə/",m:"n. 花",ex:"There are some flowers in the park.",exz:"公园里有一些花。",tip:"flowers 复数加 s；some 一些。"},
+    {w:"water",ipa:"/ˈwɔːtə/",m:"n. 水",ex:"There isn't any water in the cup.",exz:"杯子里没有水。",tip:"water 水，不可数，用 is；否定加 any。"},
+    {w:"cup",ipa:"/kʌp/",m:"n. 杯子",ex:"There is some water in the cup.",exz:"杯子里有一些水。",tip:"cup 杯子；不可数名词用 is。"}
+  ],
+  pattern:{
+    title:"There be · 某地有某物",
+    sub:"there 不是「那里」，是「有」",
+    rows:[["There is","+ 单数名词 / 不可数名词","There is a dining hall."],["There are","+ 复数名词","There are many books."],["否定","There isn't / aren't","There isn't any water."],["疑问","Is / Are there…?","Yes, there is. / No, there isn't."]],
+    formula:"There be + 名词 + 地点　（某地有某物）",
+    note:"就近原则：后面跟着好几个名词时，be 看最近的那一个！There is a ruler and two books on the desk. ——最近的是 a ruler（单数），用 is。",
+    sents:["There is a dining hall in front of the school. 学校前面有一个食堂。","There are many interesting books in the library. 图书馆里有很多有趣的书。","There isn't any water in the cup. 杯子里没有水。"]
+  },
+  lines:[
+    {en:"There is a dining hall in front of the school.",zh:"学校前面有一个食堂。"},
+    {en:"There are many interesting books in the library.",zh:"图书馆里有很多有趣的书。"},
+    {en:"There is a ruler on the desk.",zh:"书桌上有一把尺子。"},
+    {en:"There isn't any water in the cup.",zh:"杯子里没有水。"},
+    {en:"There is a ruler and two books on the desk.",zh:"书桌上有一把尺子和两本书。（就近原则）"}
+  ],
+  quiz:[
+    {t:"c", q:"There ___ a ruler on the desk.", o:["is","are","am","be"], a:"is", hint:"a ruler 是单数。", ex:"a ruler 单数 → There is。单数/不可数名词用 is。"},
+    {t:"c", q:"There ___ many interesting books in the library.", o:["is","are","am","be"], a:"are", hint:"many books 是复数。", ex:"many books 复数 → There are。复数名词用 are。"},
+    {t:"c", q:"There ___ some water in the cup.", o:["is","are","am","be"], a:"is", hint:"water 是不可数名词。", ex:"water 不可数 → 当单数处理，用 is。"},
+    {t:"c", q:"就近原则：There ___ a ruler and two books on the desk.", o:["is","are","am","be"], a:"is", hint:"最近的名词是 a ruler 还是 two books？", ex:"最近的是 a ruler（单数）→ 用 is。这就是就近原则。"},
+    {t:"c", q:"疑问句：— ___ there a dining hall? — Yes, there is.", o:["Is","Are","Am","Do"], a:"Is", hint:"a dining hall 单数，疑问句把 is 提前。", ex:"单数 → Is there…? Yes, there is. 复数才用 Are there…?"}
+  ],
+  final:[
+    {t:"f", q:"填空：There ___ a dining hall in front of the school.", a:"is", hint:"a dining hall 单数。", ex:"单数用 is：There is a dining hall in front of the school. 原句在讲义 1040 页。"},
+    {t:"f", q:"填空：There ___ many interesting books in the library.", a:"are", hint:"many books 复数。", ex:"复数用 are：There are many interesting books in the library."},
+    {t:"f", q:"改否定：There is some water in the cup. → There ___ any water in the cup.", a:"isn't", hint:"否定用 isn't，some 要变 any。", ex:"There isn't any water in the cup. 否定句把 some 改成 any，is 改成 isn't。"},
+    {t:"c", q:"就近原则：There ___ two books and a ruler on the desk.", o:["are","is","am","be"], a:"are", hint:"这次最近的是 two books（复数）。", ex:"最近的是 two books → 用 are。就近原则：看离 be 最近的名词。"}
+  ]
+},
+{
+  id:"l5", icon:"🏛️", title:"语法填空 · 介绍我的学校", src:"讲义第 1041 页",
+  teacher:{
+    goal:"学生学会「看空前后→定词性→变词形」的语法填空五步法，能对付 build/centre/amaze 这类词形变化。",
+    traps:["build 变名词 building，复数 buildings（two tall buildings）","centre 变形容词 central（central part 中心部分）","amaze 的两个形容词：amazing 形容物，amazed 形容人"],
+    say:"每空都先问三句话：缺什么词？要不要变复数？动词要不要加 s？问完再填。"
+  },
+  vocab:[
+    {w:"building",ipa:"/ˈbɪldɪŋ/",m:"n. 建筑物",ex:"There are many modern buildings.",exz:"有很多现代建筑。",tip:"build（建造）+ ing → 建筑物。"},
+    {w:"modern",ipa:"/ˈmɒdn/",m:"adj. 现代的",ex:"It's a modern school.",exz:"这是一所现代化学校。",tip:"modern 现代，词尾 en 弱读 /ən/。"},
+    {w:"garden",ipa:"/ˈɡɑːdn/",m:"n. 花园",ex:"There is a round garden.",exz:"有一个圆形花园。",tip:"round 圆的；garden 花园。"},
+    {w:"centre",ipa:"/ˈsentə/",m:"n. 中心",ex:"It's in the centre of our school.",exz:"它在我们学校的中心。",tip:"centre 中心；central 形容词=中心的。"},
+    {w:"culture",ipa:"/ˈkʌltʃə/",m:"n. 文化",ex:"Chinese traditional culture",exz:"中国传统文化",tip:"culture 文化；traditional 传统的。"},
+    {w:"flag",ipa:"/flæɡ/",m:"n. 旗",ex:"We raise the flag on Monday.",exz:"我们星期一升旗。",tip:"raise the flag 升旗。"},
+    {w:"seat",ipa:"/siːt/",m:"n. 座位",ex:"We change our seats every week.",exz:"我们每周换座位。",tip:"change seats 换座位。"},
+    {w:"jiaozi",ipa:"/ˈdʒaʊdzi/",m:"n. 饺子",ex:"They make delicious jiaozi.",exz:"他们做美味的饺子。",tip:"jiaozi 饺子，中文音译词。"}
+  ],
+  pattern:{
+    title:"语法填空 · 五步法",
+    sub:"先看缺什么，再想怎么变",
+    rows:[["①看空前后","缺名词？动词？形容词？介词？"],["②定词性","名词→单复数；动词→三单/ing；形容词→变副词"],["③变词形","build→building(s)，centre→central，amaze→amazing"],["④主谓一致","主语三单→动词加 s；there be 就近"]],
+    formula:"①看空前后 → ②定词性 → ③变词形 → ④代入检查",
+    note:"最高频的三组：build→building（建筑）、centre→central（中心的）、amaze→amazing/amazed（令人惊叹的/感到惊叹的）。",
+    sents:["There are many modern buildings. 有很多现代建筑。","We raise the flag every Monday. 我们每周一升旗。","The dining hall is across from the sports field. 食堂在运动场对面。"]
+  },
+  lines:[
+    {en:"Hi Flora, thanks for your email.",zh:"嗨，弗罗拉，谢谢你的邮件。"},
+    {en:"My new school is great! It's very beautiful.",zh:"我的新学校很棒！它非常漂亮。"},
+    {en:"There are many modern buildings.",zh:"有很多现代建筑。"},
+    {en:"Every Monday we raise the flag there.",zh:"我们每个星期一都在那里升旗。"},
+    {en:"They make delicious jiaozi.",zh:"他们做美味的饺子。"}
+  ],
+  quiz:[
+    {t:"c", q:"You can see two tall ___（build）in front of you.", o:["build","builds","building","buildings"], a:"buildings", hint:"two 表示复数，build 变名词再加 s。", ex:"two 提示复数 → building（名词）+s = buildings。two tall buildings 两座高楼。"},
+    {t:"c", q:"There is a round garden in the ___（centre）part of our school.", o:["centre","central","centres","centring"], a:"central", hint:"part 是名词，前面缺形容词。", ex:"修饰名词 part 用形容词 central（中心的）：central part 中心部分。"},
+    {t:"c", q:"There ___（be）a pencil and two rulers in the pencil case.", o:["is","are","am","be"], a:"is", hint:"就近原则！最近的名词是 a pencil。", ex:"最近的名词是 a pencil（单数）→ is。这是 1041 页原题。"},
+    {t:"c", q:"Visitors are ___（amaze）at traditional Chinese culture.", o:["amaze","amazing","amazed","amazes"], a:"amazed", hint:"be amazed at 是固定搭配=对…感到惊叹。", ex:"be amazed at=对…感到惊叹。amazed 形容人（感到…），amazing 形容物（令人…）。"}
+  ],
+  final:[
+    {t:"f", q:"填空：There ___（be）many modern buildings in our school.", a:"are", hint:"many buildings 复数。", ex:"复数 → are：There are many modern buildings. 原题在 1041 页。"},
+    {t:"f", q:"填空：It's ___（amaze）! 感叹学校很漂亮。", a:"amazing", hint:"形容事物本身用 -ing 那个。", ex:"It's amazing! 形容物用 amazing（令人惊叹的）。形容人感到…才用 amazed。"},
+    {t:"f", q:"填空：We change our ___（seat）every week.", a:"seats", hint:"我们每个人一个座位，不止一个。", ex:"change our seats 换座位 → 用复数 seats。"},
+    {t:"f", q:"填空：I love the ___（China）food there.", a:"Chinese", hint:"China 变成形容词「中国的」。", ex:"China→Chinese（中国的）：Chinese food 中国菜。原题：They make delicious Chinese food…"},
+    {t:"f", q:"填空：Many people don't really know the ___（important）of tea.", a:"importance", hint:"the ___ of tea 缺一个名词。", ex:"important 变名词 importance（重要性）：the importance of tea 茶的重要性。原题在 1041 页。"}
+  ]
+},
+{
+  id:"l6", icon:"👥", title:"选词填空 · 我的新同学", src:"讲义第 1039 页",
+  teacher:{
+    goal:"学生掌握「通读→看搭配→先易后难→代入检查」的选词填空方法，记牢 be good at / full of / ready to 等固定搭配。",
+    traps:["full of energy 精力充沛","be good at 擅长","be ready to do 准备好做…","friend→friendly 友好的"],
+    say:"先不急着填，让她把整段读一遍再说大意。每空填完都问：这个词放回去，句子通顺吗？"
+  },
+  vocab:[
+    {w:"energy",ipa:"/ˈenədʒi/",m:"n. 精力",ex:"He is full of energy.",exz:"他精力充沛。",tip:"full of energy 精力充沛。"},
+    {w:"slim",ipa:"/slɪm/",m:"adj. 苗条的",ex:"She is a tall and slim girl.",exz:"她是个又高又苗条的女孩。",tip:"slim 苗条；tall and slim 又高又瘦。"},
+    {w:"smart",ipa:"/smɑːt/",m:"adj. 聪明的",ex:"He is smart.",exz:"他很聪明。",tip:"smart=聪明的，也可以说 clever。"},
+    {w:"polite",ipa:"/pəˈlaɪt/",m:"adj. 有礼貌的",ex:"She is very polite.",exz:"她非常有礼貌。",tip:"polite 有礼貌的；反义词 impolite 没礼貌的。"},
+    {w:"ready",ipa:"/ˈredi/",m:"adj. 准备好的",ex:"He is always ready to help others.",exz:"他总是乐于帮助别人。",tip:"be ready to do=准备好做…。"},
+    {w:"piano",ipa:"/piˈænəʊ/",m:"n. 钢琴",ex:"She can play the piano well.",exz:"她钢琴弹得很好。",tip:"play the piano 弹钢琴，乐器前要加 the。"},
+    {w:"science",ipa:"/ˈsaɪəns/",m:"n. 科学",ex:"He likes learning about science.",exz:"他喜欢学科学。",tip:"science 科学；learn about 学习…"},
+    {w:"friendly",ipa:"/ˈfrendli/",m:"adj. 友好的",ex:"They are friendly to each other.",exz:"他们彼此很友好。",tip:"friend（朋友）+ly → 友好的。"}
+  ],
+  pattern:{
+    title:"选词填空 · 四步法",
+    sub:"固定搭配是送分题",
+    rows:[["①通读全文","先整篇读一遍，抓住大意"],["②看搭配","be good at / full of / ready to / be nice to"],["③先易后难","会的先填，剩下的慢慢推"],["④代入检查","每个空放回去，再读一遍顺不顺"]],
+    formula:"通读 → 找搭配 → 先易后难 → 代入检查",
+    note:"本课高频搭配：full of energy（精力充沛）、be good at（擅长）、play the piano（弹钢琴）、be ready to help（乐于助人）、be friendly to（对…友好）。",
+    sents:["He is full of energy. 他精力充沛。","She is good at music. 她擅长音乐。","He is always ready to help others. 他总是乐于助人。"]
+  },
+  lines:[
+    {en:"Simon is a tall boy. He likes sport and playing football.",zh:"西蒙是个高个子男孩。他喜欢运动，喜欢踢足球。"},
+    {en:"He is always full of energy.",zh:"他总是精力充沛。"},
+    {en:"Sandy is a tall and slim girl with long hair.",zh:"桑迪是个又高又苗条、留着长发的女孩。"},
+    {en:"She is good at music, and she can play the piano well.",zh:"她擅长音乐，钢琴也弹得很好。"},
+    {en:"They are friendly to each other.",zh:"他们彼此很友好。"}
+  ],
+  quiz:[
+    {t:"c", q:"He is full of ___. 精力充沛。", o:["energy","water","toy","room"], a:"energy", hint:"full of 后面接「精力」。", ex:"full of energy 精力充沛，固定搭配。原句在 1039 页。"},
+    {t:"c", q:"She is ___ at music. 擅长音乐。", o:["good","polite","smart","ready"], a:"good", hint:"be ___ at 擅长…。", ex:"be good at 擅长…，固定搭配。"},
+    {t:"c", q:"He is always ___ to help others. 乐于助人。", o:["ready","energy","with","good"], a:"ready", hint:"be ___ to do 准备好做…。", ex:"be ready to help 乐于帮助，ready to 固定搭配。"},
+    {t:"c", q:"They are ___ to each other. 彼此友好。", o:["friendly","friend","friends","friendship"], a:"friendly", hint:"are 后面接形容词；friend 要变形容词。", ex:"are friendly 友好的。friend→friendly（友好的），形容词。"}
+  ],
+  final:[
+    {t:"f", q:"从词库选词：He is always full of ___.<br>（词库：sport/energy/with/good/the/polite/always/smart/ready/friendly，2 个多余）", a:"energy", hint:"full of ___ 精力充沛。", ex:"full of energy 精力充沛。"},
+    {t:"f", q:"从词库选词：Sandy is a tall and slim girl ___ long hair.<br>（词库同上）", a:"with", hint:"一个「留着长发的」介词。", ex:"with long hair 留着长头发，with 表特征。"},
+    {t:"f", q:"从词库选词：She is ___ at music.<br>（词库同上）", a:"good", hint:"be ___ at 擅长。", ex:"be good at music 擅长音乐。"},
+    {t:"f", q:"从词库选词：She can play ___ piano well.<br>（词库同上）", a:"the", hint:"弹乐器前面要加哪个小词？", ex:"play the piano，乐器前加 the。"},
+    {t:"f", q:"从词库选词：She is very ___. 她很有礼貌。<br>（词库同上）", a:"polite", hint:"有礼貌的。", ex:"She is very polite. 她非常有礼貌。"},
+    {t:"f", q:"从词库选词：She ___ says “please” and “thank you”.<br>（词库同上）", a:"always", hint:"她___说请和谢谢=经常。", ex:"She always says… 她总是说…，always 总是，放在动词前。"},
+    {t:"f", q:"从词库选词：Daniel is ___. 他很聪明。<br>（词库同上）", a:"smart", hint:"聪明的。", ex:"Daniel is smart. 丹尼尔很聪明。"},
+    {t:"f", q:"从词库选词：He is always ___ to help others.<br>（词库同上）", a:"ready", hint:"be ___ to do 乐于做…。", ex:"be ready to help 乐于助人，ready to 固定搭配。"},
+    {t:"f", q:"从词库选词：They are ___ to each other.<br>（词库同上）", a:"friendly", hint:"are ___ 后面接形容词，friend 变…？", ex:"are friendly 友好的。friend→friendly。"}
+  ]
+},
+{
+  id:"l7", icon:"📖", title:"阅读理解 · 西方姓氏的来源", src:"讲义第 1039 页",
+  teacher:{
+    goal:"学生学会「先看问题→带问题读→回原文定位→排除法」的阅读四步法，能答对信息题和结构题。",
+    traps:["信息题要回原文找原话，别凭感觉","Jack London 的姓氏 London 来自地名（居住地）","结构题：总起句在开头，后面 4 个分点并列"],
+    say:"先让她看问题（中文也可以），再读文章。每道题都逼她指回原文哪一行找到的答案。"
+  },
+  vocab:[
+    {w:"name",ipa:"/neɪm/",m:"n. 名字",ex:"Family names come last.",exz:"姓氏放在最后。",tip:"given name=名，family name/last name=姓。"},
+    {w:"surname",ipa:"/ˈsɜːneɪm/",m:"n. 姓氏",ex:"Surname means family name.",exz:"surname 就是姓氏。",tip:"sur+name=在名字之后的=姓。"},
+    {w:"westerner",ipa:"/ˈwestənə/",m:"n. 西方人",ex:"Westerners get their family names in different ways.",exz:"西方人用不同的方式得到他们的姓氏。",tip:"west 西 + er + n 人 = 西方人。"},
+    {w:"job",ipa:"/dʒɒb/",m:"n. 工作",ex:"“Smith” means the name of a job.",exz:"“史密斯”是一种工作的名称。",tip:"Smith 本义是铁匠。"},
+    {w:"colour",ipa:"/ˈkʌlə/",m:"n. 颜色",ex:"Some family names are from colours.",exz:"有些姓氏来自颜色。",tip:"Black/White 都是颜色姓氏。"},
+    {w:"famous",ipa:"/ˈfeɪməs/",m:"adj. 著名的",ex:"the famous American writer Jack London",exz:"著名的美国作家杰克·伦敦",tip:"fame 名声 + ous 形容词后缀。"},
+    {w:"writer",ipa:"/ˈraɪtə/",m:"n. 作家",ex:"He is a famous writer.",exz:"他是一位著名作家。",tip:"write（写）+ r（人）= 作家。"},
+    {w:"parent",ipa:"/ˈpeərənt/",m:"n. 父亲/母亲",ex:"“David's son” becomes “Davidson”.",exz:"“大卫的儿子”变成“戴维森”。",tip:"parent 父母一方；-son 表「…的儿子」。"}
+  ],
+  pattern:{
+    title:"阅读理解 · 四步法",
+    sub:"答案都在原文里",
+    rows:[["①先看问题","知道要问什么，心里有数"],["②带问题读","盯住关键词：人名、数字、地名"],["③回原文定位","答案基本是原文原话"],["④排除法","明显不对的先划掉"]],
+    formula:"先看问题 → 带着问题读 → 回原文定位 → 排除法",
+    note:"结构题小技巧：开头一句总起，后面每段讲一类，就是「总分」结构。Smith/Cook 是工作，Bush/Cliff/Lake 是地名，Black/White 是颜色，Davidson/Peterson 是父母。",
+    sents:["Some family names such as Smith, Cook and Taylor are about a person's job. 有些姓氏和工作有关。","Some family names are from colours. Black means the black colour. 有些姓氏来自颜色。","“David's son” becomes “Davidson”. “大卫的儿子”变成了“戴维森”。"]
+  },
+  lines:[
+    {en:"In English, given names come first and family names come last.",zh:"英语里，名在前，姓在后。"},
+    {en:"Family names are also called last names.",zh:"姓氏也叫 last names。"},
+    {en:"Westerners get their family names in different ways.",zh:"西方人用不同的方式获得姓氏。"},
+    {en:"Some family names such as Smith, Cook and Taylor are about a person's job.",zh:"有些姓氏和工作有关，比如 Smith、Cook 和 Taylor。"},
+    {en:"Some westerners get their family names from their living places, such as Bush, Cliff and Lake.",zh:"有些人根据居住地取姓，比如 Bush、Cliff 和 Lake。"},
+    {en:"Some family names are from colours. “Black” means the black colour.",zh:"有些姓氏来自颜色。“Black”就是黑色。"},
+    {en:"Other family names are from the name of a parent. “David's son” becomes “Davidson”.",zh:"还有些姓氏来自父亲的名字。“大卫的儿子”变成“戴维森”。"}
+  ],
+  quiz:[
+    {t:"c", q:"“Smith”这个姓氏和什么有关？", o:["工作","颜色","地名","父母"], a:"工作", hint:"原文：Smith, Cook and Taylor are about a person's job.", ex:"原文第一类：job 工作。Smith 本义是铁匠（a job）。"},
+    {t:"c", q:"“Black”这个姓氏和什么有关？", o:["颜色","工作","地名","父母"], a:"颜色", hint:"原文：Black means the black colour.", ex:"原文第三类：colour 颜色。Black 就是黑色。"},
+    {t:"c", q:"“Davidson”这个姓氏是怎么来的？", o:["来自父亲的名字","来自工作","来自地名","来自颜色"], a:"来自父亲的名字", hint:"David's son → Davidson。", ex:"David's son 大卫的儿子 → Davidson。-son 表示「…的儿子」，来自父母的名字。"},
+    {t:"c", q:"文章结构：开头总起，后面 4 类并列，是什么结构？", o:["总分结构","分总结构","总分总结构","并列结构"], a:"总分结构", hint:"先总说，再分 4 类展开。", ex:"先总起（get their family names in different ways），再分工作/地名/颜色/父母 4 类 → 总分结构。"}
+  ],
+  final:[
+    {t:"c", q:"What is the family name “Smith” about in the passage?", o:["A. A place.","B. A colour.","C. A job.","D. A name of a parent."], a:"C. A job.", hint:"原文：Smith, Cook and Taylor are about a person's job.", ex:"C。原文明确说 Smith 这类姓氏 about a person's job（和工作有关）。这是 1039 页原题第 1 题。"},
+    {t:"c", q:"Where might Jack London's family live long ago?", o:["A. In New York.","B. In Sydney.","C. In Paris.","D. In London."], a:"D. In London.", hint:"Jack London 的姓 London 来自地名那一类。", ex:"D。London 属于「from their living places」这一类 → 他们以前住在伦敦。这是原题第 2 题。"},
+    {t:"c", q:"In how many ways do westerners get their family names?", o:["A. Three.","B. Four.","C. Five.","D. Six."], a:"B. Four.", hint:"数一数文章里的几类：工作/地名/颜色/父母。", ex:"B。四种：job、living places、colours、parent's name。这是原题第 3 题。"},
+    {t:"c", q:"What's the structure of the passage?", o:["A. 总分结构：先总起，再分 4 类","B. 分总结构：先分说，再总结","C. 时间顺序","D. 按人名的字母顺序"], a:"A. 总分结构：先总起，再分 4 类", hint:"开头说 in different ways，后面每段讲一种。", ex:"A。开头总起「西方人用不同方式取姓」，后面 ①②③④ 每段一类 → 总分结构。这是原题第 4 题。"}
+  ]
+},
+{
+  id:"l8", icon:"💻", title:"完形填空 · 科技进校园", src:"讲义第 1042 页",
+  teacher:{
+    goal:"学生掌握完形单选四步法（跳过空格通读→看上下文→逐项排除→代入检查），并会认 technology/equipment/common 等科技词。",
+    traps:["work on maths 用 on","be surprised 感到惊讶（surprised 形容人）","head teacher 校长","regard…as 把…看作，instead of 而不是"],
+    say:"先遮住选项让她把文章读一遍，说出大意；再一题一题做，每题都要讲为什么不选另外三个。"
+  },
+  vocab:[
+    {w:"technology",ipa:"/tekˈnɒlədʒi/",m:"n. 技术",ex:"The school uses new technology.",exz:"学校使用新技术。",tip:"tech（技术）+ nology，科技技术。"},
+    {w:"modern",ipa:"/ˈmɒdn/",m:"adj. 现代的",ex:"his modern classroom",exz:"他现代化的教室",tip:"modern 现代；和 old 相反。"},
+    {w:"equipment",ipa:"/ɪˈkwɪpmənt/",m:"n. 设备",ex:"electronic equipment",exz:"电子设备",tip:"equipment 不可数，没有复数。"},
+    {w:"electronic",ipa:"/ˌelekˈtrɒnɪk/",m:"adj. 电子的",ex:"electronic equipment 电子设备",exz:"电子设备",tip:"electronic 电子的；和 electricity（电）同根。"},
+    {w:"tablet",ipa:"/ˈtæblət/",m:"n. 平板电脑",ex:"I like using a tablet computer.",exz:"我喜欢用平板电脑。",tip:"tablet computer 平板电脑。"},
+    {w:"common",ipa:"/ˈkɒmən/",m:"adj. 常见的",ex:"Technology is very common now.",exz:"现在科技很常见。",tip:"common 常见的、普遍的。"},
+    {w:"century",ipa:"/ˈsentʃəri/",m:"n. 世纪",ex:"We live in the 21st century.",exz:"我们生活在 21 世纪。",tip:"the 21st century 21 世纪。"},
+    {w:"outside",ipa:"/ˌaʊtˈsaɪd/",m:"n./adj. 外面（的）",ex:"bring the outside world in",exz:"把外面的世界带进来",tip:"out（外）+ side（边）= 外面。"}
+  ],
+  pattern:{
+    title:"完形单选 · 四步法",
+    sub:"不会的题也要会「蒙」出道理",
+    rows:[["①跳过空格通读","先不看选项，把文章读一遍"],["②看上下文","空前空后给的线索最重要"],["③逐项排除","四个选项一个一个试"],["④代入检查","把答案放回原文，读通不顺"]],
+    formula:"通读 → 找线索 → 排除 → 代入检查",
+    note:"本课常考：work on maths（做数学题）、be surprised（惊讶）、head teacher（校长）、instead of（而不是）。遇到拿不准的，先把「读着最顺」的填进去。",
+    sents:["He was surprised when he saw his modern classroom. 他看到现代化的教室时很惊讶。","They will use the electronic equipment to take notes. 他们将用电子设备记笔记。","Mr Miller regards himself as a guide for students' learning. 米勒先生把自己看作学生学习的向导。"]
+  },
+  lines:[
+    {en:"Tony is a student in Grade 7 in a middle school.",zh:"托尼是一所中学七年级的学生。"},
+    {en:"He was surprised when he saw his modern classroom.",zh:"他看到现代化的教室时很惊讶。"},
+    {en:"Technology is very common in most of our classrooms now.",zh:"现在科技在我们大部分教室都很常见。"},
+    {en:"Mr Miller now regards himself as a guide for students' learning.",zh:"米勒先生现在把自己看作学生学习的向导。"},
+    {en:"I will teach them how to find the answers instead of telling them what the answers are.",zh:"我会教他们怎么找到答案，而不是直接告诉他们答案。"}
+  ],
+  quiz:[
+    {t:"c", q:"Tony is a student in Grade 7 in a ___. 中学。", o:["middle school","primary school","park","library"], a:"middle school", hint:"middle school=中学。", ex:"middle school 中学（初中）。原文 Tony is a student in Grade 7 in a middle school."},
+    {t:"c", q:"They will ___ the electronic equipment to take notes. 使用。", o:["use","buy","carry","clean"], a:"use", hint:"take notes 用电子设备来记笔记→使用。", ex:"use 使用。用电子设备来 take notes（记笔记）。"},
+    {t:"c", q:"“Technology is very ___ in our classrooms now.” 常见的。", o:["common","difficult","old","heavy"], a:"common", hint:"common=常见的。", ex:"common 常见的、普遍的：Technology is very common now."},
+    {t:"c", q:"I will teach them how to find the answers ___ telling them the answers. 而不是。", o:["instead of","because of","full of","ready to"], a:"instead of", hint:"instead of=而不是，后面接动词-ing。", ex:"instead of telling them… 而不是告诉他们…。instead of 本课生词。"}
+  ],
+  final:[
+    {t:"c", q:"1. He was surprised when he saw his ___ on his first day of school.", o:["A. hall","B. playground","C. library","D. classroom"], a:"D. classroom", hint:"开头 Tony 在中学，第一天看到自己的…？", ex:"D。Tony 是学生，在教室里上课，看到的是自己的教室 classroom。原题 1。"},
+    {t:"c", q:"2. This term, they will ___ the electronic equipment to take notes.", o:["A. carry","B. use","C. take","D. buy"], a:"B. use", hint:"用电子设备来记笔记。", ex:"B。use…to take notes 用…来记笔记。carry 携带、buy 买都不顺。原题 2。"},
+    {t:"c", q:"3. “It's very ___,” said Tony. \"I like using a tablet computer.\"", o:["A. difficult","B. important","C. interesting","D. comfortable"], a:"C. interesting", hint:"后面说“我喜欢”，说明他觉得…？", ex:"C。I like using… 说明他觉得很有趣 interesting。原题 3。"},
+    {t:"c", q:"4. I like using a tablet computer to work on maths or other tasks ___ my team members.", o:["A. on","B. by","C. at","D. with"], a:"D. with", hint:"和我的队友们一起。", ex:"D。with my team members 和我的队友一起。with=和…一起。原题 4。"},
+    {t:"c", q:"5. The school uses new technology in classrooms to help ___ see and hear.", o:["A. teachers","B. students","C. parents","D. workers"], a:"B. students", hint:"教室里谁在看和听？", ex:"B。教室里看和听的是学生 students。原题 5。"},
+    {t:"c", q:"6. We are trying to use technology to ___ to kids. It can bring the outside world in.", o:["A. open up","B. look up","C. pick up","D. call up"], a:"A. open up", hint:"向孩子们「打开」外面的世界。", ex:"A。open up 打开：把外面的世界带进来 = 打开眼界。look up 查找。原题 6。"},
+    {t:"c", q:"7. It is a quick way for students to ___ the outside world.", o:["A. help","B. plan","C. know","D. play"], a:"C. know", hint:"了解外面的世界。", ex:"C。know the outside world 了解外面的世界。原题 7。"},
+    {t:"c", q:"8. I will try to teach them ___ to find the answers.", o:["A. why","B. what","C. when","D. how"], a:"D. how", hint:"教他们「怎么」找到答案。", ex:"D。teach them how to find the answers 教他们怎么找到答案。how=怎么。原题 8。"},
+    {t:"c", q:"9. He was not really interested in his classes before, ___ now he likes them very much.", o:["A. but","B. and","C. or","D. so"], a:"A. but", hint:"以前不喜欢，现在喜欢 → 转折。", ex:"A。but 但是，表转折：以前不感兴趣，但现在很喜欢。原题 9。"},
+    {t:"c", q:"10. He was not really interested in his classes before, but now he ___ them very much.", o:["A. stand","B. hate","C. enjoy","D. clean"], a:"C. enjoy", hint:"现在很喜欢 = 享受。", ex:"C。enjoy them very much 非常喜欢/享受。hate 讨厌意思相反。原题 10。"}
+  ]
+}
+];
+
+/* ============ 状态 ============ */
+let cur = { lesson:null, stage:0, i:0, score:0, total:0 };  // i 是当前小步索引
+const STAGE_NAMES = ["关一 单词","关二 句型","关三 跟读","关四 练习","关五 实战"];
+const app = $("#app");
+
+/* ============ 渲染：课程地图 ============ */
+function renderHome(){
+  stopSpeak();
+  const done = Object.values(progress.lessons).filter(l=>l.done).length;
+  const stars = Object.values(progress.lessons).reduce((s,l)=>s+(l.stars||0),0);
+  const h = el("div");
+  h.appendChild(el("div","stat-row",`
+    <div class="stat"><b>${done}/${LESSONS.length}</b><span>已学课时</span></div>
+    <div class="stat"><b>${stars}/${LESSONS.length*3}</b><span>累计星星</span></div>
+    <div class="stat"><b>${wrongStore.length}</b><span>待练错题</span></div>`));
+  LESSONS.forEach(L=>{
+    const st = progress.lessons[L.id];
+    const doneIt = st && st.done;
+    const card = el("div","l-card"+(doneIt?" done":""),`
+      <div class="icon">${L.icon}</div>
+      <div class="info">
+        <div class="t">${L.title}</div>
+        <div class="s">${L.src} · ${doneIt?"已完成":(st?"进行中":"未开始")}</div>
+        <div class="stars">${doneIt ? "★".repeat(st.stars||0)+"☆".repeat(3-(st.stars||0)) : ""}</div>
+      </div>
+      <div class="go">${doneIt?"🔁 复习":"开始 →"}</div>`);
+    card.onclick = ()=> openLesson(L.id);
+    h.appendChild(card);
+  });
+  h.appendChild(el("div","card",`
+    <b style="font-size:15px">📌 怎么用</b>
+    <p style="font-size:13.5px;color:#5a5f7a;line-height:1.8;margin-top:8px">
+    每一课都走同一条路：<b>先学这课的生词 → 看句型公式 → 一句一句跟着读 → 做小练习 → 最后上原卷实战</b>。
+    每道题做完都会告诉你「为什么」，答错了也别怕，看讲解就能懂。<br>
+    <span style="color:#9a9fb8">建议一次学一课（约 10 分钟），学完第二天先复习错题再开新课。</span></p>`));
+  app.innerHTML=""; app.appendChild(h);
+}
+
+/* ============ 渲染：课时流程 ============ */
+function openLesson(id){
+  const L = LESSONS.find(x=>x.id===id);
+  cur = { lesson:L, stage:1, i:0, score:0, fscore:0, total:0 };
+  renderStage();
+}
+function backToLesson(){
+  cur.i = 0; cur.stage = 1; cur.fscore = 0; renderStage();
+}
+
+function stageBar(){
+  return `<div class="steps">${STAGE_NAMES.map((s,ix)=>{
+    const cls = ix+1<cur.stage?"done":(ix+1===cur.stage?"on":"");
+    return `<div class="step ${cls}">${s}</div>`;
+  }).join("")}</div>`;
+}
+function lessonTop(){
+  const L = cur.lesson;
+  const title = L?`${L.icon} ${L.title}`:"📕 错题重练";
+  const src = L?L.src:"";
+  const tipsBtn = L?`<button class="btn ghost" style="background:#f1ecff;color:#5f3dc4" onclick="showTips()">👩‍🏫 要点</button>`:"";
+  return `<div class="lesson-top">
+    <button class="back" onclick="renderHome()">←</button>
+    <div class="ti"><b>${title}</b><span>${src}</span></div>
+    ${tipsBtn}
+  </div>`;
+}
+
+function renderStage(){
+  stopSpeak();
+  const L = cur.lesson;
+  let body="";
+  if(cur.stage===1){ body = stageVocab(); }
+  else if(cur.stage===2){ body = stagePattern(); }
+  else if(cur.stage===3){ body = stageLines(); }
+  else if(cur.stage===4){ body = stageQuiz(false); }
+  else if(cur.stage===5){ body = stageQuiz(true); }
+  else { body = stageDone(); }
+  if(body===null){ app.innerHTML = lessonTop() + stageDone(); return; }  // null = 全部关卡做完，进完成页
+  app.innerHTML = lessonTop() + stageBar() + `<div class="stage-tag">${STAGE_NAMES[cur.stage-1]}</div>` + body;
+}
+
+/* ---- 关一 单词 ---- */
+function stageVocab(){
+  const L = cur.lesson;
+  const w = L.vocab[cur.i];
+  const total = L.vocab.length;
+  if(!w){ cur.stage=2; cur.i=0; return stagePattern(); }
+  cur.total = total;
+  const bar = `<div class="bar"><i style="width:${Math.round(cur.i/total*100)}%"></i></div>`;
+  return `<div class="card w-card">
+    ${bar}
+    <div class="w-prog">单词 ${cur.i+1} / ${total}　·　这一课先认识它们，才读得懂后面的句子</div>
+    <div class="w-word" style="margin-top:8px">${w.w}</div>
+    <div class="w-ipa">${w.ipa}</div>
+    <button class="w-sound" onclick="speak('${w.w.replace(/'/g,"\\'")}')">🔊 听发音</button>
+    <div class="w-meaning" id="wMean">
+      <div class="m">${w.m}</div>
+      <div class="ex">${w.ex}<br><span style="color:#9a9fb8">${w.exz}</span></div>
+      <div class="tip">💡 ${w.tip}</div>
+    </div>
+    <div class="w-btns">
+      <button class="btn grey" onclick="revealMeaning()">👁️ 看意思</button>
+      <button class="btn green" onclick="wordKnow(true)">✅ 认识</button>
+      <button class="btn pink" onclick="wordKnow(false)">❌ 不认识</button>
+    </div>
+  </div>`;
+}
+function revealMeaning(){
+  $("#wMean").classList.add("show");
+  speak(cur.lesson.vocab[cur.i].w);
+}
+function wordKnow(known){
+  const w = cur.lesson.vocab[cur.i];
+  if(!known){
+    const q = { t:"f", q:w.w+"（"+w.m+"）", a:w.w, hint:"", ex:"把这个词记进错题本，明早再拼一次。" };
+    addWrong(cur.lesson.id, "word:"+w.w, q);
+    toast("已记入错题本，明天再练");
+  }
+  cur.i++;
+  renderStage();
+}
+function nextWord(){ wordKnow(true); }
+
+/* ---- 关二 句型 ---- */
+function stagePattern(){
+  const p = cur.lesson.pattern;
+  const rows = (p.rows||[]).map(r=>{
+    const tds = r.map((c,ix)=> ix===0?`<td class="lbl">${c}</td>`:`<td>${c}</td>`).join("");
+    return `<tr>${tds}</tr>`;
+  }).join("");
+  const sents = (p.sents||[]).map((s,ix)=>{
+    return `<div class="one"><span><b>${enPart(s)}</b> <small style="color:#9a9fb8">${zhPart(s)}</small></span><button class="say" onclick="speakPat(${ix})">🔊</button></div>`;
+  }).join("");
+  return `<div class="card">
+    <div class="f-title">${p.title}</div>
+    <div class="f-sub">${p.sub||""}</div>
+    ${p.rows?`<table class="tbl"><tr>${p.rows[0].map((c,ix)=>ix===0?"<th>种类</th>":"<th>"+c+"</th>").join("")}</tr>${rows}</table>`:""}
+    <div class="formula">📐 ${p.formula}</div>
+    <div class="note">💬 ${p.note}</div>
+    ${sents?`<div class="f-sent"><div class="lbl">例句（点 🔊 跟读）</div>${sents}</div>`:""}
+    <div style="margin-top:18px;display:flex;gap:10px">
+      <button class="btn ghost" style="background:#eef0f8;color:#5a5f7a" onclick="playAllSents()">🔊 全读一遍</button>
+      <button class="btn primary" style="flex:1;background:#5f3dc4;color:#fff" onclick="cur.stage=3;cur.i=0;renderStage()">都懂了 → 去跟读</button>
+    </div>
+  </div>`;
+}
+function enPart(s){ const i=s.search(/[一-鿿]/); return i>=0?s.slice(0,i).trim():s; }
+function zhPart(s){ const i=s.search(/[一-鿿]/); return i>=0?s.slice(i).trim():""; }
+function speakPat(ix){ const s=(cur.lesson.pattern.sents||[])[ix]; if(s) speak(enPart(s)); }
+function playAllSents(){
+  stopSpeak();
+  const sents=cur.lesson.pattern.sents||[];
+  sents.forEach((s,i)=>{ setTimeout(()=>speak(enPart(s)), i*1700); });
+}
+
+/* ---- 关三 跟读 ---- */
+function stageLines(){
+  const L = cur.lesson;
+  const line = L.lines[cur.i];
+  if(!line){ cur.stage=4; cur.i=0; return stageQuiz(false); }
+  cur.total = L.lines.length;
+  const bar = `<div class="bar"><i style="width:${Math.round(cur.i/L.lines.length*100)}%"></i></div>`;
+  return `<div class="card line-card">
+    ${bar}
+    <div class="w-prog">句子 ${cur.i+1} / ${L.lines.length}　·　先看中文，再说英文</div>
+    <div class="line-zh" style="margin-top:10px">${line.zh}</div>
+    <div class="line-en" id="lineEn">
+      ${line.en}
+      <div><button class="snd" onclick="speakLine()">🔊 听英文</button></div>
+    </div>
+    <div style="margin-top:24px;display:flex;gap:10px">
+      <button class="btn white" style="flex:1;background:#5f3dc4;color:#fff" onclick="revealLine()">👉 看英文</button>
+      <button class="btn green" onclick="cur.i++;renderStage()">下一句 →</button>
+    </div>
+  </div>`;
+}
+function revealLine(){
+  const e=$("#lineEn"); e.classList.add("show");
+  speak(cur.lesson.lines[cur.i].en);
+}
+function speakLine(){ speak(cur.lesson.lines[cur.i].en); }
+
+/* ---- 关四/关五 题目 ---- */
+function stageQuiz(isFinal){
+  const L = cur.lesson;
+  const list = isFinal?L.final:L.quiz;
+  if(!list || !list.length){ if(isFinal){ return null; } else { cur.stage=5; return stageQuiz(true); } }
+  if(cur.i>=list.length){ cur.i=0; if(isFinal){ return null; } else { cur.stage=5; cur.fscore=0; return stageQuiz(true); } }
+  cur.total = list.length;
+  const q = list[cur.i];
+  const bar = `<div class="bar"><i style="width:${Math.round(cur.i/list.length*100)}%"></i></div>`;
+  let inner = "";
+  if(q.t==="f"){
+    inner = `<div class="q-text">${q.q}</div>
+      <div class="fill-row"><input class="fill-in" id="fillIn" placeholder="在这里输入…" autocomplete="off" autocapitalize="off">
+      <button class="btn primary" style="background:#5f3dc4;color:#fff;flex-shrink:0" onclick="submitFill()">提交</button></div>`;
+  } else {
+    inner = `<div class="q-text">${q.q}</div>
+      <div class="opts">${q.o.map((o,ix)=>`<button class="opt" data-i="${ix}" onclick="pickOpt(this,${ix})">${o}</button>`).join("")}</div>`;
+  }
+  return `<div class="card q-card">
+    ${bar}
+    <div class="q-num">${isFinal?"🖊 原题实战":"✏️ 小练习"}　第 ${cur.i+1} / ${list.length} 题${isFinal?"　·　选对了算分拿星星":""}</div>
+    ${inner}
+    ${q.hint?`<button class="q-hint" onclick="showQHint()">💡 提示</button><div class="q-hint-box" id="hintBox">${q.hint}</div>`:""}
+    <div class="q-feedback" id="qFb"></div>
+  </div>`;
+}
+function showQHint(){ const h=$("#hintBox"); if(h){ h.classList.add("show"); } }
+function renderFb(ok, q){
+  const fb=$("#qFb");
+  fb.className="q-feedback show "+(ok?"ok":"bad");
+  fb.innerHTML = `<div class="v">${ok?"✅ 答对了！":"❌ 答错了"}</div>
+    <div class="why">${ok?q.ex:"正确答案："+(Array.isArray(q.a)?q.a.join(" / "):q.a)+"<br><br>💡 "+q.ex}</div>`;
+  const nxt = el("div","",`<button class="btn primary" style="width:100%;margin-top:12px;background:#5f3dc4;color:#fff" onclick="cur.i++;renderStage()">下一题 →</button>`);
+  fb.appendChild(nxt);
+  fb.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function pickOpt(btn, ix){
+  const L = cur.lesson;
+  const q = (cur.stage===5?L.final:L.quiz)[cur.i];
+  const ok = matchAns(q.o[ix], q.a);
+  const qid = cur.lesson.id+":"+(cur.stage===5?"f":"q")+cur.i;
+  document.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(+b.dataset.i===ix) b.classList.add(ok?"sel-right":"sel-wrong"); else b.classList.add("dim"); });
+  if(ok){ if(cur.stage===5) cur.fscore++; } else { addWrong(cur.lesson.id, qid, q); }
+  renderFb(ok, q);
+}
+function submitFill(){
+  const L = cur.lesson;
+  const q = (cur.stage===5?L.final:L.quiz)[cur.i];
+  const got = ($("#fillIn")||{}).value||"";
+  const ok = matchAns(got, q.a);
+  const qid = cur.lesson.id+":"+(cur.stage===5?"f":"q")+cur.i;
+  $("#fillIn").disabled=true;
+  if(ok){ if(cur.stage===5) cur.fscore++; } else { addWrong(cur.lesson.id, qid, q); }
+  renderFb(ok, q);
+}
+
+/* ---- 完成页 ---- */
+function stageDone(){
+  const L = cur.lesson;
+  const final = L.final;
+  const n = final.length;
+  const rate = n? Math.min(1, cur.fscore/n) : 1;
+  const stars = rate>=0.99?3:(rate>=0.6?2:1);
+  progress.lessons[L.id] = { done:true, stars:Math.max(stars, progress.lessons[L.id]?.stars||0) };
+  saveProg();
+  return `<div class="card done-card">
+    <div class="done-big">${stars>=3?"🏆":(stars===2?"🎉":"💪")}</div>
+    <div class="done-title">${L.title} 学完啦！</div>
+    <div class="done-stars">${"★".repeat(stars)}${"☆".repeat(3-stars)}</div>
+    <div class="done-sub">关五实战对了 ${cur.fscore} / ${n} 题<br>错题已收进错题本，明天复习</div>
+    <div style="margin-top:20px;display:flex;gap:10px">
+      <button class="btn ghost" style="background:#eef0f8;color:#5a5f7a" onclick="backToLesson()">🔁 再学一遍</button>
+      <button class="btn primary" style="flex:1;background:#5f3dc4;color:#fff" onclick="renderHome()">返回地图</button>
+    </div>
+  </div>`;
+}
+function finishLesson(){ renderStage(); }
+
+/* ============ 错题 ============ */
+function addWrong(lessonId, qid, q){
+  const w = wrongStore.find(x=>x.qid===qid);
+  if(w){ w.streak=0; } else { wrongStore.push({ lessonId, qid, q, streak:0, correct:0 }); }
+  saveWrong();
+}
+function openWrong(){
+  const b=$("#wrongBody");
+  if(!wrongStore.length){ b.innerHTML=`<h3>📕 错题本</h3><div class="empty">目前没有错题，继续加油！</div>`; $("#wrongOv").classList.add("show"); return; }
+  b.innerHTML=`<button class="close" onclick="closeOv('wrongOv')">✕</button>
+    <h3>📕 错题本</h3><div class="sub">共 ${wrongStore.length} 题 · 连对 2 次自动移出</div>
+    <button class="btn primary" style="width:100%;margin-bottom:14px;background:#ff5c8a;color:#fff" onclick="startWrongPractice()">🔁 重练全部错题</button>
+    ${wrongStore.map((w,i)=>`
+      <div class="wr-item">
+        <div class="lbl">${lessonTitle(w.lessonId)} · ${w.q.t==="f"?"拼写/填空":"选择"}</div>
+        <div class="q">${w.q.q}</div>
+        <div class="a">✔ ${Array.isArray(w.q.a)?w.q.a.join(" / "):w.q.a}</div>
+        <div class="why">${w.q.ex||""}</div>
+      </div>`).join("")}
+    <button class="btn grey" style="width:100%;margin-top:6px" onclick="clearWrong()">🗑 清空错题</button>`;
+  $("#wrongOv").classList.add("show");
+}
+function lessonTitle(id){ const L=LESSONS.find(x=>x.id===id); return L?L.title:id; }
+function clearWrong(){ wrongStore=[]; saveWrong(); openWrong(); }
+let wp = { list:[], i:0 };
+function startWrongPractice(){
+  wp = { list:wrongStore.slice(), i:0 };
+  $("#wrongOv").classList.remove("show");
+  renderWrongPractice();
+}
+function renderWrongPractice(){
+  const appBody = app;
+  if(!wp.list.length){ toast("错题都练完了 🎉"); wrongStore=[]; saveWrong(); renderHome(); return; }
+  if(wp.i>=wp.list.length){ toast("本轮完成"); renderHome(); return; }
+  const item = wp.list[wp.i];
+  const q = item.q;
+  const bar = `<div class="bar"><i style="width:${Math.round(wp.i/wp.list.length*100)}%"></i></div>`;
+  let inner = "";
+  if(q.t==="f"){
+    inner = `<div class="q-text">${q.q}</div>
+      <div class="fill-row"><input class="fill-in" id="wpFill" placeholder="输入答案…" autocomplete="off" autocapitalize="off">
+      <button class="btn primary" style="background:#5f3dc4;color:#fff;flex-shrink:0" onclick="wpSubmit()">提交</button></div>`;
+  } else {
+    inner = `<div class="q-text">${q.q}</div>
+      <div class="opts">${q.o.map((o,ix)=>`<button class="opt" data-i="${ix}" onclick="wpPick(this,${ix})">${o}</button>`).join("")}</div>`;
+  }
+  appBody.innerHTML = `${lessonTop()}${bar}
+    <div class="stage-tag">🔁 错题重练</div>
+    <div class="card q-card">
+      <div class="q-num">第 ${wp.i+1} / ${wp.list.length} 道错题</div>
+      ${inner}
+      <div class="q-feedback" id="wpFb"></div>
+    </div>`;
+}
+function wpPick(btn, ix){
+  const q = wp.list[wp.i].q;
+  const ok = matchAns(q.o[ix], q.a);
+  document.querySelectorAll(".opt").forEach(b=>{ b.disabled=true; if(+b.dataset.i===ix) b.classList.add(ok?"sel-right":"sel-wrong"); else b.classList.add("dim"); });
+  wpDone(ok, q);
+}
+function wpSubmit(){
+  const q = wp.list[wp.i].q;
+  const ok = matchAns(($("#wpFill")||{}).value||"", q.a);
+  $("#wpFill").disabled=true;
+  wpDone(ok, q);
+}
+function wpDone(ok, q){
+  const w = wp.list[wp.i];
+  const fb=$("#wpFb");
+  fb.className="q-feedback show "+(ok?"ok":"bad");
+  fb.innerHTML=`<div class="v">${ok?"✅ 对！":"❌ 再记一遍"}</div>
+    <div class="why">${ok?q.ex:"正确答案："+(Array.isArray(q.a)?q.a.join(" / "):q.a)+"　"+q.ex}</div>`;
+  const nxt=el("div","",`<button class="btn primary" style="width:100%;margin-top:12px;background:#5f3dc4;color:#fff" onclick="wpNext(${ok})">下一题 →</button>`);
+  fb.appendChild(nxt);
+}
+function wpNext(ok){
+  const store = wrongStore.find(x=>x.qid===wp.list[wp.i].qid);
+  if(ok){ if(store){ store.correct=(store.correct||0)+1; if(store.correct>=2){ wrongStore = wrongStore.filter(x=>x.qid!==store.qid); } } }
+  else { if(store){ store.correct=0; store.streak=0; } }
+  saveWrong();
+  wp.i++; renderWrongPractice();
+}
+
+/* ============ 老师面板 / 要点 ============ */
+function showTips(){
+  const L = cur.lesson;
+  $("#tipsBody").innerHTML=`<button class="close" onclick="closeOv('tipsOv')">✕</button>
+    <h3>👩‍🏫 ${L.title} · 老师要点</h3><div class="sub">${L.src}　·　上课时看这里</div>
+    <div class="t-block t-goal"><b>🎯 本节课目标</b><p>${L.teacher.goal}</p></div>
+    <div class="t-block t-trap"><b>⚠️ 学生常踩的坑</b><ul>${L.teacher.traps.map(t=>`<li>${t}</li>`).join("")}</ul></div>
+    <div class="t-block t-say"><b>🗣️ 带教话术</b><p>${L.teacher.say}</p></div>`;
+  $("#tipsOv").classList.add("show");
+}
+function openTeacher(){
+  const done = Object.values(progress.lessons).filter(l=>l.done).length;
+  const stars = Object.values(progress.lessons).reduce((s,l)=>s+(l.stars||0),0);
+  $("#teacherBody").innerHTML=`<button class="close" onclick="closeOv('teacherOv')">✕</button>
+    <h3>👩‍🏫 老师面板</h3><div class="sub">已学 ${done}/${LESSONS.length} 课 · 星星 ${stars}/${LESSONS.length*3} · 错题 ${wrongStore.length} 道</div>
+    ${LESSONS.map(L=>{
+      const st=progress.lessons[L.id];
+      return `<div class="wr-item">
+        <div class="lbl">${L.icon} ${L.title}　${L.src}</div>
+        <div class="q" style="font-weight:700">${st&&st.done?("已完成 · "+"★".repeat(st.stars)):"未开始"}</div>
+        <div class="why">${L.teacher.goal}</div>
+      </div>`;
+    }).join("")}
+    <div class="t-block t-goal" style="margin-top:6px"><b>📱 平台提示</b>
+      <p>发音朗读（TTS）iPhone Safari 可用；语音识别打分仅安卓/Chrome 支持。本系统只用了朗读，iPhone 全功能可用。</p></div>
+    <button class="btn grey" style="width:100%;margin-top:8px" onclick="closeOv('teacherOv')">关闭</button>`;
+  $("#teacherOv").classList.add("show");
+}
+function closeOv(id){ $("#"+id).classList.remove("show"); }
+
+/* ============ 事件绑定 + 启动 ============ */
+$("#homeBtn").onclick=renderHome;
+$("#teacherBtn").onclick=openTeacher;
+$("#wrongBtn").onclick=openWrong;
+load(); updateWrongBadge(); renderHome();
+</script>
+</body>
+</html>
