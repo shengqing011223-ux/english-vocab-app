@@ -299,7 +299,8 @@
    tips 记忆讲解 / example 例句 / derivatives 衍生词[词,释义] /
    phrases 常用短语[短语,释义] / chunks 拼读拆解[{letters,ipa,rule,sound}] /
    speaTips 发音建议 / spelling 逐字母拼写（自动生成）
-   板块：basic = 基本信息，like = 性格与喜好 */
+   板块：basic = 基本信息，like = 性格与喜好，place/feel = 学校场所，
+   subject = 学校科目，learn = 学习方法 */
 const WORDS = [
   {
     word:"introduce", ipa:"/ˌɪntrəˈdjuːs/", meaning:"v. 介绍",
@@ -804,6 +805,573 @@ const WORDS = [
     ],
     speaTips:"重音在第二音节：a-MA-zing。a 弱读 /ə/，结尾 ing 发 /ɪŋ/。"
   }
+,
+
+  // ============ 第 3 天 · 学校科目 ============
+  {
+    word:"science", ipa:"/ˈsaɪəns/", meaning:"n. 科学",
+    cat:"subject",
+    tips:"sci + ence：c 后跟 e、i 时发软音 /s/。science 指“科学、理科”，科学课 science class。同根词：scientist 科学家、scientific 科学的。",
+    example:"We have science on Monday. 我们星期一上科学课。",
+    derivatives:[["scientist","n. 科学家"],["scientific","adj. 科学的"],["scientists","n. 复数形式"]],
+    phrases:[["science class","科学课"],["science teacher","科学老师"],["science lab","科学实验室"]],
+    chunks:[
+      {letters:"sci",  ipa:"/saɪ/", rule:"c+i→/s/（软音）",   sound:"sai"},
+      {letters:"ence", ipa:"/əns/", rule:"弱读 ence，c+e→/s/", sound:"uhns"}
+    ],
+    speaTips:"重音在第一音节 sci：SCI-ence。/aɪ/读到位，ence 弱化读 /əns/。"
+  },
+  {
+    word:"subject", ipa:"/ˈsʌbdʒɪkt/", meaning:"n. 学科；科目",
+    cat:"subject",
+    tips:"sub（在下面）+ ject（扔）→ 排在你课表上的科目。同根词：project 项目、object 物体。j 发 /dʒ/。",
+    example:"My favourite subject is English. 我最喜欢的科目是英语。",
+    derivatives:[["subjects","n. 复数形式"],["subject matter","主题；内容"]],
+    phrases:[["favourite subject","最喜欢的科目"],["school subjects","学校科目"]],
+    chunks:[
+      {letters:"sub", ipa:"/sʌb/",   rule:"u→/ʌ/",       sound:"sub"},
+      {letters:"ject",ipa:"/dʒɪkt/", rule:"j→/dʒ/，e 弱读", sound:"jekt"}
+    ],
+    speaTips:"重音在第一音节 sub：SUB-ject。u 发 /ʌ/，ject 里 e 弱读成 /ɪ/。"
+  },
+  {
+    word:"biology", ipa:"/baɪˈɒlədʒi/", meaning:"n. 生物学",
+    cat:"subject",
+    tips:"bio（生命）+ logy（学科后缀）→ 研究生命的学科。词根 bio=生命，同根词：biography 传记、antibiotic 抗生素。",
+    example:"Biology is the study of life. 生物学是研究生命的学科。",
+    derivatives:[["biologist","n. 生物学家"],["biological","adj. 生物学的"]],
+    phrases:[["biology class","生物课"],["biology teacher","生物老师"]],
+    chunks:[
+      {letters:"bio",  ipa:"/baɪə/",  rule:"i 开音节→/aɪ/，o 弱读", sound:"bye"},
+      {letters:"logy", ipa:"/lədʒi/", rule:"gy→/dʒi/，o 弱读",     sound:"luhjee"}
+    ],
+    speaTips:"重音在第二音节：bi-OL-o-gy。bio 里 i 读长音 /aɪ/，结尾 gy 发 /dʒi/。"
+  },
+  {
+    word:"scientist", ipa:"/ˈsaɪəntɪst/", meaning:"n. 科学家",
+    cat:"subject",
+    tips:"science 去掉 ce 加 tist → scientist。ist 是表“人”的后缀：scientist、artist、biologist 都是“从事某行的人”。",
+    example:"A scientist studies nature. 科学家研究大自然。",
+    derivatives:[["science","n. 科学"],["scientific","adj. 科学的"]],
+    phrases:[["a famous scientist","一位著名的科学家"]],
+    chunks:[
+      {letters:"sci", ipa:"/saɪ/",   rule:"c+i→/s/",     sound:"sai"},
+      {letters:"ent", ipa:"/ənt/",   rule:"弱读 ent",      sound:"uhnt"},
+      {letters:"ist", ipa:"/ɪst/",   rule:"i→/ɪ/",        sound:"ist"}
+    ],
+    speaTips:"重音在第一音节 sci：SCI-en-tist。ent 弱读，ist 发 /ɪst/。"
+  },
+  {
+    word:"biologist", ipa:"/baɪˈɒlədʒɪst/", meaning:"n. 生物学家",
+    cat:"subject",
+    tips:"biology 去掉 y 加 ist → biologist。ist 表“人”：研究生物学的人。",
+    example:"The biologist studies animals. 这位生物学家研究动物。",
+    derivatives:[["biology","n. 生物学"],["biological","adj. 生物学的"]],
+    phrases:[["a marine biologist","海洋生物学家"]],
+    chunks:[
+      {letters:"bio", ipa:"/baɪə/",  rule:"i 开音节→/aɪ/", sound:"bye"},
+      {letters:"log", ipa:"/lɒg/",   rule:"o→/ɒ/（短音）",  sound:"log"},
+      {letters:"ist", ipa:"/ɪst/",   rule:"i→/ɪ/",         sound:"ist"}
+    ],
+    speaTips:"重音在第二音节：bi-OL-o-gist。log 发 /lɒg/，结尾 ist 收住。"
+  },
+  {
+    word:"art", ipa:"/ɑːt/", meaning:"n. 艺术；美术",
+    cat:"subject",
+    tips:"单音节。ar 组合读长音 /ɑː/。art 既是“美术”学科，也泛指“艺术”。同家族：artist 艺术家、art class 美术课。",
+    example:"I like drawing in art class. 我喜欢在美术课上画画。",
+    derivatives:[["artist","n. 艺术家"],["artistic","adj. 艺术的"]],
+    phrases:[["art class","美术课"],["art room","美术教室"],["works of art","艺术品"]],
+    chunks:[
+      {letters:"ar", ipa:"/ɑː/", rule:"ar→/ɑː/（长音）", sound:"ar"},
+      {letters:"t",  ipa:"/t/",  rule:"t→/t/",        sound:"t"}
+    ],
+    speaTips:"一个音节 /ɑːt/。/ɑː/口型张大，结尾 t 轻收，别拖长。"
+  },
+  {
+    word:"artist", ipa:"/ˈɑːtɪst/", meaning:"n. 艺术家；（尤指）画家",
+    cat:"subject",
+    tips:"art（艺术）+ ist（表“人”）→ 从事艺术的人。ist 家族一起记：scientist、biologist、artist。",
+    example:"My uncle is an artist. 我叔叔是位画家。",
+    derivatives:[["art","n. 艺术"],["artistic","adj. 艺术的"]],
+    phrases:[["a famous artist","著名艺术家"],["street artist","街头艺人"]],
+    chunks:[
+      {letters:"ar",  ipa:"/ɑː/",  rule:"ar→/ɑː/（长音）", sound:"ar"},
+      {letters:"tist",ipa:"/tɪst/",rule:"i→/ɪ/",        sound:"tist"}
+    ],
+    speaTips:"重音在第一音节 ar：AR-tist。tist 发 /tɪst/，别拖。"
+  },
+  {
+    word:"history", ipa:"/ˈhɪstri/", meaning:"n. 历史；历史课",
+    cat:"subject",
+    tips:"hi-sto-ry 三个音节，口语里 o 弱化，几乎读成 /ˈhɪstri/。同根词：historical 历史的、historian 历史学家。",
+    example:"History is my favourite subject. 历史是我最喜欢的科目。",
+    derivatives:[["historical","adj. 历史的"],["historian","n. 历史学家"]],
+    phrases:[["history class","历史课"],["Chinese history","中国历史"],["in history","在历史上"]],
+    chunks:[
+      {letters:"his", ipa:"/hɪs/", rule:"i→/ɪ/",       sound:"his"},
+      {letters:"tory",ipa:"/tri/", rule:"o 弱读",        sound:"tree"}
+    ],
+    speaTips:"重音在第一音节 his：HIS-to-ry。后面两个音节快读成 /tri/。"
+  },
+  {
+    word:"historical", ipa:"/hɪˈstɒrɪkl/", meaning:"adj. 历史的；史学的",
+    cat:"subject",
+    tips:"history 变 y 为 i 再加 cal → historical。易错：history→histor-i-cal，别漏第二个 i。",
+    example:"Xi'an is a historical city. 西安是一座历史名城。",
+    derivatives:[["history","n. 历史"],["historically","adv. 在历史上"]],
+    phrases:[["a historical city","历史名城"],["historical event","历史事件"]],
+    chunks:[
+      {letters:"his", ipa:"/hɪs/",  rule:"i→/ɪ/",          sound:"his"},
+      {letters:"tor", ipa:"/tɒ/",   rule:"or→/ɒ/",          sound:"tor"},
+      {letters:"i",   ipa:"/ɪ/",    rule:"i→/ɪ/",           sound:"ih"},
+      {letters:"cal", ipa:"/kl/",   rule:"al→/l/（弱读）",    sound:"kl"}
+    ],
+    speaTips:"重音在第二音节：his-TOR-i-cal。tor 发 /tɒ/，结尾 cal 弱读 /kl/。"
+  },
+  {
+    word:"boring", ipa:"/ˈbɔːrɪŋ/", meaning:"adj. 乏味的；令人生厌的",
+    cat:"subject",
+    tips:"bore（使厌烦）+ ing → 令人厌烦的。boring 形容“物”（这本书无聊），bored 形容“人”（我很无聊）。对比 interesting / interested。",
+    example:"The film is boring. 这部电影很无聊。",
+    derivatives:[["bore","v. 使厌烦"],["bored","adj. 感到厌倦的"],["boredom","n. 厌烦"]],
+    phrases:[["a boring book","一本无聊的书"],["feel bored","感到无聊"]],
+    chunks:[
+      {letters:"bor", ipa:"/bɔː/", rule:"or→/ɔː/",   sound:"bor"},
+      {letters:"ing", ipa:"/ɪŋ/",  rule:"ing→/ɪŋ/",  sound:"ing"}
+    ],
+    speaTips:"重音在第一音节 bor：BOR-ing。or 读 /ɔː/，结尾 ing 发 /ɪŋ/。"
+  },
+  {
+    word:"bored", ipa:"/bɔːd/", meaning:"adj. 厌倦的；烦闷的",
+    cat:"subject",
+    tips:"bore + ed → 感到厌倦的。bored 形容“人的感受”：I'm bored.（我很无聊）。ed 在元音后发 /d/。",
+    example:"I'm bored. Let's go out. 我很无聊，我们出去吧。",
+    derivatives:[["bore","v. 使厌烦"],["boring","adj. 令人厌烦的"]],
+    phrases:[["be bored with","对……厌倦"],["feel bored","感到无聊"]],
+    chunks:[
+      {letters:"bor", ipa:"/bɔː/", rule:"or→/ɔː/",   sound:"bor"},
+      {letters:"ed",  ipa:"/d/",   rule:"ed→/d/（元音后）", sound:"d"}
+    ],
+    speaTips:"一个音节 /bɔːd/。or 读 /ɔː/，结尾 ed 读 /d/。"
+  },
+  {
+    word:"reason", ipa:"/ˈriːzn/", meaning:"n. 原因；理由",
+    cat:"subject",
+    tips:"ea 组合读长音 /iː/。注意：reason 里的 s 发浊音 /z/，不是 /s/。搭配 the reason for（……的原因），介词用 for。",
+    example:"What is the reason for your absence? 你缺席的原因是什么？",
+    derivatives:[["reasonable","adj. 合理的"],["unreasonable","adj. 不合理的"]],
+    phrases:[["the reason for","……的原因"],["for this reason","因为这个原因"]],
+    chunks:[
+      {letters:"rea", ipa:"/riː/", rule:"ea→/iː/",   sound:"ree"},
+      {letters:"son", ipa:"/zn/",  rule:"s→/z/，o 弱读", sound:"zun"}
+    ],
+    speaTips:"重音在第一音节 rea：REA-son。s 发 /z/，son 弱读 /zn/。"
+  },
+  {
+    word:"excellent", ipa:"/ˈeksələnt/", meaning:"adj. 优秀的；极好的",
+    cat:"subject",
+    tips:"ex（向外）+ cell（超越）+ ent（形容词后缀）。拼写易错：ex-cel-lent 双写 l。比 good 更强，表示“极好”。",
+    example:"You did an excellent job! 你做得棒极了！",
+    derivatives:[["excellence","n. 优秀"],["excellently","adv. 出色地"]],
+    phrases:[["an excellent student","优秀学生"],["excellent job","出色的工作"]],
+    chunks:[
+      {letters:"ex",   ipa:"/eks/",  rule:"x→/ks/",      sound:"eks"},
+      {letters:"cel",  ipa:"/sə/",   rule:"c+e→/s/，e 弱读", sound:"suh"},
+      {letters:"lent", ipa:"/lənt/", rule:"弱读 lent",      sound:"lunt"}
+    ],
+    speaTips:"重音在第一音节 ex：EX-cel-lent。后面两个音节都弱读，别一字一顿。"
+  },
+  {
+    word:"future", ipa:"/ˈfjuːtʃə(r)/", meaning:"n. 将来；未来",
+    cat:"subject",
+    tips:"拼写容易漏 e：fu-ture。ture 结尾发 /tʃə(r)/，是常见词尾：picture、nature、culture 都一样。搭配 in the future（在将来）。",
+    example:"What do you want to be in the future? 你将来想做什么？",
+    derivatives:[["futures","n. 期货（特殊义）"]],
+    phrases:[["in the future","在将来"],["future life","未来的生活"],["bright future","光明的未来"]],
+    chunks:[
+      {letters:"fu",   ipa:"/fjuː/",   rule:"u→/juː/",          sound:"fyoo"},
+      {letters:"ture", ipa:"/tʃə(r)/", rule:"ture→/tʃə(r)/",     sound:"cher"}
+    ],
+    speaTips:"重音在第一音节 fu：FU-ture。ture 读 /tʃə(r)/，别读成“涂儿”。"
+  },
+  {
+    word:"useful", ipa:"/ˈjuːsfl/", meaning:"adj. 有用的；有益的",
+    cat:"subject",
+    tips:"use（使用）+ ful（形容词后缀，“充满……”）→ 有用的。ful 只有一个 l。搭配 be useful for（对……有用）。",
+    example:"A dictionary is very useful. 字典非常有用。",
+    derivatives:[["use","v. 使用"],["useless","adj. 无用的"],["usefully","adv. 有用地"]],
+    phrases:[["be useful for","对……有用"],["be useful to sb","对某人有帮助"]],
+    chunks:[
+      {letters:"use", ipa:"/juːs/", rule:"u_e→/juː/，魔法 e",  sound:"yooss"},
+      {letters:"ful", ipa:"/fl/",   rule:"ful→/fl/（弱读）",    sound:"ful"}
+    ],
+    speaTips:"重音在第一音节 use：USE-ful。ful 弱读 /fl/，别拖。"
+  },
+  {
+    word:"help", ipa:"/help/", meaning:"v. & n. 帮助",
+    cat:"subject",
+    tips:"短元音 /e/。常用搭配：help sb with sth、help sb (to) do sth（帮某人做某事）。ask for help 求助。",
+    example:"Can you help me with my homework? 你能帮我做作业吗？",
+    derivatives:[["helpful","adj. 有帮助的"],["helpless","adj. 无助的"],["helper","n. 帮手"]],
+    phrases:[["help sb with sth","帮某人做某事"],["help sb (to) do sth","帮某人做某事"],["ask for help","求助"]],
+    chunks:[
+      {letters:"he", ipa:"/he/",  rule:"e→/e/（短音）",  sound:"heh"},
+      {letters:"lp", ipa:"/lp/",  rule:"lp 组合 /lp/",   sound:"lp"}
+    ],
+    speaTips:"一个音节 /help/。e 短音干脆，结尾 lp 连读，别拖。"
+  },
+  {
+    word:"helpful", ipa:"/ˈhelpfl/", meaning:"adj. 有帮助的；有用的",
+    cat:"subject",
+    tips:"help + ful → 有帮助的。对比记：helpful（有帮助的）/ helpless（无助的），就差一个字母，别写错。",
+    example:"Thank you. That is very helpful. 谢谢你，那很有帮助。",
+    derivatives:[["help","v./n. 帮助"],["helpless","adj. 无助的"],["helpfully","adv. 有帮助地"]],
+    phrases:[["be helpful to","对……有帮助"],["a helpful teacher","热心的老师"]],
+    chunks:[
+      {letters:"help", ipa:"/help/", rule:"e→/e/（短音）",  sound:"help"},
+      {letters:"ful",  ipa:"/fl/",   rule:"ful→/fl/（弱读）", sound:"ful"}
+    ],
+    speaTips:"重音在第一音节 help：HELP-ful。ful 弱读 /fl/。"
+  },
+  {
+    word:"helpless", ipa:"/ˈhelpləs/", meaning:"adj. 无助的；不能自立的",
+    cat:"subject",
+    tips:"help + less（后缀，表“无”）→ 无助的。less 家族：helpless 无助的、useless 无用的、hopeless 无望的。",
+    example:"The little bird is helpless. 这只小鸟无助极了。",
+    derivatives:[["help","v./n. 帮助"],["helplessly","adv. 无助地"]],
+    phrases:[["feel helpless","感到无助"],["a helpless child","无助的孩子"]],
+    chunks:[
+      {letters:"help", ipa:"/help/", rule:"e→/e/（短音）",    sound:"help"},
+      {letters:"less", ipa:"/ləs/",  rule:"e→/ə/（弱读）",    sound:"luss"}
+    ],
+    speaTips:"重音在第一音节 help：HELP-less。less 弱读 /ləs/。"
+  },
+  {
+    word:"exciting", ipa:"/ɪkˈsaɪtɪŋ/", meaning:"adj. 令人激动的；使人兴奋的",
+    cat:"subject",
+    tips:"excite（使兴奋）+ ing → 令人兴奋的。exciting 形容“物”，excited 形容“人”。搭配 be excited about（对……感到兴奋）。",
+    example:"The football game is exciting. 这场足球赛很激动人心。",
+    derivatives:[["excite","v. 使兴奋"],["excited","adj. 感到兴奋的"],["excitement","n. 兴奋"]],
+    phrases:[["an exciting game","激动人心的比赛"],["exciting news","令人兴奋的消息"]],
+    chunks:[
+      {letters:"ex",  ipa:"/ɪk/",   rule:"ex→/ɪk/（轻读）",   sound:"ick"},
+      {letters:"cit", ipa:"/saɪt/", rule:"c+i→/s/，开音节→/aɪ/", sound:"site"},
+      {letters:"ing", ipa:"/ɪŋ/",   rule:"ing→/ɪŋ/",          sound:"ing"}
+    ],
+    speaTips:"重音在第二音节 cit：ex-CIT-ing。开头 ex 轻读，cit 发 /saɪt/。"
+  },
+  {
+    word:"excited", ipa:"/ɪkˈsaɪtɪd/", meaning:"adj. 激动的；兴奋的",
+    cat:"subject",
+    tips:"excite + ed → 感到兴奋的。excited 形容“人”的感受，exciting 形容“物”。ed 在 t 后发 /ɪd/。",
+    example:"He is excited about the exciting news. 他对这个激动人心的消息感到兴奋。",
+    derivatives:[["excite","v. 使兴奋"],["exciting","adj. 令人兴奋的"],["excitement","n. 兴奋"]],
+    phrases:[["be excited about","对……感到兴奋"]],
+    chunks:[
+      {letters:"ex",  ipa:"/ɪk/",  rule:"ex→/ɪk/（轻读）",     sound:"ick"},
+      {letters:"cit", ipa:"/saɪt/",rule:"c+i→/s/，开音节→/aɪ/", sound:"site"},
+      {letters:"ed",  ipa:"/ɪd/",  rule:"ed→/ɪd/（在 t 后）",   sound:"id"}
+    ],
+    speaTips:"重音在第二音节 cit：ex-CIT-ed。ed 在 t 后读 /ɪd/。"
+  },
+  {
+    word:"past", ipa:"/pɑːst/", meaning:"n. 过去；过去的事情",
+    cat:"subject",
+    tips:"a 在 st 前发长音 /ɑː/。搭配 in the past（在过去）。别和 pass（经过）记混，也别和 passed 混淆。",
+    example:"In the past, there was no school here. 过去这里没有学校。",
+    derivatives:[["pastime","n. 消遣"]],
+    phrases:[["in the past","在过去"],["half past two","两点半"],["the past tense","过去时"]],
+    chunks:[
+      {letters:"pas", ipa:"/pɑː/",  rule:"a→/ɑː/（在 st 前）", sound:"pah"},
+      {letters:"t",   ipa:"/t/",    rule:"t→/t/",            sound:"t"}
+    ],
+    speaTips:"一个音节 /pɑːst/。a 读长音 /ɑː/，结尾 st 连读。"
+  },
+  {
+    word:"number", ipa:"/ˈnʌmbə(r)/", meaning:"n. 数字；号码",
+    cat:"subject",
+    tips:"u 发 /ʌ/（像“啊”）。number 的 b 要发音（读 /ˈnʌmbə/），和 comb、lamb 里 b 不发音不一样。搭配 telephone number（电话号码）。",
+    example:"What's your telephone number? 你的电话号码是多少？",
+    derivatives:[["numbers","n. 复数形式"],["numberless","adj. 无数的"]],
+    phrases:[["telephone number","电话号码"],["a number of","一些；许多"],["the number of","……的数量"]],
+    chunks:[
+      {letters:"num", ipa:"/nʌm/", rule:"u→/ʌ/",          sound:"num"},
+      {letters:"ber", ipa:"/bə(r)/",rule:"er→/ə(r)/（弱读）", sound:"buh"}
+    ],
+    speaTips:"重音在第一音节 num：NUM-ber。u 读 /ʌ/，结尾 er 弱读 /ə(r)/。"
+  },
+  // ============ 学习方法（学习与问题 / 方法与建议） ============
+  {
+    word:"mistake", ipa:"/mɪˈsteɪk/", meaning:"n. 错误；失误",
+    cat:"learn",
+    tips:"mis（错）+ take（拿）→ 拿错了＝错误。搭配 make a mistake / make mistakes（犯错误）。拼写别漏 e：mis-take。",
+    example:"Don't be afraid of making mistakes. 别害怕犯错。",
+    derivatives:[["mistakes","n. 复数形式"],["mistaken","adj. 弄错的"]],
+    phrases:[["make a mistake","犯错误"],["make mistakes","犯错误"],["by mistake","错误地"]],
+    chunks:[
+      {letters:"mis",  ipa:"/mɪs/",  rule:"i→/ɪ/",           sound:"miss"},
+      {letters:"take", ipa:"/teɪk/", rule:"魔法 e：a_e→/eɪ/", sound:"take"}
+    ],
+    speaTips:"重音在第二音节 take：mis-TAKE。take 的 /eɪ/ 拉长。"
+  },
+  {
+    word:"difficulty", ipa:"/ˈdɪfɪkəlti/", meaning:"n. 困难",
+    cat:"learn",
+    tips:"difficult（困难的）变 t 为 ty 名词化。拼写易错：dif-fi-cul-ty，中间 -ficult 别漏 u。",
+    example:"We have difficulty finishing the work. 我们完成这项工作有困难。",
+    derivatives:[["difficult","adj. 困难的"],["difficulties","n. 复数形式"]],
+    phrases:[["have difficulty (in) doing sth","做某事有困难"],["with difficulty","艰难地"]],
+    chunks:[
+      {letters:"dif", ipa:"/dɪf/",  rule:"i→/ɪ/",      sound:"dif"},
+      {letters:"fi",  ipa:"/fɪ/",   rule:"i→/ɪ/",      sound:"fih"},
+      {letters:"cult",ipa:"/kəlt/", rule:"u→/ə/（弱读）", sound:"kult"},
+      {letters:"y",   ipa:"/i/",    rule:"y→/i/",      sound:"ee"}
+    ],
+    speaTips:"重音在第一音节 dif：DIF-fi-cul-ty。后面都弱读，y 发 /i/。"
+  },
+  {
+    word:"fact", ipa:"/fækt/", meaning:"n. 事实；真相",
+    cat:"learn",
+    tips:"短音 /æ/。搭配 in fact（事实上）。别和 factory（工厂）、fact（事实）之外拼写混淆。",
+    example:"In fact, she is good at singing. 事实上，她擅长唱歌。",
+    derivatives:[["facts","n. 复数形式"],["factual","adj. 事实的"]],
+    phrases:[["in fact","事实上"],["a true fact","真实的事实"]],
+    chunks:[
+      {letters:"f",  ipa:"/f/",  rule:"f→/f/",     sound:"f"},
+      {letters:"a",  ipa:"/æ/",  rule:"a→/æ/（短音）", sound:"a"},
+      {letters:"ct", ipa:"/kt/", rule:"ct 组合 /kt/", sound:"kt"}
+    ],
+    speaTips:"一个音节 /fækt/。a 读 /æ/，ct 连读，别拖。"
+  },
+  {
+    word:"mean", ipa:"/miːn/", meaning:"v. 意思是；打算",
+    cat:"learn",
+    tips:"ea 组合读长音 /iː/。句型 What does ... mean?（……是什么意思？）。名词 meaning（意思）。mean to do sth 打算做某事。",
+    example:"What does this word mean? 这个词是什么意思？",
+    derivatives:[["meaning","n. 意义"],["meaningful","adj. 有意义的"],["means","n. 手段"]],
+    phrases:[["mean to do sth","打算做某事"],["What does...mean?","……是什么意思？"]],
+    chunks:[
+      {letters:"m",  ipa:"/m/",  rule:"m→/m/",    sound:"m"},
+      {letters:"ea", ipa:"/iː/", rule:"ea→/iː/",   sound:"ee"},
+      {letters:"n",  ipa:"/n/",  rule:"n→/n/",    sound:"n"}
+    ],
+    speaTips:"一个音节 /miːn/。/iː/拉长，结尾 n 轻收。"
+  },
+  {
+    word:"meaning", ipa:"/ˈmiːnɪŋ/", meaning:"n. 意义；含义",
+    cat:"learn",
+    tips:"mean（意思）+ ing → 意义。拼写别漏 e：mean-ing。搭配 the meaning of（……的意思）。",
+    example:"The meaning of this word is clear. 这个词的意思很清楚。",
+    derivatives:[["mean","v. 意思是"],["meaningful","adj. 有意义的"],["meaningless","adj. 无意义的"]],
+    phrases:[["the meaning of","……的意思"]],
+    chunks:[
+      {letters:"mean", ipa:"/miːn/", rule:"ea→/iː/",      sound:"meen"},
+      {letters:"ing",  ipa:"/ɪŋ/",   rule:"ing→/ɪŋ/",     sound:"ing"}
+    ],
+    speaTips:"重音在第一音节 mean：MEAN-ing。/iː/拉长，ing 发 /ɪŋ/。"
+  },
+  {
+    word:"meaningful", ipa:"/ˈmiːnɪŋfl/", meaning:"adj. 意味深长的；有意义的",
+    cat:"learn",
+    tips:"meaning（意义）+ ful → 有意义的。对比：meaningful（有意义的）/ meaningless（无意义的），ful 表“充满”，less 表“无”。",
+    example:"It's a meaningful question. 这是一个有意义的问题。",
+    derivatives:[["meaning","n. 意义"],["meaningless","adj. 无意义的"]],
+    phrases:[["a meaningful life","有意义的人生"],["meaningful words","意味深长的话"]],
+    chunks:[
+      {letters:"mean", ipa:"/miːn/", rule:"ea→/iː/",       sound:"meen"},
+      {letters:"ing",  ipa:"/ɪŋ/",   rule:"ing→/ɪŋ/",      sound:"ing"},
+      {letters:"ful",  ipa:"/fl/",   rule:"ful→/fl/（弱读）", sound:"ful"}
+    ],
+    speaTips:"重音在第一音节 mean：MEAN-ing-ful。ful 弱读 /fl/。"
+  },
+  {
+    word:"difficult", ipa:"/ˈdɪfɪkəlt/", meaning:"adj. 困难的",
+    cat:"learn",
+    tips:"对比 hard：difficult 更正式。拼写易错：dif-fi-cult，别漏 u。句型 It is difficult (for sb) to do sth（做某事对某人来说是困难的）。",
+    example:"It's difficult to remember all the words. 记住所有单词很难。",
+    derivatives:[["difficulty","n. 困难"],["difficulties","n. 复数形式"]],
+    phrases:[["be difficult to do","做……有困难"],["a difficult question","一个难题"]],
+    chunks:[
+      {letters:"dif", ipa:"/dɪf/",  rule:"i→/ɪ/",      sound:"dif"},
+      {letters:"fi",  ipa:"/fɪ/",   rule:"i→/ɪ/",      sound:"fih"},
+      {letters:"cult",ipa:"/kəlt/", rule:"u→/ə/（弱读）", sound:"kult"}
+    ],
+    speaTips:"重音在第一音节 dif：DIF-fi-cult。cult 弱读 /kəlt/。"
+  },
+  {
+    word:"question", ipa:"/ˈkwestʃən/", meaning:"n. 问题",
+    cat:"learn",
+    tips:"拼写易错：ques-tion，别丢 u。tion 结尾读 /ʃən/。动词 question 表“询问”。搭配 ask a question、answer the question。",
+    example:"May I ask you a question? 我能问你一个问题吗？",
+    derivatives:[["questions","n. 复数形式"],["questionnaire","n. 问卷"]],
+    phrases:[["ask a question","问问题"],["answer the question","回答问题"],["no question","没问题"]],
+    chunks:[
+      {letters:"ques", ipa:"/kwes/", rule:"qu→/kw/",        sound:"kwes"},
+      {letters:"tion", ipa:"/ʃən/",  rule:"tion→/ʃən/",     sound:"shun"}
+    ],
+    speaTips:"重音在第一音节 ques：QUES-tion。qu 发 /kw/，tion 发 /ʃən/。"
+  },
+  {
+    word:"mind", ipa:"/maɪnd/", meaning:"n. 头脑；心思",
+    cat:"learn",
+    tips:"i 在 nd 前读长音 /aɪ/（find、kind 同款）。搭配：keep in mind（记住）、Never mind!（没关系）、a mind map（思维导图）。",
+    example:"Never mind! 没关系！",
+    derivatives:[["minds","n. 复数形式"],["mindful","adj. 留意的"]],
+    phrases:[["keep in mind","记住"],["Never mind!","没关系！"],["a mind map","思维导图"],["change one's mind","改变主意"]],
+    chunks:[
+      {letters:"m",   ipa:"/m/",    rule:"m→/m/",           sound:"m"},
+      {letters:"ind", ipa:"/aɪnd/", rule:"i→/aɪ/（在 nd 前）", sound:"ind"}
+    ],
+    speaTips:"一个音节 /maɪnd/。i 读长音 /aɪ/，nd 连读。"
+  },
+  {
+    word:"key", ipa:"/kiː/", meaning:"n. 钥匙；关键 adj. 至关重要的",
+    cat:"learn",
+    tips:"ey 组合读长音 /iː/（monkey、donkey 同款）。搭配 the key to ...（……的关键），to 是介词，后面接名词。",
+    example:"Practice is the key to learning English. 练习是学好英语的关键。",
+    derivatives:[["keys","n. 复数形式"],["keyboard","n. 键盘"]],
+    phrases:[["the key to","……的关键"],["key point","关键点"],["key to the door","门钥匙"]],
+    chunks:[
+      {letters:"k",  ipa:"/k/",  rule:"k→/k/",     sound:"k"},
+      {letters:"ey", ipa:"/iː/", rule:"ey→/iː/",   sound:"ee"}
+    ],
+    speaTips:"一个音节 /kiː/。/iː/拉长，结尾轻收。"
+  },
+  {
+    word:"remember", ipa:"/rɪˈmembə(r)/", meaning:"v. 记住；记起",
+    cat:"learn",
+    tips:"re（再）+ member（记忆）→ 再想回来＝记住。拼写易错：re-mem-ber，双写 m。remember to do sth（记得要做，还没做）/ remember doing sth（记得做过，已发生）。",
+    example:"Remember to bring your homework. 记得带作业来。",
+    derivatives:[["memory","n. 记忆"],["remembered","v. 过去式"]],
+    phrases:[["remember to do sth","记得要做某事"],["remember doing sth","记得做过某事"]],
+    chunks:[
+      {letters:"re",   ipa:"/rɪ/",  rule:"e→/ɪ/（轻读）",   sound:"rih"},
+      {letters:"mem",  ipa:"/mem/", rule:"e→/e/（短音）",   sound:"mem"},
+      {letters:"ber",  ipa:"/bə(r)/",rule:"er→/ə(r)/（弱读）", sound:"buh"}
+    ],
+    speaTips:"重音在第二音节 mem：re-MEM-ber。开头 re 轻读，ber 弱读。"
+  },
+  {
+    word:"relax", ipa:"/rɪˈlæks/", meaning:"v. 放松；休息",
+    cat:"learn",
+    tips:"动词“放松”。relax 直接加 ing / ed：relaxing（令人放松的）、relaxed（感到放松的）。",
+    example:"Let's relax and listen to music. 我们放松一下，听听音乐吧。",
+    derivatives:[["relaxing","adj. 令人放松的"],["relaxed","adj. 放松的"],["relaxation","n. 放松"]],
+    phrases:[["relax yourself","放松一下"],["relax at home","在家休息"]],
+    chunks:[
+      {letters:"re",  ipa:"/rɪ/",   rule:"e→/ɪ/（轻读）",   sound:"rih"},
+      {letters:"lax", ipa:"/læks/", rule:"a→/æ/，x→/ks/",  sound:"laks"}
+    ],
+    speaTips:"重音在第二音节 lax：re-LAX。x 发 /ks/。"
+  },
+  {
+    word:"relaxing", ipa:"/rɪˈlæksɪŋ/", meaning:"adj. 令人放松的",
+    cat:"learn",
+    tips:"relax + ing → 令人放松的。relaxing 形容“物”，relaxed 形容“人”。",
+    example:"The music is relaxing. 这音乐让人放松。",
+    derivatives:[["relax","v. 放松"],["relaxed","adj. 感到放松的"]],
+    phrases:[["relaxing music","令人放松的音乐"],["a relaxing weekend","轻松的周末"]],
+    chunks:[
+      {letters:"re",  ipa:"/rɪ/",    rule:"e→/ɪ/（轻读）",    sound:"rih"},
+      {letters:"lax", ipa:"/læks/",  rule:"a→/æ/，x→/ks/",   sound:"laks"},
+      {letters:"ing", ipa:"/ɪŋ/",    rule:"ing→/ɪŋ/",        sound:"ing"}
+    ],
+    speaTips:"重音在第二音节 lax：re-LAX-ing。ing 发 /ɪŋ/。"
+  },
+  {
+    word:"relaxed", ipa:"/rɪˈlækst/", meaning:"adj. 放松的；冷静的；镇定的",
+    cat:"learn",
+    tips:"relax + ed → 感到放松的。relaxed 形容“人”的状态：I feel relaxed.（我感到放松）。",
+    example:"I feel relaxed after the exam. 考完试后我感到很放松。",
+    derivatives:[["relax","v. 放松"],["relaxing","adj. 令人放松的"]],
+    phrases:[["feel relaxed","感到放松"],["a relaxed smile","轻松的微笑"]],
+    chunks:[
+      {letters:"re",  ipa:"/rɪ/",   rule:"e→/ɪ/（轻读）",    sound:"rih"},
+      {letters:"lax", ipa:"/læks/", rule:"a→/æ/，x→/ks/",   sound:"laks"},
+      {letters:"ed",  ipa:"/t/",    rule:"ed→/t/（在清辅音后）", sound:"t"}
+    ],
+    speaTips:"重音在第二音节 lax：re-LAXED。ed 在清辅音后读 /t/。"
+  },
+  {
+    word:"advice", ipa:"/ədˈvaɪs/", meaning:"n. 意见；建议；忠告",
+    cat:"learn",
+    tips:"不可数名词！一条建议是 a piece of advice，不是 an advice。动词是 advise（建议）。c 在 i 前发 /s/。",
+    example:"Let me give you some advice. 我给你一些建议吧。",
+    derivatives:[["advise","v. 建议"],["advisor","n. 顾问"]],
+    phrases:[["a piece of advice","一条建议"],["give advice","提建议"],["take one's advice","采纳某人的建议"]],
+    chunks:[
+      {letters:"ad",   ipa:"/əd/",   rule:"a 弱读",           sound:"uhd"},
+      {letters:"vice", ipa:"/vaɪs/", rule:"魔法 e：i_e→/aɪ/",  sound:"vice"}
+    ],
+    speaTips:"重音在第二音节 vice：ad-VICE。vice 的 /aɪ/ 拉长。"
+  },
+  {
+    word:"correct", ipa:"/kəˈrekt/", meaning:"adj. 正确的；合适的",
+    cat:"learn",
+    tips:"cor + rect，拼写双写 r：cor-rect。动词“改正”：correct mistakes（纠正错误）。同根：incorrect 不正确的、correctly 正确地。",
+    example:"Your answer is correct. 你的答案是正确的。",
+    derivatives:[["incorrect","adj. 不正确的"],["correctly","adv. 正确地"],["correction","n. 改正"]],
+    phrases:[["correct answer","正确答案"],["correct the mistakes","改正错误"]],
+    chunks:[
+      {letters:"cor",  ipa:"/kə/",   rule:"or→/ə/（弱读）",   sound:"kuh"},
+      {letters:"rect", ipa:"/rekt/", rule:"e→/e/（短音）",    sound:"rect"}
+    ],
+    speaTips:"重音在第二音节 rect：cor-RECT。开头 co 轻读，别读成两个重音。"
+  },
+  {
+    word:"secret", ipa:"/ˈsiːkrət/", meaning:"n. 秘密；诀窍；奥妙",
+    cat:"learn",
+    tips:"两个音节：se-cret。第一个 e 发长音 /iː/，第二个 e 弱读 /ə/。搭配 keep a secret（保守秘密）、the secret of（……的诀窍）。",
+    example:"It's our secret and you should keep it. 这是我们的秘密，你应该保守它。",
+    derivatives:[["secretly","adv. 秘密地"],["secrets","n. 复数形式"]],
+    phrases:[["keep a secret","保守秘密"],["the secret of","……的诀窍"],["a secret plan","秘密计划"]],
+    chunks:[
+      {letters:"se",   ipa:"/siː/", rule:"e→/iː/",          sound:"see"},
+      {letters:"cret", ipa:"/krət/",rule:"e→/ə/（弱读）",     sound:"krut"}
+    ],
+    speaTips:"重音在第一音节 se：SE-cret。cret 弱读 /krət/。"
+  },
+  {
+    word:"listen", ipa:"/ˈlɪsn/", meaning:"v. 听",
+    cat:"learn",
+    tips:"注意：t 不发音！listen 读 /ˈlɪsn/，别读成“list-en”。搭配 listen to（听……），to 别漏。",
+    example:"Listen to the teacher carefully. 认真听老师讲。",
+    derivatives:[["listens","v. 第三人称单数"],["listener","n. 听众"]],
+    phrases:[["listen to","听；倾听"],["listen to music","听音乐"],["listen carefully","仔细听"]],
+    chunks:[
+      {letters:"li",   ipa:"/lɪ/", rule:"i→/ɪ/",           sound:"lih"},
+      {letters:"sten", ipa:"/sn/", rule:"t 不发音，弱读",    sound:"sun"}
+    ],
+    speaTips:"重音在第一音节 li：LI-sten。t 不发音，sten 读 /sn/。"
+  },
+  {
+    word:"study", ipa:"/ˈstʌdi/", meaning:"v. & n. 学习；研究",
+    cat:"learn",
+    tips:"双音节：stud-y。u 发 /ʌ/。study 比 learn 更强调“下功夫、研究”。study hard 努力学习、a study plan 学习计划。",
+    example:"I study English every day. 我每天学英语。",
+    derivatives:[["studies","n. 复数形式"],["student","n. 学生"]],
+    phrases:[["study hard","努力学习"],["study English","学英语"],["a study plan","学习计划"]],
+    chunks:[
+      {letters:"stu", ipa:"/stʌ/", rule:"u→/ʌ/",       sound:"stuh"},
+      {letters:"dy",  ipa:"/di/",  rule:"y→/i/",       sound:"dee"}
+    ],
+    speaTips:"重音在第一音节 stu：STU-dy。u 读 /ʌ/，dy 发 /di/。"
+  },
+  {
+    word:"plan", ipa:"/plæn/", meaning:"v. & n. 打算；计划",
+    cat:"learn",
+    tips:"短音 /æ/。搭配 make a plan（制订计划）、plan to do sth（计划做某事）。plan 的现在分词双写 n：planning。",
+    example:"I plan to study hard this term. 这学期我打算努力学习。",
+    derivatives:[["plans","n. 复数形式"],["planned","v. 过去式"],["planning","n. 规划"]],
+    phrases:[["make a plan","制订计划"],["plan to do sth","计划做某事"],["a study plan","学习计划"]],
+    chunks:[
+      {letters:"pl", ipa:"/pl/", rule:"pl 组合 /pl/",   sound:"pl"},
+      {letters:"a",  ipa:"/æ/",  rule:"a→/æ/（短音）",  sound:"a"},
+      {letters:"n",  ipa:"/n/",  rule:"n→/n/",         sound:"n"}
+    ],
+    speaTips:"一个音节 /plæn/。a 短音 /æ/，结尾 n 轻收。"
+  }
 ];
 
 /* 拼读规则面板数据 */
@@ -865,7 +1433,7 @@ function stopSpeak(){
 }
 
 /* ================= 渲染单词卡 ================= */
-const CATS = [["basic","基本信息"],["like","性格与喜好"],["place","学校场所 · 设施"],["feel","学校场所 · 感受"]];
+const CATS = [["basic","基本信息"],["like","性格与喜好"],["place","学校场所 · 设施"],["feel","学校场所 · 感受"],["subject","学校科目"],["learn","学习方法"]];
 const app = $("#app");
 
 function renderCard(w){
@@ -971,7 +1539,8 @@ function renderAll(){
     if(!ws.length) continue;
     const sec = el("div","section");
     const h = el("div","section-title");
-    h.innerHTML = `<h2>${key==="basic"?"📋":"🎈"} ${title} <span class="badge">${ws.length} 词</span></h2>
+    const emoji = ({basic:"📋",like:"🎈",place:"🏫",feel:"😊",subject:"📖",learn:"💡"})[key] || "🎈";
+    h.innerHTML = `<h2>${emoji} ${title} <span class="badge">${ws.length} 词</span></h2>
       <button class="btn ghost" style="background:#e6e2ff;color:#5a4cff;padding:8px 12px;font-size:12.5px" data-all>🔊 连读全部</button>`;
     sec.appendChild(h);
     ws.forEach(w=>sec.appendChild(renderCard(w)));
