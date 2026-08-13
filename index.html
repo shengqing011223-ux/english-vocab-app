@@ -218,6 +218,24 @@
     opacity:0; pointer-events:none; transition: opacity .2s;
   }
   .toast.show { opacity:1; }
+
+  /* 拼写范围选择 */
+  .setup-sub { font-size:13px; color:#6a6f8a; margin:2px 0 10px; line-height:1.6; }
+  .chip-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+  .chip { border:1px solid #e0e0f0; background:#f6f5ff; color:#4a4f6e; border-radius:10px; padding:8px 12px;
+    font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:5px; }
+  .chip span { background:#e6e2ff; color:#5a4cff; border-radius:8px; padding:1px 7px; font-size:12px; font-weight:700; }
+  .chip:active { background:#ece8ff; }
+  .setup-selbar { display:flex; align-items:center; gap:10px; margin:10px 0 4px; }
+  .sel-count { font-size:12.5px; color:#8a8fa8; font-weight:600; }
+  .sel-actions { display:flex; gap:8px; margin:8px 0; }
+  .sel-group { margin-bottom:10px; }
+  .sel-group-title { font-size:13px; font-weight:700; color:#5a4cff; margin:12px 0 6px; }
+  .sel-row { display:flex; align-items:center; gap:10px; background:#faf9ff; border:1px solid #eceef7;
+    border-radius:10px; padding:8px 10px; margin-bottom:6px; }
+  .sel-row input { width:18px; height:18px; accent-color:#5a4cff; flex-shrink:0; }
+  .sel-row .sw { font-size:15px; font-weight:700; color:#23294a; min-width:88px; }
+  .sel-row .sm { flex:1; font-size:12px; color:#6a6f8a; line-height:1.4; }
 </style>
 </head>
 <body>
@@ -266,6 +284,14 @@
 <div class="overlay" id="spellOverlay">
   <div class="sheet" style="background:transparent;padding:10px 14px;">
     <div id="spellBody"></div>
+  </div>
+</div>
+
+<!-- 拼写范围选择弹层 -->
+<div class="overlay" id="spellSetupOverlay">
+  <div class="sheet">
+    <h3>✏️ 拼写测试 · 选范围 <button class="close" data-close="spellSetupOverlay">✕</button></h3>
+    <div id="spellSetupBody"></div>
   </div>
 </div>
 
@@ -1434,6 +1460,8 @@ function stopSpeak(){
 
 /* ================= 渲染单词卡 ================= */
 const CATS = [["basic","基本信息"],["like","性格与喜好"],["place","学校场所 · 设施"],["feel","学校场所 · 感受"],["subject","学校科目"],["learn","学习方法"]];
+const CAT_EMOJI = {basic:"📋",like:"🎈",place:"🏫",feel:"😊",subject:"📖",learn:"💡"};
+const catEmoji = k => CAT_EMOJI[k] || "🎈";
 const app = $("#app");
 
 function renderCard(w){
@@ -1539,7 +1567,7 @@ function renderAll(){
     if(!ws.length) continue;
     const sec = el("div","section");
     const h = el("div","section-title");
-    const emoji = ({basic:"📋",like:"🎈",place:"🏫",feel:"😊",subject:"📖",learn:"💡"})[key] || "🎈";
+    const emoji = catEmoji(key);
     h.innerHTML = `<h2>${emoji} ${title} <span class="badge">${ws.length} 词</span></h2>
       <button class="btn ghost" style="background:#e6e2ff;color:#5a4cff;padding:8px 12px;font-size:12.5px" data-all>🔊 连读全部</button>`;
     sec.appendChild(h);
@@ -1932,11 +1960,81 @@ function renderQuiz(){
 function next(){ quiz.idx++; quiz.state="guess"; renderQuiz(); }
 
 /* ================= 拼写测试 ================= */
-const spell = { list:[], idx:0, score:0, total:0, checked:false, lastOk:false, lastTyped:"" };
-$("#spellBtn").onclick = startSpell;
+const spell = { list:[], idx:0, score:0, total:0, checked:false, lastOk:false, lastTyped:"", sourceList:[] };
+$("#spellBtn").onclick = showSpellSetup;
 
-function startSpell(){
-  spell.list = WORDS.map((w,i)=>({w,i})).sort(()=>Math.random()-0.5);
+// 拼写入口：先选范围（每课 / 自选 / 全部）
+const selSet = new Set();
+function showSpellSetup(){
+  renderSpellSetup();
+  $("#spellSetupOverlay").classList.add("show");
+}
+function renderSpellSetup(){
+  const body = $("#spellSetupBody");
+  const chips = [["__all","全部",WORDS.length]]
+    .concat(CATS.map(([k,t])=>[k,t,WORDS.filter(w=>w.cat===k).length]));
+  body.innerHTML = `<p class="setup-sub">按「课」选一个范围开始，或自选单词：</p>
+    <div class="chip-row">
+      ${chips.map(([k,t,n])=>`<button class="chip" data-cat="${k}">${k==="__all"?"":catEmoji(k)+" "}${t} <span>${n}</span></button>`).join("")}
+    </div>
+    <div class="setup-selbar">
+      <button class="btn ghost" id="selToggle" style="flex:1">☑️ 自选单词</button>
+      <span class="sel-count" id="selCount">已选 ${selSet.size}</span>
+    </div>
+    <div id="selWrap" style="display:none"></div>
+    <div class="quiz-btns" style="margin-top:12px"><button class="btn primary" id="selStart" style="background:#2fb46b;flex:1" disabled>开始拼写</button></div>`;
+  body.querySelectorAll(".chip").forEach(b=>{
+    b.onclick = ()=>{ $("#spellSetupOverlay").classList.remove("show"); startSpellForCat(b.dataset.cat); };
+  });
+  const sw = $("#selWrap");
+  $("#selToggle").onclick = ()=>{
+    const show = sw.style.display === "none";
+    sw.style.display = show ? "block" : "none";
+    if(show) renderSelList();
+  };
+  $("#selStart").onclick = ()=>{
+    if(!selSet.size){ toast("先勾选要拼写的单词"); return; }
+    $("#spellSetupOverlay").classList.remove("show");
+    startSpell(WORDS.filter(w=>selSet.has(w.word)).map(w=>({w})));
+  };
+  refreshSelCount();
+}
+function startSpellForCat(cat){
+  const list = cat === "__all"
+    ? WORDS.map((w,i)=>({w,i}))
+    : WORDS.filter(w=>w.cat===cat).map(w=>({w}));
+  startSpell(list);
+}
+function renderSelList(){
+  const sw = $("#selWrap");
+  let h = `<div class="sel-actions">
+      <button class="btn ghost" id="selAll" style="flex:1">✅ 全选</button>
+      <button class="btn ghost" id="selNone" style="flex:1">🗑 清空</button>
+    </div>`;
+  for(const [k,t] of CATS){
+    const ws = WORDS.filter(w=>w.cat===k);
+    if(!ws.length) continue;
+    h += `<div class="sel-group"><div class="sel-group-title">${catEmoji(k)} ${t}（${ws.length}）</div>`;
+    h += ws.map(w=>`<label class="sel-row"><input type="checkbox" data-w="${w.word}" ${selSet.has(w.word)?"checked":""}><span class="sw">${w.word}</span><span class="sm">${w.meaning}</span></label>`).join("");
+    h += `</div>`;
+  }
+  sw.innerHTML = h;
+  sw.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    cb.onchange = ()=>{ if(cb.checked) selSet.add(cb.dataset.w); else selSet.delete(cb.dataset.w); refreshSelCount(); };
+  });
+  $("#selAll").onclick = ()=>{ WORDS.forEach(w=>selSet.add(w.word)); renderSelList(); refreshSelCount(); };
+  $("#selNone").onclick = ()=>{ selSet.clear(); renderSelList(); refreshSelCount(); };
+}
+function refreshSelCount(){
+  const c = $("#selCount"), s = $("#selStart");
+  if(c) c.textContent = "已选 " + selSet.size;
+  if(s){ s.disabled = selSet.size === 0; s.textContent = selSet.size ? `开始拼写（${selSet.size} 个）` : "开始拼写"; }
+}
+
+function startSpell(list){
+  const src = list || WORDS.map((w,i)=>({w,i}));
+  spell.sourceList = src;
+  spell.list = src.slice().sort(()=>Math.random()-0.5);
   spell.idx = 0; spell.score = 0; spell.total = spell.list.length;
   spell.checked = false; spell.lastOk = false; spell.lastTyped = "";
   $("#spellOverlay").classList.add("show");
@@ -1966,7 +2064,7 @@ function renderSpell(){
     </div>`;
     const sgw = $("#spellGoWrong");
     if(sgw) sgw.onclick = ()=>{ $("#spellOverlay").classList.remove("show"); startWrongPractice(); };
-    $("#spellAgain").onclick = startSpell;
+    $("#spellAgain").onclick = ()=> startSpell(spell.sourceList);
     return;
   }
   const {w} = spell.list[spell.idx];
