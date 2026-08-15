@@ -121,6 +121,16 @@
   .fill-row { display:flex; gap:9px; }
   .fill-in { flex:1; border:2px solid #e4e6f2; border-radius:13px; padding:13px; font-size:17px; font-weight:700; text-align:center; outline:none; color:#23294a; background:#fbfbfe; }
   .fill-in:focus { border-color:#5f3dc4; background:#fff; }
+  .bank-sel { border:2px dashed #c9c3ee; border-radius:13px; padding:10px 14px; font-size:14.5px; color:#5f3dc4; background:#fbfaff; margin-bottom:12px; text-align:center; }
+  .bank-sel b { font-size:17px; }
+  .bank-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:4px; }
+  .bank-chip { border:2px solid #e4e6f2; border-radius:11px; padding:9px 14px; font-size:14.5px; font-weight:700; background:#fff; color:#23294a; cursor:pointer; line-height:1.4; }
+  .bank-chip:active { transform: scale(.96); }
+  .bank-chip.sel { border-color:#5f3dc4; background:#f1ecff; color:#5f3dc4; }
+  .bank-chip.sel-right { border-color:#2fb46b; background:#e9f9f0; color:#0a8f50; }
+  .bank-chip.sel-wrong { border-color:#ff5c8a; background:#ffe9f0; color:#d4380d; }
+  .bank-chip.dim { opacity:.5; }
+  .bank-chip:disabled { cursor:default; }
   .q-feedback { display:none; margin-top:14px; border-radius:13px; padding:12px 14px; }
   .q-feedback.show { display:block; }
   .q-feedback.ok { background:#e9f9f0; border:1px solid #bfe9d0; }
@@ -174,6 +184,26 @@
   .toast.show { opacity:1; }
   .bar { height:8px; background:#eceff8; border-radius:6px; overflow:hidden; margin-top:8px; }
   .bar i { display:block; height:100%; background:linear-gradient(90deg,#5f3dc4,#8a5cf6); border-radius:6px; transition:width .3s; }
+
+  /* 学习记录 */
+  .sl-stats { display:flex; gap:9px; margin-bottom:14px; }
+  .sl-stat { flex:1; background:#f6f2ff; border-radius:14px; padding:10px 8px; text-align:center; }
+  .sl-stat b { font-size:17px; color:#5f3dc4; display:block; }
+  .sl-stat span { font-size:10.5px; color:#8a8fa8; }
+  .sl-week { display:flex; gap:6px; align-items:flex-end; height:78px; margin:4px 0 16px; }
+  .sl-bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; }
+  .sl-bar .col { flex:1; width:100%; display:flex; align-items:flex-end; }
+  .sl-bar .col i { display:block; width:100%; border-radius:6px 6px 2px 2px; background:linear-gradient(180deg,#8a5cf6,#5f3dc4); min-height:2px; }
+  .sl-bar .d { font-size:10px; color:#9a9fb8; white-space:nowrap; }
+  .sl-day { border-top:1px solid #f0f1f8; padding:11px 0 6px; }
+  .sl-day-h { font-size:12.5px; font-weight:800; color:#5f3dc4; margin-bottom:5px; }
+  .sl-item { display:flex; align-items:flex-start; gap:8px; padding:6px 0; }
+  .sl-item .ic { font-size:15px; width:22px; text-align:center; flex-shrink:0; }
+  .sl-item .tx { flex:1; min-width:0; }
+  .sl-item .tx .lb { font-size:13.5px; font-weight:700; color:#23294a; }
+  .sl-item .tx .te { font-size:12px; color:#8a8fa8; margin-top:1px; line-height:1.5; }
+  .sl-item .tm { font-size:11px; color:#b9bdcf; flex-shrink:0; }
+  .sl-empty { text-align:center; color:#9a9fb8; font-size:14px; padding:30px 0; line-height:1.8; }
 </style>
 </head>
 <body>
@@ -185,6 +215,7 @@
     <button class="btn white" id="homeBtn">🏠 课程地图</button>
     <button class="btn ghost" id="teacherBtn">👩‍🏫 老师面板</button>
     <button class="btn ghost" id="wrongBtn">📕 错题本 <span id="wrongCount"></span></button>
+    <button class="btn ghost" id="studyBtn">📊 学习记录</button>
   </div>
 </div>
 
@@ -192,6 +223,7 @@
 
 <div class="overlay" id="teacherOv"><div class="sheet"><div id="teacherBody"></div></div></div>
 <div class="overlay" id="wrongOv"><div class="sheet"><div id="wrongBody"></div></div></div>
+<div class="overlay" id="studyOv"><div class="sheet"><div id="studyBody"></div></div></div>
 <div class="overlay" id="tipsOv"><div class="sheet"><div id="tipsBody"></div></div></div>
 <div class="toast" id="toast"></div>
 
@@ -242,8 +274,79 @@ function saveWrong(){ try{ localStorage.setItem(LS_WRONG,JSON.stringify(wrongSto
 function updateWrongBadge(){ const n=$("#wrongCount"); if(n) n.textContent=wrongStore.length?(" "+wrongStore.length+" "):""; }
 function wrongOf(qid){ return wrongStore.find(w=>w.qid===qid); }
 
+/* ============ 学习记录 ============ */
+const LS_STUDY = "course_study_log";
+const STUDY_ICONS = { lesson:"🎓", wrong:"🔁", quiz:"✏️" };
+let studyLog = [];
+(function(){
+  try{ studyLog = JSON.parse(localStorage.getItem(LS_STUDY)||"[]") || []; }
+  catch(e){ studyLog = []; }
+  if(!Array.isArray(studyLog)) studyLog = [];
+})();
+function saveStudy(){ try{ localStorage.setItem(LS_STUDY, JSON.stringify(studyLog)); }catch(e){} }
+function recStudy(k, label, text, n, ok){
+  studyLog.push({ t: Date.now(), k, label, text, n: n||0, ok: ok||0 });
+  if(studyLog.length > 500) studyLog = studyLog.slice(-500);
+  saveStudy();
+}
+function dayStr(ts){ const d=new Date(ts); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function pad2(x){ return String(x).padStart(2,"0"); }
+function openStudy(){ renderStudyLog(); $("#studyOv").classList.add("show"); }
+function renderStudyLog(){
+  const today = dayStr(Date.now());
+  const y = new Date(); y.setDate(y.getDate()-1);
+  const ykey = dayStr(y.getTime());
+  const byDay = {};
+  studyLog.forEach(r=>{ const d=dayStr(r.t); (byDay[d]=byDay[d]||[]).push(r); });
+  const days = Object.keys(byDay).sort();
+  const todayItems = byDay[today]||[];
+  const todayQ = todayItems.reduce((s,r)=>s+(r.n||0),0);
+  const todayOk = todayItems.reduce((s,r)=>s+(r.ok||0),0);
+  // 连续学习天数：今天没学就从昨天起算
+  let streak = 0;
+  const daySet = new Set(days);
+  const cursor = new Date(); cursor.setHours(0,0,0,0);
+  if(!daySet.has(dayStr(cursor.getTime()))) cursor.setDate(cursor.getDate()-1);
+  while(daySet.has(dayStr(cursor.getTime()))){ streak++; cursor.setDate(cursor.getDate()-1); }
+  // 近 7 天柱状（含今天）
+  const WD = ["日","一","二","三","四","五","六"];
+  const week = [];
+  for(let i=6;i>=0;i--){
+    const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-i);
+    const key=dayStr(d.getTime());
+    week.push({ key, label:WD[d.getDay()], cnt:(byDay[key]||[]).reduce((s,r)=>s+(r.n||0),0) });
+  }
+  const maxCnt = Math.max(1, ...week.map(w=>w.cnt));
+  const bars = week.map(w=>`<div class="sl-bar"><div class="col"><i style="height:${Math.round(w.cnt/maxCnt*100)}%"></i></div><div class="d">${w.cnt?w.cnt:""}${w.label}</div></div>`).join("");
+  const rows = days.slice().reverse().slice(0,14).map(d=>{
+    const items = byDay[d].slice(-8);
+    const rel = d===today?"今天":(d===ykey?"昨天":d.slice(5));
+    const qsum = d===today && todayQ ? ` · 做题 ${todayQ} 对 ${todayOk}` : "";
+    return `<div class="sl-day"><div class="sl-day-h">${rel} · ${items.length} 项${qsum}</div>
+      ${items.map(r=>`<div class="sl-item"><span class="ic">${STUDY_ICONS[r.k]||"📘"}</span><span class="tx"><div class="lb">${r.label}</div><div class="te">${r.text}</div></span><span class="tm">${pad2(new Date(r.t).getHours())}:${pad2(new Date(r.t).getMinutes())}</span></div>`).join("")}
+    </div>`;
+  }).join("");
+  const body = $("#studyBody");
+  body.innerHTML = `<button class="close" onclick="closeOv('studyOv')">✕</button>
+    <h3>📊 学习记录</h3><div class="sub">学完一课、练完一轮错题都会自动记下来</div>
+    <div class="sl-stats">
+      <div class="sl-stat"><b>${todayItems.length}</b><span>今日学习</span></div>
+      <div class="sl-stat"><b>${streak}</b><span>连续天数</span></div>
+      <div class="sl-stat"><b>${studyLog.length}</b><span>累计记录</span></div>
+    </div>
+    <div class="sub" style="margin-bottom:4px">近 7 天 · 每天做题数</div>
+    <div class="sl-week">${bars}</div>
+    ${studyLog.length ? rows + `<button class="btn grey" style="width:100%;margin-top:10px" onclick="clearStudy()">🗑 清空记录</button>`
+      : `<div class="sl-empty">还没有学习记录<br>去学一课，就会自动记下来 📝</div>`}`;
+  $("#studyOv").classList.add("show");
+}
+function clearStudy(){ if(confirm("确定清空全部学习记录吗？")){ studyLog=[]; saveStudy(); renderStudyLog(); } }
+$("#studyBtn").onclick = openStudy;
+
 /* ============ 课时数据 ============ */
 /* 每个课时：vocab 关一 / pattern 关二 / lines 关三 / quiz 关四 / final 关五 */
+/* l6 选词填空共用的词库（sport 是干扰词，不用选） */
+const L6_BANK=["sport","energy","with","good","the","polite","always","smart","ready","friendly"];
 const LESSONS=[
 {
   id:"l1", icon:"🙋", title:"人称代词", src:"讲义第 1037 页",
@@ -512,15 +615,15 @@ const LESSONS=[
     {t:"c", q:"They are ___ to each other. 彼此友好。", o:["friendly","friend","friends","friendship"], a:"friendly", hint:"are 后面接形容词；friend 要变形容词。", ex:"are friendly 友好的。friend→friendly（友好的），形容词。"}
   ],
   final:[
-    {t:"f", q:"从词库选词：He is always full of ___.<br>（词库：sport/energy/with/good/the/polite/always/smart/ready/friendly，2 个多余）", a:"energy", hint:"full of ___ 精力充沛。", ex:"full of energy 精力充沛。"},
-    {t:"f", q:"从词库选词：Sandy is a tall and slim girl ___ long hair.<br>（词库同上）", a:"with", hint:"一个「留着长发的」介词。", ex:"with long hair 留着长头发，with 表特征。"},
-    {t:"f", q:"从词库选词：She is ___ at music.<br>（词库同上）", a:"good", hint:"be ___ at 擅长。", ex:"be good at music 擅长音乐。"},
-    {t:"f", q:"从词库选词：She can play ___ piano well.<br>（词库同上）", a:"the", hint:"弹乐器前面要加哪个小词？", ex:"play the piano，乐器前加 the。"},
-    {t:"f", q:"从词库选词：She is very ___. 她很有礼貌。<br>（词库同上）", a:"polite", hint:"有礼貌的。", ex:"She is very polite. 她非常有礼貌。"},
-    {t:"f", q:"从词库选词：She ___ says “please” and “thank you”.<br>（词库同上）", a:"always", hint:"她___说请和谢谢=经常。", ex:"She always says… 她总是说…，always 总是，放在动词前。"},
-    {t:"f", q:"从词库选词：Daniel is ___. 他很聪明。<br>（词库同上）", a:"smart", hint:"聪明的。", ex:"Daniel is smart. 丹尼尔很聪明。"},
-    {t:"f", q:"从词库选词：He is always ___ to help others.<br>（词库同上）", a:"ready", hint:"be ___ to do 乐于做…。", ex:"be ready to help 乐于助人，ready to 固定搭配。"},
-    {t:"f", q:"从词库选词：They are ___ to each other.<br>（词库同上）", a:"friendly", hint:"are ___ 后面接形容词，friend 变…？", ex:"are friendly 友好的。friend→friendly。"}
+    {t:"b", q:"He is always full of ___. 精力充沛。", bank:L6_BANK, a:"energy", hint:"full of ___ 精力充沛。", ex:"full of energy 精力充沛。"},
+    {t:"b", q:"Sandy is a tall and slim girl ___ long hair.", bank:L6_BANK, a:"with", hint:"一个「留着长发的」介词。", ex:"with long hair 留着长头发，with 表特征。"},
+    {t:"b", q:"She is ___ at music. 擅长音乐。", bank:L6_BANK, a:"good", hint:"be ___ at 擅长。", ex:"be good at music 擅长音乐。"},
+    {t:"b", q:"She can play ___ piano well. 弹钢琴。", bank:L6_BANK, a:"the", hint:"弹乐器前面要加哪个小词？", ex:"play the piano，乐器前加 the。"},
+    {t:"b", q:"She is very ___. 她很有礼貌。", bank:L6_BANK, a:"polite", hint:"有礼貌的。", ex:"She is very polite. 她非常有礼貌。"},
+    {t:"b", q:"She ___ says “please” and “thank you”. 她总是说请和谢谢。", bank:L6_BANK, a:"always", hint:"她___说请和谢谢=经常。", ex:"She always says… 她总是说…，always 总是，放在动词前。"},
+    {t:"b", q:"Daniel is ___. 他很聪明。", bank:L6_BANK, a:"smart", hint:"聪明的。", ex:"Daniel is smart. 丹尼尔很聪明。"},
+    {t:"b", q:"He is always ___ to help others. 乐于助人。", bank:L6_BANK, a:"ready", hint:"be ___ to do 乐于做…。", ex:"be ready to help 乐于助人，ready to 固定搭配。"},
+    {t:"b", q:"They are ___ to each other. 彼此友好。", bank:L6_BANK, a:"friendly", hint:"are ___ 后面接形容词，friend 变…？", ex:"are friendly 友好的。friend→friendly。"}
   ]
 },
 {
@@ -830,6 +933,12 @@ function stageQuiz(isFinal){
     inner = `<div class="q-text">${q.q}</div>
       <div class="fill-row"><input class="fill-in" id="fillIn" placeholder="在这里输入…" autocomplete="off" autocapitalize="off">
       <button class="btn primary" style="background:#5f3dc4;color:#fff;flex-shrink:0" onclick="submitFill()">提交</button></div>`;
+  } else if(q.t==="b"){
+    inner = `<div class="q-text">${q.q}</div>
+      <div class="bank-sel">已选：<b id="bankSelWord">____</b></div>
+      <div class="bank-row">${q.bank.map((w,ix)=>`<button class="bank-chip" data-i="${ix}" onclick="bankPick(this,${ix})">${w}</button>`).join("")}</div>
+      <div class="q-bank" style="margin-top:10px">词库共 ${q.bank.length} 个词 · ${bankExtra(L, q.bank)} 个多余不用选 · 点一下选中，再点提交</div>
+      <button class="btn primary" style="width:100%;margin-top:12px;background:#5f3dc4;color:#fff" onclick="bankSubmit()">提交</button>`;
   } else {
     inner = `<div class="q-text">${q.q}</div>
       <div class="opts">${q.o.map((o,ix)=>`<button class="opt" data-i="${ix}" onclick="pickOpt(this,${ix})">${o}</button>`).join("")}</div>`;
@@ -841,6 +950,28 @@ function stageQuiz(isFinal){
     ${q.hint?`<button class="q-hint" onclick="showQHint()">💡 提示</button><div class="q-hint-box" id="hintBox">${q.hint}</div>`:""}
     <div class="q-feedback" id="qFb"></div>
   </div>`;
+}
+function bankExtra(L, bank){
+  const used = new Set((L.quiz||[]).concat(L.final||[]).map(q=>String(q.a).toLowerCase().trim()));
+  return bank.filter(w=>!used.has(String(w).toLowerCase().trim())).length;
+}
+function bankPick(btn, ix){
+  const wasSel = btn.classList.contains("sel");
+  document.querySelectorAll(".bank-chip").forEach(b=>b.classList.remove("sel"));
+  const slot = $("#bankSelWord");
+  if(wasSel){ btn.classList.remove("sel"); if(slot) slot.textContent="____"; }
+  else { btn.classList.add("sel"); if(slot) slot.textContent=btn.textContent; }
+}
+function bankSubmit(){
+  const L = cur.lesson;
+  const q = (cur.stage===5?L.final:L.quiz)[cur.i];
+  const sel = document.querySelector(".bank-chip.sel");
+  if(!sel){ toast("先点一个词选中再提交"); return; }
+  const ok = matchAns(sel.textContent, q.a);
+  const qid = cur.lesson.id+":"+(cur.stage===5?"f":"q")+cur.i;
+  document.querySelectorAll(".bank-chip").forEach(b=>{ b.disabled=true; if(b===sel) b.classList.add(ok?"sel-right":"sel-wrong"); else b.classList.add("dim"); });
+  if(ok){ if(cur.stage===5) cur.fscore++; } else { addWrong(cur.lesson.id, qid, q); }
+  renderFb(ok, q);
 }
 function showQHint(){ const h=$("#hintBox"); if(h){ h.classList.add("show"); } }
 function renderFb(ok, q){
@@ -885,6 +1016,7 @@ function stageDone(){
   const stars = rate>=0.99?3:(rate>=0.6?2:1);
   progress.lessons[L.id] = { done:true, stars:Math.max(stars, progress.lessons[L.id]?.stars||0) };
   saveProg();
+  recStudy("lesson", L.title, "★"+stars+" · 实战对 "+cur.fscore+"/"+n, n, cur.fscore);
   return `<div class="card done-card">
     <div class="done-big">${stars>=3?"🏆":(stars===2?"🎉":"💪")}</div>
     <div class="done-title">${L.title} 学完啦！</div>
@@ -912,7 +1044,7 @@ function openWrong(){
     <button class="btn primary" style="width:100%;margin-bottom:14px;background:#ff5c8a;color:#fff" onclick="startWrongPractice()">🔁 重练全部错题</button>
     ${wrongStore.map((w,i)=>`
       <div class="wr-item">
-        <div class="lbl">${lessonTitle(w.lessonId)} · ${w.q.t==="f"?"拼写/填空":"选择"}</div>
+        <div class="lbl">${lessonTitle(w.lessonId)} · ${w.q.t==="f"?"拼写/填空":(w.q.t==="b"?"词库选词":"选择")}</div>
         <div class="q">${w.q.q}</div>
         <div class="a">✔ ${Array.isArray(w.q.a)?w.q.a.join(" / "):w.q.a}</div>
         <div class="why">${w.q.ex||""}</div>
@@ -924,14 +1056,14 @@ function lessonTitle(id){ const L=LESSONS.find(x=>x.id===id); return L?L.title:i
 function clearWrong(){ wrongStore=[]; saveWrong(); openWrong(); }
 let wp = { list:[], i:0 };
 function startWrongPractice(){
-  wp = { list:wrongStore.slice(), i:0 };
+  wp = { list:wrongStore.slice(), i:0, okCount:0 };
   $("#wrongOv").classList.remove("show");
   renderWrongPractice();
 }
 function renderWrongPractice(){
   const appBody = app;
   if(!wp.list.length){ toast("错题都练完了 🎉"); wrongStore=[]; saveWrong(); renderHome(); return; }
-  if(wp.i>=wp.list.length){ toast("本轮完成"); renderHome(); return; }
+  if(wp.i>=wp.list.length){ recStudy("wrong","错题重练","本轮对 "+wp.okCount+"/"+wp.list.length+"，错题本剩 "+wrongStore.length, wp.list.length, wp.okCount); toast("本轮完成"); renderHome(); return; }
   const item = wp.list[wp.i];
   const q = item.q;
   const bar = `<div class="bar"><i style="width:${Math.round(wp.i/wp.list.length*100)}%"></i></div>`;
@@ -940,6 +1072,12 @@ function renderWrongPractice(){
     inner = `<div class="q-text">${q.q}</div>
       <div class="fill-row"><input class="fill-in" id="wpFill" placeholder="输入答案…" autocomplete="off" autocapitalize="off">
       <button class="btn primary" style="background:#5f3dc4;color:#fff;flex-shrink:0" onclick="wpSubmit()">提交</button></div>`;
+  } else if(q.t==="b"){
+    inner = `<div class="q-text">${q.q}</div>
+      <div class="bank-sel">已选：<b id="wpBankWord">____</b></div>
+      <div class="bank-row">${q.bank.map((w,ix)=>`<button class="bank-chip" data-i="${ix}" onclick="wpBankPick(this,${ix})">${w}</button>`).join("")}</div>
+      <div class="q-bank" style="margin-top:10px">词库共 ${q.bank.length} 个词 · 点一下选中，再点提交</div>
+      <button class="btn primary" style="width:100%;margin-top:12px;background:#5f3dc4;color:#fff" onclick="wpBankSubmit()">提交</button>`;
   } else {
     inner = `<div class="q-text">${q.q}</div>
       <div class="opts">${q.o.map((o,ix)=>`<button class="opt" data-i="${ix}" onclick="wpPick(this,${ix})">${o}</button>`).join("")}</div>`;
@@ -951,6 +1089,21 @@ function renderWrongPractice(){
       ${inner}
       <div class="q-feedback" id="wpFb"></div>
     </div>`;
+}
+function wpBankPick(btn, ix){
+  const wasSel = btn.classList.contains("sel");
+  document.querySelectorAll(".bank-chip").forEach(b=>b.classList.remove("sel"));
+  const slot = $("#wpBankWord");
+  if(wasSel){ btn.classList.remove("sel"); if(slot) slot.textContent="____"; }
+  else { btn.classList.add("sel"); if(slot) slot.textContent=btn.textContent; }
+}
+function wpBankSubmit(){
+  const q = wp.list[wp.i].q;
+  const sel = document.querySelector(".bank-chip.sel");
+  if(!sel){ toast("先点一个词选中再提交"); return; }
+  const ok = matchAns(sel.textContent, q.a);
+  document.querySelectorAll(".bank-chip").forEach(b=>{ b.disabled=true; if(b===sel) b.classList.add(ok?"sel-right":"sel-wrong"); else b.classList.add("dim"); });
+  wpDone(ok, q);
 }
 function wpPick(btn, ix){
   const q = wp.list[wp.i].q;
@@ -965,6 +1118,7 @@ function wpSubmit(){
   wpDone(ok, q);
 }
 function wpDone(ok, q){
+  if(ok) wp.okCount++;
   lastEx=q.ex;
   const w = wp.list[wp.i];
   const fb=$("#wpFb");
