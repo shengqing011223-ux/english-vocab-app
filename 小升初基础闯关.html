@@ -347,6 +347,8 @@ $("#studyBtn").onclick = openStudy;
 /* 每个课时：vocab 关一 / pattern 关二 / lines 关三 / quiz 关四 / final 关五 */
 /* l6 选词填空共用的词库（sport 是干扰词，不用选） */
 const L6_BANK=["sport","energy","with","good","the","polite","always","smart","ready","friendly"];
+/* l10 选词填空共用的词库（in 是干扰词，不用选；remember 用两次） */
+const L10_BANK=["her","write","mistake","remember","difficult","meaning","important","question","in","stop"];
 const LESSONS=[
 {
   id:"l1", icon:"🙋", title:"人称代词", src:"讲义第 1037 页",
@@ -722,6 +724,109 @@ const LESSONS=[
     {t:"c", q:"8. I will try to teach them ___ to find the answers.", o:["A. why","B. what","C. when","D. how"], a:"D. how", hint:"教他们「怎么」找到答案。", ex:"D。teach them how to find the answers 教他们怎么找到答案。how=怎么。原题 8。"},
     {t:"c", q:"9. He was not really interested in his classes before, ___ now he likes them very much.", o:["A. but","B. and","C. or","D. so"], a:"A. but", hint:"以前不喜欢，现在喜欢 → 转折。", ex:"A。but 但是，表转折：以前不感兴趣，但现在很喜欢。原题 9。"},
     {t:"c", q:"10. He was not really interested in his classes before, but now he ___ them very much.", o:["A. stand","B. hate","C. enjoy","D. clean"], a:"C. enjoy", hint:"现在很喜欢 = 享受。", ex:"C。enjoy them very much 非常喜欢/享受。hate 讨厌意思相反。原题 10。"}
+  ]
+},
+{
+  id:"l9", icon:"🔗", title:"连词 and、but、because", src:"讲义第 1011/1012 页",
+  teacher:{
+    goal:"学生能分清 and（并列）、but（转折）、because（因果）三种连词，并在句中正确选用。",
+    traps:["and 连接并列成分：We have art and PE on Monday.","but 表转折：前后意思相反才用 but","because 表原因：前果后因，回答 Why 的提问"],
+    say:"先读三个语境例句，再记口诀：and 手拉手、but 唱反调、because 讲原因。"
+  },
+  vocab:[
+    {w:"and",ipa:"/ænd/",m:"conj. 和；又；而",ex:"We have art and PE on Monday.",exz:"周一我们有美术课和体育课。",tip:"and 连接两个并列成分，像手拉手。"},
+    {w:"but",ipa:"/bʌt/",m:"conj. 但是；然而",ex:"Science is difficult but useful.",exz:"科学很难，但是有用。",tip:"but 表转折：前后意思相反时用它。"},
+    {w:"because",ipa:"/bɪˈkɒz/",m:"conj. 因为",ex:"I like Friday because I have English class on that day.",exz:"我喜欢周五，因为那天我有英语课。",tip:"because 表原因，前果后因。"},
+    {w:"subject",ipa:"/ˈsʌbdʒɪkt/",m:"n. 学科；科目",ex:"My favourite subject is English.",exz:"我最喜欢的学科是英语。",tip:"school subject 学校科目。"},
+    {w:"history",ipa:"/ˈhɪstri/",m:"n. 历史",ex:"Beijing is a city with a long history.",exz:"北京是一座历史悠久的城市。",tip:"history 历史，a long history 悠久的历史。"},
+    {w:"useful",ipa:"/ˈjuːsfl/",m:"adj. 有用的",ex:"Science is difficult but useful.",exz:"科学很难，但是有用。",tip:"use（用）+ ful → 有用的。"},
+    {w:"boring",ipa:"/ˈbɔːrɪŋ/",m:"adj. 无聊的；乏味的",ex:"Some TV shows are boring.",exz:"有些电视节目很无聊。",tip:"bore（使厌烦）+ ing → 令人无聊的。"},
+    {w:"scientist",ipa:"/ˈsaɪəntɪst/",m:"n. 科学家",ex:"He wants to be a scientist.",exz:"他想成为一名科学家。",tip:"science（科学）+ ist（人）→ 科学家。"}
+  ],
+  pattern:{
+    title:"连词三兄弟",
+    sub:"and 手拉手 · but 唱反调 · because 讲原因",
+    rows:[["and","和；又；而 —— 连接两个并列成分","We have art and PE on Monday."],["but","但是；然而 —— 连接相反概念，表转折","Science is difficult but useful."],["because","因为 —— 连接两个分句，表因果（前果后因）","I like Friday because I have English class on that day."]],
+    formula:"找关系：并列 → and，转折 → but，因果 → because",
+    note:"because 回答 Why 的提问；but 前后意思相反；and 连接同类成分。",
+    sents:["We have art and PE on Monday. 周一我们有美术课和体育课。","Science is difficult but useful. 科学很难，但是有用。","I like Friday because I have English class on that day. 我喜欢周五，因为那天我有英语课。","I have an apple and a banana. 我有一个苹果和一个香蕉。","I wanted to go for a walk, but it started to rain. 我想去散步，但是开始下雨了。"]
+  },
+  lines:[
+    {en:"We have art and PE on Monday.",zh:"周一我们有美术课和体育课。"},
+    {en:"Science is difficult but useful.",zh:"科学很难，但是有用。"},
+    {en:"I like Friday because I have English class on that day.",zh:"我喜欢周五，因为那天我有英语课。"},
+    {en:"I have an apple and a banana.",zh:"我有一个苹果和一个香蕉。"},
+    {en:"I wanted to go for a walk, but it started to rain.",zh:"我想去散步，但是开始下雨了。"}
+  ],
+  quiz:[
+    {t:"c", q:"Science is difficult ___ useful. 科学很难，但是有用。", o:["but","and","because","so"], a:"but", hint:"difficult（难）和 useful（有用）意思相反 → 转折。", ex:"but 表转折。Science is difficult but useful. 原句在讲义 1011 页。"},
+    {t:"c", q:"I like Friday ___ I have English class on that day. 喜欢周五的「原因」。", o:["because","but","and","or"], a:"because", hint:"喜欢周五的原因是那天有英语课。", ex:"because 表原因，前果后因。I like Friday because I have English class on that day. 原句在讲义 1011 页。"},
+    {t:"c", q:"We have art ___ PE on Monday. 两门课并列。", o:["and","but","because","or"], a:"and", hint:"美术课和体育课是并列的两门课。", ex:"and 连接两个并列成分：art and PE。We have art and PE on Monday. 原句在讲义 1011 页。"},
+    {t:"c", q:"I think they're ___（use）. 有用的。", o:["useful","use","used","uses"], a:"useful", hint:"be 动词后面接形容词。", ex:"use→useful 有用的。I think they're useful. 原题 II.1 在讲义 1011 页。"},
+    {t:"c", q:"Xu Beihong is a famous ___（art）. 艺术家。", o:["artist","art","artists","arting"], a:"artist", hint:"famous 后面接人（艺术家）。", ex:"art→artist 艺术家。a famous artist 一位著名艺术家。原题 II.5 在讲义 1011 页。"}
+  ],
+  final:[
+    {t:"c", q:"阅读还原 1：___ First, knowing about the past helps you know why things are the way they are today.", o:["A. It's full of stories.","B. They did great things.","C. Learning history is very important.","D. It's like having the key to today's world.","E. History helps you think better."], a:"C. Learning history is very important.", hint:"文章开头总起：学习历史非常…？", ex:"C。主题句 Learning history is very important. 学习历史非常重要。原题 1 在讲义 1012 页。"},
+    {t:"c", q:"阅读还原 2：First, knowing about the past helps you know why things are the way they are today. ___ When you learn from the past, you will not make the same mistakes in your life.", o:["A. It's full of stories.","B. They did great things.","C. Learning history is very important.","D. It's like having the key to today's world.","E. History helps you think better."], a:"D. It's like having the key to today's world.", hint:"了解过去就像握住了通向今天世界的…？", ex:"D。It's like having the key to today's world. 就像掌握了通往当今世界的钥匙。原题 2。"},
+    {t:"c", q:"阅读还原 3：Second, ___ In history classes, you learn what happened and why. You also learn to see things from different points of view.", o:["A. It's full of stories.","B. They did great things.","C. Learning history is very important.","D. It's like having the key to today's world.","E. History helps you think better."], a:"E. History helps you think better.", hint:"第二点：学历史帮你…？", ex:"E。History helps you think better. 学历史能帮你更好地思考。原题 3。"},
+    {t:"c", q:"阅读还原 4：Third, in history, there were many great people. ___ That can make you do great things too.", o:["A. It's full of stories.","B. They did great things.","C. Learning history is very important.","D. It's like having the key to today's world.","E. History helps you think better."], a:"B. They did great things.", hint:"伟大的人做了…？", ex:"B。They did great things. 他们做了伟大的事。原题 4。"},
+    {t:"c", q:"阅读还原 5：Fourth, history is interesting! ___ Just like reading a storybook or watching a movie, learning history is very fun.", o:["A. It's full of stories.","B. They did great things.","C. Learning history is very important.","D. It's like having the key to today's world.","E. History helps you think better."], a:"A. It's full of stories.", hint:"就像读故事书 → 历史充满了…？", ex:"A。It's full of stories. 历史充满了故事。原题 5。"},
+    {t:"c", q:"— Why do you like Monday? — ___ we have art and PE on that day.", o:["Because","But","And","So"], a:"Because", hint:"回答 Why 的提问用哪个连词？", ex:"Because。回答 Why 用 because（因为）：Because we have art and PE on that day."},
+    {t:"c", q:"I wanted to go for a walk, ___ it started to rain. 但是下雨了。", o:["but","and","because","so"], a:"but", hint:"想去散步 和 下雨，意思相反。", ex:"but 表转折：I wanted to go for a walk, but it started to rain. 我想去散步，但是开始下雨了。原例句在讲义 1012 页。"},
+    {t:"c", q:"You should eat more fruit ___ it is good for your health. 因为。", o:["because","but","and","or"], a:"because", hint:"吃水果和身体好是因果关系。", ex:"because 表原因：You should eat more fruit because it is good for your health. 你应该多吃水果，因为对你的健康有好处。原例句在讲义 1012 页。"},
+    {t:"c", q:"In the past, people often wrote letters to ___. 互相。", o:["each other","every other","another one","the others"], a:"each other", hint:"write letters to ___ 互相写信。", ex:"each other 互相：write letters to each other 互相写信。原句 III.1 在讲义 1011 页。"}
+  ]
+},
+{
+  id:"l10", icon:"🍎", title:"可数名词与不可数名词", src:"讲义第 1014/1015/1016 页",
+  teacher:{
+    goal:"学生能区分可数名词与不可数名词，掌握规则复数的四种变化和不可数名词的量词表达。",
+    traps:["o 结尾有生命加 -es：tomato→tomatoes，无生命加 -s：zoo→zoos","f/fe 结尾变 ves：knife→knives，leaf→leaves","不可数名词作主语谓语用单数：There is some juice."],
+    say:"先背规则表，再玩「这个名词可数吗」的游戏，最后做讲义原题。"
+  },
+  vocab:[
+    {w:"storybook",ipa:"/ˈstɔːribʊk/",m:"n. 故事书",ex:"I have an interesting storybook.",exz:"我有一本有趣的故事书。",tip:"story（故事）+ book（书）= 故事书。可数名词，前面用 an。"},
+    {w:"class",ipa:"/klɑːs/",m:"n. 课；班级",ex:"There are three maths classes this week.",exz:"这周有三节数学课。",tip:"class→classes（s 结尾加 -es），three classes 三节课。"},
+    {w:"maths",ipa:"/mæθs/",m:"n. 数学",ex:"We have three maths classes this week.",exz:"这周我们有三节数学课。",tip:"maths 数学 = mathematics 的简称。"},
+    {w:"juice",ipa:"/dʒuːs/",m:"n. 果汁（不可数）",ex:"There is some orange juice here.",exz:"这里有一些橙汁。",tip:"juice 不可数：some juice，不说 two juices。"},
+    {w:"rice",ipa:"/raɪs/",m:"n. 米饭（不可数）",ex:"I'd like a bowl of rice.",exz:"我想要一碗米饭。",tip:"rice 不可数：a bowl of rice 一碗米饭。"},
+    {w:"water",ipa:"/ˈwɔːtə/",m:"n. 水（不可数）",ex:"A cup of water, please.",exz:"请来一杯水。",tip:"water 不可数：a cup of water 一杯水。"},
+    {w:"tomato",ipa:"/təˈmɑːtəʊ/",m:"n. 西红柿",ex:"Tomatoes are vegetables.",exz:"西红柿是蔬菜。",tip:"tomato→tomatoes：o 结尾有生命加 -es。"},
+    {w:"potato",ipa:"/pəˈteɪtəʊ/",m:"n. 土豆",ex:"Potatoes are vegetables.",exz:"土豆是蔬菜。",tip:"potato→potatoes：o 结尾有生命加 -es。"}
+  ],
+  pattern:{
+    title:"可数名词与不可数名词",
+    sub:"先分种类，再看单复数",
+    rows:[["可数·单数","a / an + 单数名词","an interesting storybook"],["可数·复数","加 -s / -es / -ies / -ves","three maths classes"],["不可数","不用 a/an，没有复数","water, rice, juice"],["量的表达","数词 + 量词 + of","a bowl of rice, two cups of water"]],
+    formula:"名词分两类：可数 → a/an 或复数；不可数 → 直接用，加量词短语表数量",
+    note:"不可数名词作主语，谓语用单数：There is some juice. 常见不可数：water、rice、juice、milk、bread。",
+    sents:["I have an interesting storybook. 我有一本有趣的故事书。","There are three maths classes this week. 这周有三节数学课。","There is some orange juice here and you can have it. 这里有一些橙汁，你可以喝。","I'd like a bowl of rice and a cup of water. 我想要一碗米饭和一杯水。","Tomatoes and potatoes are vegetables. 西红柿和土豆是蔬菜。"]
+  },
+  lines:[
+    {en:"I have an interesting storybook.",zh:"我有一本有趣的故事书。"},
+    {en:"There are three maths classes this week.",zh:"这周有三节数学课。"},
+    {en:"There is some orange juice here and you can have it.",zh:"这里有一些橙汁，你可以喝。"},
+    {en:"I'd like a bowl of rice and a cup of water.",zh:"我想要一碗米饭和一杯水。"},
+    {en:"Tomatoes and potatoes are vegetables.",zh:"西红柿和土豆是蔬菜。"}
+  ],
+  quiz:[
+    {t:"c", q:"I have ___ interesting storybook. 一本有趣的故事书。", o:["an","a","some","two"], a:"an", hint:"单数可数名词前要加冠词；interesting 以元音音素开头。", ex:"an interesting storybook：interesting 第一个音是 /ɪ/，用 an。原句在讲义 1014 页。"},
+    {t:"c", q:"There are three ___ this week. 三节数学课。", o:["maths classes","maths class","maths classs","maths classis"], a:"maths classes", hint:"three 后面接复数；class 以 s 结尾加 -es。", ex:"class→classes（s/x/ch/sh 结尾加 -es）。three maths classes 三节数学课。原句在讲义 1014 页。"},
+    {t:"c", q:"There ___ some orange juice here.", o:["is","are","am","be"], a:"is", hint:"juice 是不可数名词，作主语谓语动词用单数。", ex:"juice 不可数 → 作主语谓语用单数 is。There is some orange juice here. 原句在讲义 1014 页。"},
+    {t:"c", q:"I'd like a ___ of rice and a cup of water. 一碗米饭。", o:["bowl","cup","glass","bag"], a:"bowl", hint:"一碗米饭 = a ___ of rice。", ex:"a bowl of rice 一碗米饭（量词结构：数词+量词+of）。原例句在讲义 1014 页。"},
+    {t:"c", q:"Tomato 的复数形式是？", o:["tomatoes","tomatos","tomaties","tomato"], a:"tomatoes", hint:"以 o 结尾、有生命的名词加 -es。", ex:"tomato→tomatoes。o 结尾有生命加 -es：tomatoes、potatoes。原规则表在讲义 1014 页。"}
+  ],
+  final:[
+    {t:"b", q:"Our English teacher Ms Chen ___ the sentence on the blackboard and says, “Please write this down.” 把句子写到黑板上。", bank:L10_BANK, a:"write", hint:"主语 Ms Chen 是第三人称单数，句中要写 writes，词库先选 write。", ex:"Ms Chen writes the sentence… 三单加 s：write→writes。原题 1 在讲义 1015 页。"},
+    {t:"b", q:"We start to write. I write down the first word and ___. 写下第一个单词就停了下来。", bank:L10_BANK, a:"stop", hint:"写完第一个单词就…了。", ex:"I write down the first word and stop. 我写下第一个单词就停了。原题 2。"},
+    {t:"b", q:"“But is it OK to point out the ___? Is that polite, in the first lesson?” 指出错误。", bank:L10_BANK, a:"mistake", hint:"point out the ___ 指出…。", ex:"point out the mistake 指出错误。Is it OK to point out the mistake? 原题 3。"},
+    {t:"b", q:"“Is that polite, in the first lesson?” ___ jump into my mind. 一些问题涌进脑海。", bank:L10_BANK, a:"question", hint:"一些问题（复数）涌进脑海。", ex:"Questions jump into my mind. 一些问题涌进我的脑海。question→questions 加 s。原题 4。"},
+    {t:"b", q:"I look up at Ms Chen. My eyes meet ___. 目光与她的相遇。", bank:L10_BANK, a:"her", hint:"我的目光遇上了她的（目光），句中要写 hers。", ex:"My eyes meet hers. 我的目光与她的相遇。句中用名词性物主代词 hers（她的），词库选 her。原题 5。"},
+    {t:"b", q:"But then I think about the ___ of the sentence. 句子的意思。", bank:L10_BANK, a:"meaning", hint:"the ___ of the sentence 句子的…。", ex:"the meaning of the sentence 句子的意思。meaning 意思。原题 6。"},
+    {t:"b", q:"“Well done, Wang Han. ___, this is my first lesson for all of you.” 请记住。", bank:L10_BANK, a:"remember", hint:"请记住，这是给你们所有人的第一课。", ex:"Remember, this is my first lesson for all of you. remember 记住。原题 7 在讲义 1016 页。"},
+    {t:"b", q:"“You are now in junior high school. Learning will be more ___.” 学习将会更难。", bank:L10_BANK, a:"difficult", hint:"more + 形容词 = 更…。", ex:"Learning will be more difficult. 学习将会更难。difficult 困难的。原题 8 在讲义 1016 页。"},
+    {t:"b", q:"“You need to think more in your learning. Please always ___ this.” 请永远记住这一点。", bank:L10_BANK, a:"remember", hint:"和 7 题是同一个词哦，请永远记住。", ex:"Please always remember this. 请永远记住这一点。remember 记住。原题 9 在讲义 1016 页。"},
+    {t:"b", q:"“That's really an ___ lesson!” 那真是重要的一课！", bank:L10_BANK, a:"important", hint:"an ___ lesson 重要的一课。", ex:"That's really an important lesson! 那真是重要的一课！important 重要的。原题 10 在讲义 1016 页。"}
   ]
 }
 ];
